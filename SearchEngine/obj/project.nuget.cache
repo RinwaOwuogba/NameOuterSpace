@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "1xoAjnPaYiX0OrM/1EKzdZxx6Vgp5tKKoJ91T9A7iRvkMXMaTHIMt4nP8nGP3qzzGPY6YrWbjSSiKJOxksAHqw==",
+  "dgSpecHash": "3Cv2PXN44cBvCTMI/3rTmNW3QduhkzhceqKr+X8kSwD9TOOlPXXuJspO6DaA4TK4HgEYzFNG9C7Icpn/llLcyw==",
   "success": true,
-  "projectFilePath": "/home/thompson/Documents/SearchEngine/SearchEngine/SearchEngine.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/home/bolarinwa/ComputerScience/C#/SearchEngine/SearchEngine/SearchEngine.csproj",
+  "expectedPackageFiles": [
+    "/home/bolarinwa/.nuget/packages/anglesharp/0.16.0/anglesharp.0.16.0.nupkg.sha512",
+    "/home/bolarinwa/.nuget/packages/microsoft.netcore.platforms/5.0.0/microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "/home/bolarinwa/.nuget/packages/system.buffers/4.5.1/system.buffers.4.5.1.nupkg.sha512",
+    "/home/bolarinwa/.nuget/packages/system.text.encoding.codepages/5.0.0/system.text.encoding.codepages.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
