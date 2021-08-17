@@ -2,11 +2,10 @@
   "version": 3,
   "targets": {
     "net5.0": {
-      "AngleSharp/0.16.0": {
+      "AngleSharp/1.0.0-alpha-844": {
         "type": "package",
         "dependencies": {
-          "System.Buffers": "4.5.1",
-          "System.Text.Encoding.CodePages": "5.0.0"
+          "System.Text.Encoding.CodePages": "4.5.0"
         },
         "compile": {
           "lib/netstandard2.0/AngleSharp.dll": {}
@@ -87,15 +86,6 @@
           "lib/net5.0/Spire.Pdf.dll": {},
           "lib/net5.0/Spire.Presentation.dll": {},
           "lib/net5.0/Spire.XLS.dll": {}
-        }
-      },
-      "System.Buffers/4.5.1": {
-        "type": "package",
-        "compile": {
-          "ref/netcoreapp2.0/_._": {}
-        },
-        "runtime": {
-          "lib/netcoreapp2.0/_._": {}
         }
       },
       "System.Drawing.Common/5.0.0": {
@@ -269,14 +259,14 @@
     }
   },
   "libraries": {
-    "AngleSharp/0.16.0": {
-      "sha512": "W2Pja32gtmXLqgx4eChVehRGabH84WUNg2HsEDpVFYbq7xqexpML6J1r84Js66PVciYf7EQA0DS1sU79ndsouw==",
+    "AngleSharp/1.0.0-alpha-844": {
+      "sha512": "gQ/S3ZClscQJvFpyc8pRa75cRDMolqJ1TjIrRii9REPwI8w4hVGPM9Bdx+ONBnj56HFmCUAzLKSi+KUIFohXjA==",
       "type": "package",
-      "path": "anglesharp/0.16.0",
+      "path": "anglesharp/1.0.0-alpha-844",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "anglesharp.0.16.0.nupkg.sha512",
+        "anglesharp.1.0.0-alpha-844.nupkg.sha512",
         "anglesharp.nuspec",
         "lib/net46/AngleSharp.dll",
         "lib/net46/AngleSharp.xml",
@@ -284,9 +274,10 @@
         "lib/net461/AngleSharp.xml",
         "lib/net472/AngleSharp.dll",
         "lib/net472/AngleSharp.xml",
+        "lib/netstandard1.3/AngleSharp.dll",
+        "lib/netstandard1.3/AngleSharp.xml",
         "lib/netstandard2.0/AngleSharp.dll",
-        "lib/netstandard2.0/AngleSharp.xml",
-        "logo.png"
+        "lib/netstandard2.0/AngleSharp.xml"
       ]
     },
     "Microsoft.NETCore.Platforms/5.0.0": {
@@ -608,37 +599,6 @@
         "license.txt",
         "spire.office.6.7.0.nupkg.sha512",
         "spire.office.nuspec"
-      ]
-    },
-    "System.Buffers/4.5.1": {
-      "sha512": "Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg==",
-      "type": "package",
-      "path": "system.buffers/4.5.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/System.Buffers.dll",
-        "lib/net461/System.Buffers.xml",
-        "lib/netcoreapp2.0/_._",
-        "lib/netstandard1.1/System.Buffers.dll",
-        "lib/netstandard1.1/System.Buffers.xml",
-        "lib/netstandard2.0/System.Buffers.dll",
-        "lib/netstandard2.0/System.Buffers.xml",
-        "lib/uap10.0.16299/_._",
-        "ref/net45/System.Buffers.dll",
-        "ref/net45/System.Buffers.xml",
-        "ref/netcoreapp2.0/_._",
-        "ref/netstandard1.1/System.Buffers.dll",
-        "ref/netstandard1.1/System.Buffers.xml",
-        "ref/netstandard2.0/System.Buffers.dll",
-        "ref/netstandard2.0/System.Buffers.xml",
-        "ref/uap10.0.16299/_._",
-        "system.buffers.4.5.1.nupkg.sha512",
-        "system.buffers.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
       ]
     },
     "System.Drawing.Common/5.0.0": {
@@ -1058,7 +1018,7 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "AngleSharp >= 0.16.0",
+      "AngleSharp >= 1.0.0-alpha-844",
       "PDFPig >= 0.1.4",
       "Spire.Office >= 6.7.0"
     ]
@@ -1102,7 +1062,7 @@
         "dependencies": {
           "AngleSharp": {
             "target": "Package",
-            "version": "[0.16.0, )"
+            "version": "[1.0.0-alpha-844, )"
           },
           "PDFPig": {
             "target": "Package",
