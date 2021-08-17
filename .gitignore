@@ -307,6 +307,20 @@ ServiceFabricBackup/
 *- [Bb]ackup ([0-9]).rdl
 *- [Bb]ackup ([0-9][0-9]).rdl
 
+using System;
+
+namespace SearchEngine
+{   public using System;
+
+namespace SearchEngine
+{   public class BaseParser
+    {
+    }
+}
+class BaseParser
+    {
+    }
+}
 # Microsoft Fakes
 FakesAssemblies/
 
@@ -418,3 +432,5 @@ FodyWeavers.xsd
 
 testcon/
 repository/**
+bin/
+obj/
