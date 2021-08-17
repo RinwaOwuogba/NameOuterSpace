@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="AngleSharp" Version="1.0.0-alpha-844" />
     <PackageReference Include="PDFPig" Version="0.1.4" />
     <PackageReference Include="Spire.Office" Version="6.7.0" />
+=======
+    <PackageReference Include="AngleSharp" Version="0.16.0" />
+>>>>>>> e61e40d93f4c80ddd91e6846cac440fd862dd025
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+    <title>Using HTML in NLP · </title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    
+    <link rel="stylesheet" href="https://skeptric.com/style.main.min.5ea2f07be7e07e221a7112a3095b89d049b96c48b831f16f1015bf2d95d914e5.css" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-167481545-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-167481545-1');
+</script>
+
+</head>
+<body class=" post-template ">
+
+    <div class="site-wrapper">
+
+<header class="site-header"><div class="outer site-nav-main">
+    <div class="inner"><nav class="site-nav">
+    <div class="site-nav-left">
+        
+            <a class="site-nav-logo" href="https://skeptric.com/"></a>
+        
+        
+        <div class="site-nav-content">
+            <ul class="nav" role="menu">
+                
+                <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+                
+            </ul>
+        </div>
+        
+    </div>
+</nav>
+
+</div>
+</div></header>
+
+<main id="site-main" class="site-main outer">
+    <div class="inner">
+
+        <article class="post-full post ">
+
+            <header class="post-full-header">
+
+                
+                    
+                    <section class="post-full-tags">
+                        <a href="/tags/data">data</a>
+                    </section>
+                
+
+                <h1 class="post-full-title">Using HTML in NLP</h1>
+
+                
+
+                <div class="post-full-byline">
+                    <section class="post-full-byline-content">
+
+                        <ul class="author-list">
+    <li class="author-list-item">
+        <div class="author-card">
+            <div class="author-profile-image"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg></div>
+            <div class="author-info">
+                <div class="author-info">
+                    <h2>Edward Ross</h2>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="author-avatar author-profile-image"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg></a>
+    </li>
+</ul>
+
+                        <section class="post-full-byline-meta">
+                            
+                                <h4 class="author-name">Edward Ross</h4>
+                            
+                            <div class="byline-meta-content">
+                                <time class="byline-meta-date" datetime="2020-87-07">6 July 2020</time>
+                                <span class="byline-reading-time"><span class="bull">&bull;</span> 3 min read</span>
+                            </div>
+                        </section>
+
+                    </section>
+
+
+                </div>
+            </header>
+
+            
+            <figure class="post-full-image">
+                <img src="/images/job_html.png" alt="Using HTML in NLP" />
+            </figure>
+            
+
+            <section class="post-full-content">
+                <div class="post-content">
+                    <p>Many documents available on the web have <em>meaningful</em> markup.
+Headers, paragraph breaks, links, emphasis and lists all change the meaning of the text.
+A common way to deal with HTML documents in NLP is to strip away all the markup, e.g. with <a href="https://www.crummy.com/software/BeautifulSoup/">Beautiful Soup's <code>.get_text</code></a>.
+This is fine for a bag of words approach, but for more structured text extraction or language model this seems like throwing away a lot of information.
+Is there a better way to process the text while retaining the meaningful information?</p>
+
+<p>A lot of things that you might find in HTML pages aren't useful for NLP; like Javascript scripts, HTML tag attributes specific to the markup, and CSS.
+These you almost certainly do want to strip out.
+We need to find the right balance between the two of them.</p>
+
+<p>What is meaningful is something close to <a href="https://daringfireball.net/projects/markdown/">Markdown</a>.
+At a text span level it supports links, two kinds of emphasis (<code>em</code> and <code>strong</code>), and inline code (which is less relevant in general text).
+At a block level it supports paragraphs, 6 levels of headers, lists (ordered and unordered), quote and code blocks and horizontal rules.
+This is likely much more nuanced than is typically used but it's a reasonable compromise for generic internet content.</p>
+
+<p>It's possible to extract Markdown from HTML with <a href="https://github.com/Alir3z4/html2text">html2text</a> or the excellent <a href="https://pandoc.org/">Pandoc</a>.
+Depending on the downstream task you will probably want to use the markup in different ways.
+You could customise the approach from html2text, transform with custom Pandoc filters or write a bespoke parser with <a href="https://html5lib.readthedocs.io/en/latest/index.html">html5lib</a>.</p>
+
+<p>At minimum you could try to capture some of the meaning of the markup in plain text; similar to Pandoc's <code>plain</code> output.
+For example a list could be turned into a semicolon separated run-on sentence, maybe emphasised text should be in caps, certainly paragraphs and line breaks should be separated by newlines.
+The target may depend on what you're trying to do, but should produce a better result than just stripping away tags with Beautiful Soup <code>.get_text</code>.</p>
+
+<p>For language modelling you could encode the markup as special tokens.
+For a rules based tokenizer there are a number of straightforward ways to do this.
+An example for emphasis we could use HTML-esque <code>&lt;em&gt;</code> and <code>&lt;/em&gt;</code> tokens.
+Or we could precede every token in the span with <code>&lt;em&gt;</code>.
+We could even do something strange like precede the whole section by <code>&lt;em&gt; 5</code> where 5 is the number of tokens in the span.
+Typically it's only whole words that are emphasised; if only part of a token is you would have to decide whether to use that information or discard it (depending on how often it occurs and how meaningful it is).
+It would be worth experimenting to see what works best for a language model.</p>
+
+<p>For an unsupervised tokenizer like <a href="https://github.com/google/sentencepiece">sentencepiece</a> you could try to use Markdown or HTML tags directly.
+Just try to make it as easy as the tokenizer as possible to capture the information.</p>
+
+<p>Another way to capture the information would be to annotate it on tokenized text.
+For example you could mark it up like <a href="https://spacy.io/api/span">Spacy spans</a>.
+But you'd need some customised algorithms that could make use of the information.</p>
+
+<p>I still need to experiment more on how to get the most out of text encoded in HTML, but I definitely think there are useful ways to use the information depending on the application.</p>
+
+                </div>
+            </section>
+
+        </article>
+
+    </div>
+</main>
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+    
+    <article class="read-next-card">
+        <header class="read-next-card-header">
+            <h3><span>More in</span> <a href="/tags/data">data</a></h3>
+        </header>
+        <div class="read-next-card-content">
+            <ul>
+                
+                <li>
+                    <h4><a href="https://skeptric.com/prior-regularise/">Priors as Regularisation</a></h4>
+                    <div class="read-next-card-meta">
+                            <p><time datetime="2021-88-08">08 Aug 2021</time> 
+                                
+                            </p>
+                    </div>
+                </li>
+                
+                <li>
+                    <h4><a href="https://skeptric.com/binary-binning/">Binning Binary Predictions</a></h4>
+                    <div class="read-next-card-meta">
+                            <p><time datetime="2021-128-08">08 Aug 2021</time> 
+                                
+                            </p>
+                    </div>
+                </li>
+                
+                <li>
+                    <h4><a href="https://skeptric.com/finding-open-datasets/">Finding Open Datasets</a></h4>
+                    <div class="read-next-card-meta">
+                            <p><time datetime="2021-77-07">07 Jul 2021</time> 
+                                
+                            </p>
+                    </div>
+                </li>
+                
+            </ul>
+        </div>
+    </article>
+<article class="post-card post
+
+
+ ">
+
+        
+            <a class="post-card-image-link" href="https://skeptric.com/demjson/">
+                <img class="post-card-image"src="/images/demjson.png" alt="Demjson for parsing tricky Javascript Objects"/>
+            </a>
+        
+    
+        <div class="post-card-content">
+    
+            <a class="post-card-content-link" href="https://skeptric.com/demjson/">
+    
+                <header class="post-card-header">
+                    
+                        
+                        <div class="post-card-primary-tag">python</div>
+                    
+
+                    <h2 class="post-card-title">Demjson for parsing tricky Javascript Objects</h2>
+                </header>
+    
+                <section class="post-card-excerpt">
+                    <p>Modern Javascript web frameworks often embed the data used to render each webpage in the HTML. This means an easy way of extracting data is capturing the string representation of the object with a pushdown automoton and then parsing it. Python's inbuilt json.loads is effective, but won't handle very dynamic Javascript, but demjson will (another, much faster alternative is Chompjs.
+The problem shows up when using json.loads as the following obscure error:</p>
+                </section>
+    
+            </a>
+
+            <footer class="post-card-meta">
+                    <ul class="author-list">
+                        <li class="author-list-item">
+                            <div class="author-name-tooltip">Edward Ross</div>
+                            <a href="https://test.com" class="static-avatar author-profile-image"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg></a>
+                        </li>
+                    </ul>
+                    <div class="post-card-byline-content">
+                        <span>Edward Ross</span>
+                        <span class="post-card-byline-date"><time datetime="2020-87-07">5 July 2020</time>
+                            <span class="bull">&bull;</span> 2 min read</span>
+                    </div>
+                </footer>
+    
+        </div>
+
+</article>
+    
+
+            <article class="post-card post
+
+
+ ">
+
+        
+            <a class="post-card-image-link" href="https://skeptric.com/pybart/">
+                <img class="post-card-image"src="/images/pybart.png" alt="pyBART: Better Dependencies for Information Extraction"/>
+            </a>
+        
+    
+        <div class="post-card-content">
+    
+            <a class="post-card-content-link" href="https://skeptric.com/pybart/">
+    
+                <header class="post-card-header">
+                    
+                        
+                        <div class="post-card-primary-tag">python</div>
+                    
+
+                    <h2 class="post-card-title">pyBART: Better Dependencies for Information Extraction</h2>
+                </header>
+    
+                <section class="post-card-excerpt">
+                    <p>Dependency trees are a remarkably powerful tool for information extraction. Neural based taggers are very good and Universal Dependencies means the approach can be used for almost any language (although the rules are language specific). However syntax can get really strange requiring increasingly complex rules to extract information. The pyBART system solves this by rewriting the rules to be half a step closer to semantics than syntax.
+I've seen that dependency based rules are useful for extracting skills from noun phrases and adpositions.</p>
+                </section>
+    
+            </a>
+
+            <footer class="post-card-meta">
+                    <ul class="author-list">
+                        <li class="author-list-item">
+                            <div class="author-name-tooltip">Edward Ross</div>
+                            <a href="https://test.com" class="static-avatar author-profile-image"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg></a>
+                        </li>
+                    </ul>
+                    <div class="post-card-byline-content">
+                        <span>Edward Ross</span>
+                        <span class="post-card-byline-date"><time datetime="2020-87-07">7 July 2020</time>
+                            <span class="bull">&bull;</span> 3 min read</span>
+                    </div>
+                </footer>
+    
+        </div>
+
+</article>
+    
+        </div>
+    </div>
+</aside>
+
+
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://skeptric.com/"></a> &copy; 2020</section>
+                <nav class="site-footer-nav">
+                    <a href="https://skeptric.com/">Latest Posts</a>
+                    <a href="https://twitter.com/EddingtonRoss" target="_blank" rel="noopener">Twitter</a>
+                    <a href="https://github.com/edwardjross/" target="_blank" rel="noopener">Github</a>
+                    <a href="https://www.linkedin.com/in/edward-ross-4909ba13a/" target="_blank" rel="noopener">LinkedIn</a>
+                </nav>
+            </div>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });</script>
+
+</footer>
+
+    </div>
+
+</body>
+</html>
