@@ -40,7 +40,11 @@
           "dependencies": {
             "AngleSharp": {
               "target": "Package",
-              "version": "[1.0.0-alpha-844, )"
+              "version": "[0.16.0, )"
+            },
+            "LiteDB": {
+              "target": "Package",
+              "version": "[5.0.11, )"
             },
             "PDFPig": {
               "target": "Package",

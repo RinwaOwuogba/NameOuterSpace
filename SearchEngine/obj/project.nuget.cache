@@ -1,14 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "RnhZCMO9lj8Z+JBIl3QS6DIWHgNCpmLh3Km3oaAZZCIU1QUl5FoLi3EBaUisO/ftWSH90e/0d5O4cGKZsuTVYQ==",
+  "dgSpecHash": "6OLif3x2JoanJNUg/6EOOfC2KM0H9ujc5+QBQQ2Wvj2NSB5uSU+FQjUKuH/Swf+uR2E9D/UEUoGlTPhlgAzLWQ==",
   "success": true,
   "projectFilePath": "/home/thompson/Documents/SearchEngine/SearchEngine/SearchEngine.csproj",
   "expectedPackageFiles": [
-    "/home/thompson/.nuget/packages/anglesharp/1.0.0-alpha-844/anglesharp.1.0.0-alpha-844.nupkg.sha512",
+    "/home/thompson/.nuget/packages/anglesharp/0.16.0/anglesharp.0.16.0.nupkg.sha512",
+    "/home/thompson/.nuget/packages/litedb/5.0.11/litedb.5.0.11.nupkg.sha512",
     "/home/thompson/.nuget/packages/microsoft.netcore.platforms/5.0.0/microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "/home/thompson/.nuget/packages/microsoft.win32.systemevents/5.0.0/microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "/home/thompson/.nuget/packages/pdfpig/0.1.4/pdfpig.0.1.4.nupkg.sha512",
     "/home/thompson/.nuget/packages/spire.office/6.7.0/spire.office.6.7.0.nupkg.sha512",
+    "/home/thompson/.nuget/packages/system.buffers/4.5.1/system.buffers.4.5.1.nupkg.sha512",
     "/home/thompson/.nuget/packages/system.drawing.common/5.0.0/system.drawing.common.5.0.0.nupkg.sha512",
     "/home/thompson/.nuget/packages/system.formats.asn1/5.0.0/system.formats.asn1.5.0.0.nupkg.sha512",
     "/home/thompson/.nuget/packages/system.security.accesscontrol/5.0.0/system.security.accesscontrol.5.0.0.nupkg.sha512",
