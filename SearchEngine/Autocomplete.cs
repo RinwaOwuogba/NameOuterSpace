@@ -8,14 +8,21 @@ using System.Collections.Generic;
 using AngleSharp;
 
 namespace SearchEngine{
-    
+    //This is the trie class for a creating a trie tree
     public class trie{
         private node root;
 
+        //The class in initialized by creating a root node which is usually an empty string.
         public trie(){
             this.root = new node('\0');
         }
 
+        //The insert function for inserting words into the trie tree
+        //it takes a string and loops through each character in the string.
+        //we start by initializing a current node which is first the root node
+        //and we go down the tree by checking the children of the current node
+        //if the children is null we add the character there, if it is not then we move to the next one.
+        //and we repeat this till the loop is complete
         public void insert (String word){
             node curr = root;
             for (int i = 0; i < word.length(); i++){
@@ -28,6 +35,11 @@ namespace SearchEngine{
             curr.isWord = true;
         }
 
+
+        //this is to check prefixes and the main part of the autocomplete
+        //it takes a string which is going to be the word being typed
+        //and check if the word is in the trie or if we can move from the begining to the end in the tree
+        //it uses an helper function the getNode function
         public node startWith(string word){
             if(getNode(word) != null){
                 var node = getNode(word);
@@ -38,6 +50,7 @@ namespace SearchEngine{
             }
         }
 
+        //this is the get node function it checks if a word is in the trie tree
         private node getNode (string word){
             node curr = root;
             for (int i = 0; i < word.length(); i++){
@@ -51,6 +64,10 @@ namespace SearchEngine{
             return curr;
         }
 
+        //If a prefix is in the trie tree this functions helps get the words that has that prefix
+        //the isWord method basically checks if the node we are passing is a leaf node
+        //if it is then we add it to the List
+        //We use 26 in the loop here because each node in the trie can have up to 26 children
         public void addAllwords(node node, String word, List<string> words){
 
             if(node.isWord == true){
@@ -68,6 +85,9 @@ namespace SearchEngine{
 
         }
 
+
+
+        //this is the class for creating nodes for the trie tree
         class node{
             public char c;
             public bool isWord;
@@ -83,21 +103,31 @@ namespace SearchEngine{
         }
     }
 
+
+    //The autocomplete class
     public class Autocomplete{
         public List<T> words;
 
         public trie WordTree;
 
+        //It is initialized by passing a List of strings to the constructor
+        //A trie named WordTree is created on initialization
+        //words from string List are also added to the WordTree at initialization
         public Autocomplete(List<T> args){
             this.words = args;
             this.WordTree = new trie();
-        }
-
-        public string[] auto(string args){
-            List<string> result;
             for (int i = 0; i < this.words.Count; i++) {
                 this.WordTree.insert(this.words[i]);
             }
+        }
+
+
+        //this is the main function
+        //it takes a string which might be a prefix or a word
+        //using the trie methods created above it generates a list of words
+        //the list of words is converting into a string array which is the return value
+        public string[] auto(string args){
+            List<string> result;
             try{
             if(this.WordTree.startWith(args) != null){
                     var node = WordTree.startWith(args);
