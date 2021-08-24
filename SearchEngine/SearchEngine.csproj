@@ -5,13 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
-    <PackageReference Include="AngleSharp" Version="1.0.0-alpha-844" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
+    <PackageReference Include="OpenNLP" Version="1.3.5" />
     <PackageReference Include="PDFPig" Version="0.1.4" />
+    <PackageReference Include="Porter2Stemmer" Version="1.0.0" />
     <PackageReference Include="Spire.Office" Version="6.7.0" />
-=======
-    <PackageReference Include="AngleSharp" Version="0.16.0" />
->>>>>>> e61e40d93f4c80ddd91e6846cac440fd862dd025
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
