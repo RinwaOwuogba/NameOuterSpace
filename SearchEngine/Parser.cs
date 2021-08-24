@@ -15,155 +15,106 @@ using Spire.Xls;
 
 namespace SearchEngine
 {
+
     /// <summary>
-    /// Class to extract semantic text from files
+    /// Class to automatically handle parsing of semantic text from files
     /// </summary>
-    public class Parser
+    public class AutoDetectParser
     {
-        // Path of file to extract text from
-        private string filePath;
-
-        // Extension of file to extract text from
-        private string fileExtension;
-
-        public Parser(string filePath)
-        {
-            this.filePath = filePath;
-            this.fileExtension = Path.GetExtension(this.filePath).ToLower();
-        }
-
         /// <summary>
-        /// Automatically uses the appropriate parser to
-        /// parse a file
+        /// Fetches an instance of the appropriate parser for the passed
+        /// file type
         /// </summary>
-        /// <returns>Semantic text extracted from the file</returns>
+        /// <param name="filePath">Path of file to parse</param>
+        /// <returns>Instance of an appropriate parser </returns>
         /// <exception cref="System.ArgumentException">This is thrown
         /// when the specified file extension isn't among the allowed
         /// extensions
         /// </exception>
-        public string AutoDetectParse()
+        public static Parser GetContextParser(string filePath)
         {
-            switch (this.fileExtension)
+            string fileExtension = Path.GetExtension(filePath).ToLower();
+
+            switch (fileExtension)
             {
                 case ".xml":
-                    return this.ParseXml();
+                    return new XmlParser(filePath);
                 case ".html":
-                    return this.ParseHtml();
+                    return new HtmlParser(filePath);
                 case ".txt":
-                    string content = File.ReadAllText(filePath);
-                    return content;
+                    return new TxtParser(filePath);
                 case ".pdf":
-                    return this.ParsePdf();
+                    return new PDFParser(filePath);
                 case ".doc":
                 case ".docx":
-                    return this.ParseDoc();
+                    return new DocParser(filePath);
                 case ".ppt":
                 case ".ppts":
-                    return this.ParsePresentation();
+                    return new PresentationParser(filePath);
                 case ".xlx":
                 case ".xls":
-                    SheetParser sheetParser = new SheetParser(this.filePath);
-                    return sheetParser.Text;
+                    return new SheetParser(filePath);
                 default:
                     throw new ArgumentException("Unrecognized file type");
             }
         }
+    }
 
-        /// <summary>
-        /// Parse semantic content out of an xml file
-        /// </summary>
-        /// <returns>Semantic text extracted from xml file</returns>
-        private string ParseXml()
+    /// <summary>
+    /// General class for all parsers to extract semantic text
+    /// from files  
+    /// </summary>
+    public abstract class Parser
+    {
+        // Path of file to extract text from
+        protected string filePath;
+
+        public Parser(string filePath)
         {
-            XElement xmlElement = XElement.Load(this.filePath);
-            IEnumerable<XNode> NodesList = xmlElement.DescendantNodes();
-            StringBuilder sb = new StringBuilder("", NodesList.Count());
-
-            foreach (XNode node in NodesList)
-            {
-                if (node.NodeType == System.Xml.XmlNodeType.Text)
-                {
-                    sb.Append(node.ToString() + " ");
-                }
-            }
-
-            return sb.ToString().TrimEnd();
+            this.filePath = filePath;
         }
 
         /// <summary>
-        /// Parse semantic content out of an html file
+        /// Parses semantic text out of file
         /// </summary>
-        /// <returns>Semantic text extracted file</returns>
-        private string ParseHtml()
+        /// <returns>Semantic text in file</returns>
+        public abstract string Parse();
+    }
+
+    /// <summary>
+    /// Class to parse text from .txt files
+    /// </summary>
+    public class TxtParser : Parser
+    {
+        public TxtParser(string filePath) : base(filePath) { }
+
+        public override string Parse()
         {
-            HtmlDocument htmlDoc = new HtmlDocument();
-            htmlDoc.Load(filePath);
+            string content = File.ReadAllText(filePath);
+            return content;
+        }
+    }
 
-            var node = htmlDoc.DocumentNode.SelectSingleNode("//body");
-
-            StringBuilder sb = new StringBuilder("", node.Descendants().Count());
-
-            foreach (var nNode in node.Descendants())
-            {
-                if (nNode.NodeType == HtmlNodeType.Element)
-                {
-                    sb.Append(nNode.GetDirectInnerText().Trim() + " ");
-                }
-            }
-
-            return sb.ToString().TrimEnd();
+    /// <summary>
+    /// Class to parse semantic content out of .ppt and .ppts files
+    /// </summary>
+    public class PresentationParser : Parser
+    {
+        private Presentation pptDocument;
+        public PresentationParser(string filePath) : base(filePath)
+        {
+            pptDocument = openFile(filePath);
         }
 
-        /// <summary>
-        /// Parse semantic content out of a pdf file
-        /// </summary>
-        /// <returns>Semantic text extracted from file</returns>
-        private string ParsePdf()
+        private Presentation openFile(string path_to_file)
         {
-
-            StringBuilder sb = new StringBuilder("", 10);
-
-            using (PdfDocument document = PdfDocument.Open(this.filePath))
-                foreach (Page page in document.GetPages())
-                {
-                    string pageText = page.Text;
-
-                    foreach (Word word in page.GetWords())
-                    {
-                        sb.Append(word.Text + " ");
-                    }
-                }
-
-            return sb.ToString().TrimEnd();
+            Presentation ppt = new Presentation();
+            ppt.LoadFromFile(path_to_file);
+            return ppt;
         }
-
-        /// <summary>
-        /// Parse semantic content out of a .doc or .docx file
-        /// </summary>
-        /// <returns>Semantic text extracted from file</returns>
-        public string ParseDoc()
+        public override string Parse()
         {
-            Document document = new Document();
-            document.LoadFromFile(this.filePath);
-
-            // remove embedded spire evaluation warning from
-            // first line of text
-            IEnumerable<string> lines = Regex.Split(document.GetText(), "\r\n|\r|\n").Skip(1);
-
-            return string.Join(Environment.NewLine, lines.ToArray());
-        }
-
-        /// <summary>
-        /// Parse semantic content out of .ppt and .ppts files
-        /// </summary>
-        /// <returns>Semantic text extracted from file</returns>
-        public string ParsePresentation()
-        {
-            Presentation pptDocument = new Presentation();
-            pptDocument.LoadFromFile(this.filePath);
-
             StringBuilder sb = new StringBuilder();
-
             for (int i = 0; i < pptDocument.Slides.Count; i++)
             {
                 for (int j = 0; j < pptDocument.Slides[i].Shapes.Count; j++)
@@ -184,18 +135,121 @@ namespace SearchEngine
 
             return sb.ToString();
         }
-
     }
+
+    /// <summary>
+    /// Class to parse semantic content out of an xml file
+    /// </summary>
+    public class XmlParser : Parser
+    {
+        public XmlParser(string filePath) : base(filePath) { }
+
+        public override string Parse()
+        {
+            XElement xmlElement = XElement.Load(this.filePath);
+            IEnumerable<XNode> NodesList = xmlElement.DescendantNodes();
+            StringBuilder sb = new StringBuilder("", NodesList.Count());
+
+            foreach (XNode node in NodesList)
+            {
+                if (node.NodeType == System.Xml.XmlNodeType.Text)
+                {
+                    sb.Append(node.ToString() + " ");
+                }
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+    }
+
+    /// <summary>
+    /// Class to parse semantic content out of an html file
+    /// </summary>
+    public class HtmlParser : Parser
+    {
+        public HtmlParser(string filePath) : base(filePath) { }
+
+        public override string Parse()
+        {
+            HtmlDocument htmlDoc = new HtmlDocument();
+            htmlDoc.Load(filePath);
+
+            var node = htmlDoc.DocumentNode.SelectSingleNode("//body");
+
+            StringBuilder sb = new StringBuilder("", node.Descendants().Count());
+
+            //             foreach (var element in body.QuerySelectorAll("script"))
+            //             {
+            //                 element.Remove();
+            //             }
+
+            foreach (var nNode in node.Descendants())
+            {
+                if (nNode.NodeType == HtmlNodeType.Element)
+                {
+                    sb.Append(nNode.GetDirectInnerText().Trim() + " ");
+                }
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+    }
+
+    /// <summary>
+    /// Class to parse semantic content out of a pdf file
+    /// </summary>
+    public class PDFParser : Parser
+    {
+        public PDFParser(string filePath) : base(filePath) { }
+
+        public override string Parse()
+        {
+            StringBuilder sb = new StringBuilder("", 10);
+
+            using (PdfDocument document = PdfDocument.Open(this.filePath))
+                foreach (Page page in document.GetPages())
+                {
+                    string pageText = page.Text;
+
+                    foreach (Word word in page.GetWords())
+                    {
+                        sb.Append(word.Text + " ");
+                    }
+                }
+
+            return sb.ToString().TrimEnd();
+        }
+    }
+
+    /// <summary>
+    /// Class to parse semantic content out of a .doc or .docx file
+    /// </summary>
+    public class DocParser : Parser
+    {
+        public DocParser(string filePath) : base(filePath) { }
+
+        public override string Parse()
+        {
+            Document document = new Document();
+            document.LoadFromFile(this.filePath);
+
+            // remove embedded spire evaluation warning from
+            // first line of text
+            IEnumerable<string> lines = Regex.Split(document.GetText(), "\r\n|\r|\n").Skip(1);
+
+            return string.Join(Environment.NewLine, lines.ToArray());
+        }
+    }
+
 
     /// <summary>
     /// Class to parse semantic text out of .xls and .xlsx files
     /// </summary>
-    public class SheetParser
+    public class SheetParser : Parser
     {
         private Workbook workbook;
-        private string text;
 
-        public SheetParser(string path_to_file)
+        public SheetParser(string path_to_file) : base(path_to_file)
         {
             workbook = openFile(path_to_file);
         }
@@ -206,7 +260,7 @@ namespace SearchEngine
             return wb;
         }
 
-        private string transformToString()
+        public override string Parse()
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < workbook.Worksheets.Count; i++)
@@ -234,7 +288,6 @@ namespace SearchEngine
             }
             return sb.ToString();
         }
-        public string Text { get => transformToString(); }
 
         private void GetSheetCellText(StringBuilder sb, Worksheet sheet)
         {
@@ -267,4 +320,7 @@ namespace SearchEngine
         }
 
     }
+
 }
+
+

@@ -6,10 +6,10 @@ using SearchEngine;
 namespace Tests
 {
     [TestClass]
-    public class ParserTests
+    public class AutoDetectParserTests
     {
         [TestMethod]
-        public void AutoDetectParser_ShouldThrowAnExceptionForAnInvalidFileType()
+        public void GetContextParser_ShouldThrowAnArgumentExceptionForAnInvalidFileType()
         {
             string originalFileName = "simpleXml.xyz";
 
@@ -19,13 +19,13 @@ namespace Tests
             );
 
             Assert.ThrowsException<ArgumentException>(
-                () => new Parser(filePath).AutoDetectParse(),
+                () => AutoDetectParser.GetContextParser(filePath),
                 "Unrecognized file type"
             );
         }
 
         [TestMethod]
-        public void AutoDetectParser_ShouldParseAnXmlFileSuccessfully()
+        public void GetContextParser_ShouldReturnAnXmlParserForAnXmlFile()
         {
             string originalFileName = "simple.xml";
 
@@ -34,13 +34,13 @@ namespace Tests
                 "../../../../Files/" + originalFileName
            );
 
-            string result = new Parser(filePath).AutoDetectParse();
+            Parser parser = AutoDetectParser.GetContextParser(filePath);
 
-            Assert.AreEqual("book cook chef", result);
+            Assert.IsInstanceOfType(parser, typeof(XmlParser));
         }
 
         [TestMethod]
-        public void AutoDetectParser_ShouldParseAnHtmlFileSuccessfully()
+        public void GetContextParser_ShouldParseAnHtmlFileSuccessfully()
         {
             string originalFileName = "simple.html";
 
@@ -49,13 +49,13 @@ namespace Tests
                 "../../../../Files/" + originalFileName
            );
 
-            string result = new Parser(filePath).AutoDetectParse();
+            Parser parser = AutoDetectParser.GetContextParser(filePath);
 
-            Assert.AreEqual("books a first nesting more nesting", result);
+            Assert.IsInstanceOfType(parser, typeof(HtmlParser));
         }
 
         [TestMethod]
-        public void AutoDetectParser_ShouldReturnContentsOfATxtFile()
+        public void GetContextParser_ShouldReturnATxtParserForATxtFile()
         {
             string originalFileName = "simple.txt";
 
@@ -64,13 +64,14 @@ namespace Tests
                 "../../../../Files/" + originalFileName
            );
 
-            string result = new Parser(filePath).AutoDetectParse();
+            Parser parser = AutoDetectParser.GetContextParser(filePath);
 
-            Assert.AreEqual("book cook chef", result);
+            Assert.IsInstanceOfType(parser, typeof(TxtParser));
+
         }
 
         [TestMethod]
-        public void AutoDetectParser_ShouldReturnContentsOfAPdfFile()
+        public void GetContextParser_ShouldReturnPDFParserForPDFFile()
         {
             string originalFileName = "simple.pdf";
 
@@ -79,13 +80,13 @@ namespace Tests
                 "../../../../Files/" + originalFileName
            );
 
-            string result = new Parser(filePath).AutoDetectParse();
+            Parser parser = AutoDetectParser.GetContextParser(filePath);
 
-            Assert.AreEqual("book cook chef", result);
+            Assert.IsInstanceOfType(parser, typeof(PDFParser));
         }
 
         [TestMethod]
-        public void AutoDetectParser_ShouldReturnContentsOfADocFile()
+        public void GetContextParser_ShouldReturnDocParserForDocFile()
         {
             string originalFileName = "simple.doc";
 
@@ -94,15 +95,19 @@ namespace Tests
                 "../../../../Files/" + originalFileName
            );
 
-            string result = new Parser(filePath).AutoDetectParse();
-            Assert.AreEqual(
-                "  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ac faucibus odio. \n",
-                result
-            );
+            // string result = new Parser(filePath).AutoDetectParse();
+            // Assert.AreEqual(
+            //     "  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ac faucibus odio. \n",
+            //     result
+            // );
+
+            Parser parser = AutoDetectParser.GetContextParser(filePath);
+
+            Assert.IsInstanceOfType(parser, typeof(DocParser));
         }
 
         [TestMethod]
-        public void AutoDetectParser_ShouldReturnContentsOfADocxFile()
+        public void GetContextParser_ShouldReturnDocxParserForDocxFile()
         {
             string originalFileName = "simple.docx";
 
@@ -111,13 +116,17 @@ namespace Tests
                 "../../../../Files/" + originalFileName
            );
 
-            string result = new Parser(filePath).AutoDetectParse();
+            // string result = new Parser(filePath).AutoDetectParse();
 
-            Assert.AreEqual("book cook chef\n", result);
+            // Assert.AreEqual("book cook chef\n", result);
+
+            Parser parser = AutoDetectParser.GetContextParser(filePath);
+
+            Assert.IsInstanceOfType(parser, typeof(DocParser));
         }
 
         // [TestMethod]
-        // public void AutoDetectParser_ShouldReturnContentsOfAPptFile()
+        // public void GetContextParser_ShouldReturnPresentationParserForPptFile()
         // {
         //     string originalFileName = "simple.ppt";
 
@@ -126,13 +135,14 @@ namespace Tests
         //         "../../../../Files/" + originalFileName
         //    );
 
-        //     string result = new Parser(filePath).AutoDetectParse();
+        //     Parser parser = AutoDetectParser.GetContextParser(filePath);
 
-        //     Assert.AreEqual("book cook chef", result);
+        //     Assert.IsInstanceOfType(parser, typeof(PresentationParser));
         // }
 
         // [TestMethod]
-        // public void AutoDetectParser_ShouldReturnContentsOfAPptsFile()
+        // public void GetContextParser_ShouldReturnPresentationParserForPptsFile()
+
         // {
         //     string originalFileName = "simple.ppts";
 
@@ -141,9 +151,9 @@ namespace Tests
         //         "../../../../Files/" + originalFileName
         //    );
 
-        //     string result = new Parser(filePath).AutoDetectParse();
+        //     Parser parser = AutoDetectParser.GetContextParser(filePath);
 
-        //     Assert.AreEqual("book cook chef", result);
+        //     Assert.IsInstanceOfType(parser, typeof(PresentationParser));
         // }
     }
 }

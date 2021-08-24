@@ -41,9 +41,9 @@ namespace SearchEngine
 
         public Dictionary<string, long> Index()
         {
-            Parser parser = new Parser(this.filePath);
+            Parser parser = AutoDetectParser.GetContextParser(this.filePath);
 
-            this.text = this.fileName + " " + parser.AutoDetectParse();
+            this.text = this.fileName + " " + parser.Parse();
 
             // create tokens from text string
             EnglishRuleBasedTokenizer tokenizer = new EnglishRuleBasedTokenizer(true);
