@@ -15,7 +15,6 @@ using Spire.Xls;
 
 namespace SearchEngine
 {
-
     /// <summary>
     /// Class to automatically handle parsing of semantic text from files
     /// </summary>

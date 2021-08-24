@@ -62,12 +62,11 @@ namespace Tests
             string filePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "../../../../Files/" + originalFileName
-           );
+            );
 
             Parser parser = AutoDetectParser.GetContextParser(filePath);
 
             Assert.IsInstanceOfType(parser, typeof(TxtParser));
-
         }
 
         [TestMethod]
@@ -155,5 +154,44 @@ namespace Tests
 
         //     Assert.IsInstanceOfType(parser, typeof(PresentationParser));
         // }
+    }
+
+
+    [TestClass]
+    public class TxtParserTests
+    {
+        [TestMethod]
+        public void Parse_ShouldReturnTheContentsOfFile()
+        {
+            string originalFileName = "simple.txt";
+
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../../Files/" + originalFileName
+            );
+
+            Parser parser = new TxtParser(filePath);
+
+            Assert.AreEqual("book cook chef", parser.Parse());
+        }
+    }
+
+    [TestClass]
+    public class PDFParserTests
+    {
+        [TestMethod]
+        public void Parse_ShouldReturnTheContentsOfFile()
+        {
+            string originalFileName = "simple.pdf";
+
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../../Files/" + originalFileName
+            );
+
+            Parser parser = new PDFParser(filePath);
+
+            Assert.AreEqual("book cook chef", parser.Parse());
+        }
     }
 }

@@ -30,30 +30,5 @@ namespace Tests
             Assert.AreEqual(1, reverseIndex["first"]);
             Assert.AreEqual(1, reverseIndex["more"]);
         }
-
-        // [TestMethod]
-        // public void ReadFile_ShouldReturnTheNameAndContentOfAValidFileRead()
-        // {
-        //     string originalFileName = "sample.txt";
-        //     string currentDirectory = Directory.GetCurrentDirectory();
-
-        //     string filePath = Path.Combine(currentDirectory, "../../../../Files/" + originalFileName);
-
-        //     var (returnedFileName, text) = Indexer.ReadFile(filePath);
-
-        //     Assert.AreEqual(originalFileName, returnedFileName);
-        //     Assert.AreEqual("sample text", text);
-        // }
-
-        // [TestMethod]
-        // public void ReadFile_ShouldThrowAnExceptionForAnUnsuccessfulFileRead()
-        // {
-        //     string originalFileName = "non-existent.txt";
-        //     string currentDirectory = Directory.GetCurrentDirectory();
-
-        //     string filePath = Path.Combine(currentDirectory, "../../../../Files/" + originalFileName);
-
-        //     Assert.ThrowsException<FileNotFoundException>(() => Indexer.ReadFile(filePath));
-        // }
     }
 }
