@@ -48,7 +48,7 @@ namespace SearchEngine
                 case ".docx":
                     return new DocParser(filePath);
                 case ".ppt":
-                case ".ppts":
+                case ".pptx":
                     return new PresentationParser(filePath);
                 case ".xlx":
                 case ".xls":
@@ -269,32 +269,32 @@ namespace SearchEngine
                 {
                     continue;
                 }
-                sb.AppendLine(string.Format("The cell text in worksheet{0} are as follows:", i.ToString()));
                 GetSheetCellText(sb, sheet);
 
-                sb.AppendLine(string.Format("The comment text in worksheet{0} are as follows:", i.ToString()));
                 GetSheetCommentText(sb, sheet);
 
-                sb.AppendLine(string.Format("The shape text in worksheet{0} are as follows:", i.ToString()));
                 GetSheetShapeText(sb, sheet);
 
-                sb.AppendLine(string.Format("The textbox text in worksheet{0} are as follows:", i.ToString()));
                 for (int j = 0; j < sheet.TextBoxes.Count; j++)
                 {
                     sb.AppendLine(sheet.TextBoxes[j].Text);
                 }
 
             }
-            return sb.ToString();
+            return sb.ToString().Trim();
         }
 
         private void GetSheetCellText(StringBuilder sb, Worksheet sheet)
         {
             foreach (var cell in sheet.Cells)
             {
-                if (!string.IsNullOrEmpty(cell.Text) || !string.IsNullOrEmpty(cell.NumberText))
+                if (!string.IsNullOrEmpty(cell.Text))
                 {
                     sb.Append(cell.Text + " ");
+
+                }
+                else if (!string.IsNullOrEmpty(cell.NumberText))
+                {
                     sb.Append(cell.NumberText + " ");
                 }
 

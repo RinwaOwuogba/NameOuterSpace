@@ -72,7 +72,7 @@ namespace SearchEngine
                     continue;
                 }
 
-                filteredWords.Add(word);
+                filteredWords.Add(word.ToLower());
             }
 
             // create reverse index

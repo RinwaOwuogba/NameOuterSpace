@@ -9,13 +9,13 @@ namespace Tests
     public class AutoDetectParserTests
     {
         [TestMethod]
-        public void GetContextParser_ShouldThrowAnArgumentExceptionForAnInvalidFileType()
+        public void GetContextParser_ThrowAnArgumentExceptionForAnInvalidFileType()
         {
-            string originalFileName = "simpleXml.xyz";
+            string fileName = "filedoesnotexist.xyz";
 
             string filePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "../../../../Files/" + originalFileName
+                "../../../TestFiles/" + fileName
             );
 
             Assert.ThrowsException<ArgumentException>(
@@ -25,13 +25,13 @@ namespace Tests
         }
 
         [TestMethod]
-        public void GetContextParser_ShouldReturnAnXmlParserForAnXmlFile()
+        public void GetContextParser_ReturnsAnXmlParserForAnXmlFile()
         {
-            string originalFileName = "simple.xml";
+            string fileName = "simple.xml";
 
             string filePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "../../../../Files/" + originalFileName
+                "../../../TestFiles/" + fileName
            );
 
             Parser parser = AutoDetectParser.GetContextParser(filePath);
@@ -40,13 +40,13 @@ namespace Tests
         }
 
         [TestMethod]
-        public void GetContextParser_ShouldParseAnHtmlFileSuccessfully()
+        public void GetContextParser_ParseAnHtmlFileSuccessfully()
         {
-            string originalFileName = "simple.html";
+            string fileName = "simple.html";
 
             string filePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "../../../../Files/" + originalFileName
+                "../../../TestFiles/" + fileName
            );
 
             Parser parser = AutoDetectParser.GetContextParser(filePath);
@@ -55,13 +55,13 @@ namespace Tests
         }
 
         [TestMethod]
-        public void GetContextParser_ShouldReturnATxtParserForATxtFile()
+        public void GetContextParser_ReturnsATxtParserForATxtFile()
         {
-            string originalFileName = "simple.txt";
+            string fileName = "simple.txt";
 
             string filePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "../../../../Files/" + originalFileName
+                "../../../TestFiles/" + fileName
             );
 
             Parser parser = AutoDetectParser.GetContextParser(filePath);
@@ -70,13 +70,13 @@ namespace Tests
         }
 
         [TestMethod]
-        public void GetContextParser_ShouldReturnPDFParserForPDFFile()
+        public void GetContextParser_ReturnsPDFParserForPDFFile()
         {
-            string originalFileName = "simple.pdf";
+            string fileName = "simple.pdf";
 
             string filePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "../../../../Files/" + originalFileName
+                "../../../TestFiles/" + fileName
            );
 
             Parser parser = AutoDetectParser.GetContextParser(filePath);
@@ -85,20 +85,14 @@ namespace Tests
         }
 
         [TestMethod]
-        public void GetContextParser_ShouldReturnDocParserForDocFile()
+        public void GetContextParser_ReturnsDocParserForDocFile()
         {
-            string originalFileName = "simple.doc";
+            string fileName = "simple.doc";
 
             string filePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "../../../../Files/" + originalFileName
+                "../../../TestFiles/" + fileName
            );
-
-            // string result = new Parser(filePath).AutoDetectParse();
-            // Assert.AreEqual(
-            //     "  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ac faucibus odio. \n",
-            //     result
-            // );
 
             Parser parser = AutoDetectParser.GetContextParser(filePath);
 
@@ -106,54 +100,50 @@ namespace Tests
         }
 
         [TestMethod]
-        public void GetContextParser_ShouldReturnDocxParserForDocxFile()
+        public void GetContextParser_ReturnsDocxParserForDocxFile()
         {
-            string originalFileName = "simple.docx";
+            string fileName = "simple.docx";
 
             string filePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "../../../../Files/" + originalFileName
+                "../../../TestFiles/" + fileName
            );
 
-            // string result = new Parser(filePath).AutoDetectParse();
-
-            // Assert.AreEqual("book cook chef\n", result);
 
             Parser parser = AutoDetectParser.GetContextParser(filePath);
 
             Assert.IsInstanceOfType(parser, typeof(DocParser));
         }
 
-        // [TestMethod]
-        // public void GetContextParser_ShouldReturnPresentationParserForPptFile()
-        // {
-        //     string originalFileName = "simple.ppt";
+        [TestMethod]
+        public void GetContextParser_ReturnsPresentationParserForPptFile()
+        {
+            string fileName = "simple.ppt";
 
-        //     string filePath = Path.Combine(
-        //         Directory.GetCurrentDirectory(),
-        //         "../../../../Files/" + originalFileName
-        //    );
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../TestFiles/" + fileName
+           );
 
-        //     Parser parser = AutoDetectParser.GetContextParser(filePath);
+            Parser parser = AutoDetectParser.GetContextParser(filePath);
 
-        //     Assert.IsInstanceOfType(parser, typeof(PresentationParser));
-        // }
+            Assert.IsInstanceOfType(parser, typeof(PresentationParser));
+        }
 
-        // [TestMethod]
-        // public void GetContextParser_ShouldReturnPresentationParserForPptsFile()
+        [TestMethod]
+        public void GetContextParser_ReturnsPresentationParserForPptxFile()
+        {
+            string fileName = "simple.pptx";
 
-        // {
-        //     string originalFileName = "simple.ppts";
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../TestFiles/" + fileName
+           );
 
-        //     string filePath = Path.Combine(
-        //         Directory.GetCurrentDirectory(),
-        //         "../../../../Files/" + originalFileName
-        //    );
+            Parser parser = AutoDetectParser.GetContextParser(filePath);
 
-        //     Parser parser = AutoDetectParser.GetContextParser(filePath);
-
-        //     Assert.IsInstanceOfType(parser, typeof(PresentationParser));
-        // }
+            Assert.IsInstanceOfType(parser, typeof(PresentationParser));
+        }
     }
 
 
@@ -161,13 +151,13 @@ namespace Tests
     public class TxtParserTests
     {
         [TestMethod]
-        public void Parse_ShouldReturnTheContentsOfFile()
+        public void Parse_ReturnsSemanticFileContentForTxt()
         {
-            string originalFileName = "simple.txt";
+            string fileName = "simple.txt";
 
             string filePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "../../../../Files/" + originalFileName
+                "../../../TestFiles/" + fileName
             );
 
             Parser parser = new TxtParser(filePath);
@@ -180,18 +170,162 @@ namespace Tests
     public class PDFParserTests
     {
         [TestMethod]
-        public void Parse_ShouldReturnTheContentsOfFile()
+        public void Parse_ReturnsSemanticFileContentForPDF()
         {
-            string originalFileName = "simple.pdf";
+            string fileName = "simple.pdf";
 
             string filePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "../../../../Files/" + originalFileName
+                "../../../TestFiles/" + fileName
             );
 
             Parser parser = new PDFParser(filePath);
 
             Assert.AreEqual("book cook chef", parser.Parse());
+        }
+    }
+
+    [TestClass]
+    public class XmlParserTests
+    {
+        [TestMethod]
+        public void Parse_ReturnsSemanticFileContentForXML()
+        {
+            string fileName = "simple.xml";
+
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../TestFiles/" + fileName
+            );
+
+            Parser parser = new XmlParser(filePath);
+
+            Assert.AreEqual("book cook chef", parser.Parse());
+        }
+    }
+
+    [TestClass]
+    public class HtmlParserTests
+    {
+        [TestMethod]
+        public void Parse_ReturnsSemanticFileContentForHtml()
+        {
+            string fileName = "simple.html";
+
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../TestFiles/" + fileName
+            );
+
+            Parser parser = new HtmlParser(filePath);
+
+            Assert.AreEqual("books a first nesting more nesting", parser.Parse());
+        }
+    }
+
+    [TestClass]
+    public class DocParserTests
+    {
+        [TestMethod]
+        public void Parse_ReturnsSemanticFileContentForDoc()
+        {
+            string fileName = "simple.doc";
+
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../TestFiles/" + fileName
+            );
+
+            Parser parser = new DocParser(filePath);
+
+            Assert.AreEqual(
+                "  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ac faucibus odio.\n",
+                parser.Parse()
+            );
+        }
+    }
+
+    [TestClass]
+    public class PresentationParserTests
+    {
+
+        [TestMethod]
+        public void Parse_ReturnsSemanticFileContentForPptx()
+        {
+            string fileName = "simple.pptx";
+
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../TestFiles/" + fileName
+            );
+
+            Parser parser = new PresentationParser(filePath);
+
+            Assert.AreEqual(
+                "Books Shelf doctor items ",
+                parser.Parse()
+            );
+        }
+
+        [TestMethod]
+        public void Parse_ReturnsSemanticFileContentForPpt()
+        {
+            string fileName = "simple.ppt";
+
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../TestFiles/" + fileName
+            );
+
+            Parser parser = new PresentationParser(filePath);
+
+            Assert.AreEqual(
+                "Lorem ipsum Lorem ipsum dolor sit amet, consectetur  ",
+                parser.Parse()
+            );
+        }
+    }
+
+    [TestClass]
+    public class SheetParserTests
+    {
+
+        [TestMethod]
+        public void Parse_ReturnsSemanticFileContentForXls()
+        {
+            string fileName = "simple.xls";
+
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../TestFiles/" + fileName
+            );
+
+            Parser parser = new SheetParser(filePath);
+
+            Assert.AreEqual(
+                "0 First Name Last Name Gender Country Age Date Id 1 Dulce Abril " +
+                "Female United States 32 15/10/2017 1562",
+                parser.Parse()
+            );
+        }
+
+        [TestMethod]
+        public void Parse_ReturnsSemanticFileContentForXlsx()
+        {
+            string fileName = "simple.xlsx";
+
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "../../../TestFiles/" + fileName
+            );
+
+            Parser parser = new SheetParser(filePath);
+
+            Assert.AreEqual(
+                "0 First Name Last Name Gender Country Age Date Id 1 Dulce Abril " +
+                "Female United States 32 15/10/2017 1562",
+                parser.Parse()
+            );
         }
     }
 }
