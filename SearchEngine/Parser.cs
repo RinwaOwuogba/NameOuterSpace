@@ -1,90 +1,325 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Linq;
 using System.Collections.Generic;
-using AngleSharp;
+using HtmlAgilityPack;
+using UglyToad.PdfPig;
+using UglyToad.PdfPig.Content;
+using Spire.Doc;
+using Spire.Presentation;
+using Spire.Xls;
+
 
 namespace SearchEngine
 {
-    public class Parser
+    /// <summary>
+    /// Class to automatically handle parsing of semantic text from files
+    /// </summary>
+    public class AutoDetectParser
     {
-        static async Task ReadHtml()
+        /// <summary>
+        /// Fetches an instance of the appropriate parser for the passed
+        /// file type
+        /// </summary>
+        /// <param name="filePath">Path of file to parse</param>
+        /// <returns>Instance of an appropriate parser </returns>
+        /// <exception cref="System.ArgumentException">This is thrown
+        /// when the specified file extension isn't among the allowed
+        /// extensions
+        /// </exception>
+        public static Parser GetContextParser(string filePath)
         {
-            var source = @"
-<!DOCTYPE html>
-<html lang=en>
-  <meta charset=utf-8>
-  <meta name=viewport content=""initial-scale=1, minimum-scale=1, width=device-width"">
-  <title>Error 404 (Not Found)!!1</title>
-  <style>
-    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* > body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right:205px}p{margin:11px 0 22px;overflow:hidden}ins{color:#777;text-decoration:none}a img{border:0}@media screen and (max-width:772px){body{background:none;margin-top:0;max-width:none;padding-right:0}}#logo{background:url(//www.google.com/images/errors/logo_sm_2.png) no-repeat}@media only screen and (min-resolution:192dpi){#logo{background:url(//www.google.com/images/errors/logo_sm_2_hr.png) no-repeat 0% 0%/100% 100%;-moz-border-image:url(//www.google.com/images/errors/logo_sm_2_hr.png) 0}}@media only screen and (-webkit-min-device-pixel-ratio:2){#logo{background:url(//www.google.com/images/errors/logo_sm_2_hr.png) no-repeat;-webkit-background-size:100% 100%}}#logo{display:inline-block;height:55px;width:150px}
-  </style>
-  <a href=//www.google.com/><span id=logo aria-label=Google></span></a>
-  <p><b>404.</b> <ins>That’s an error.</ins>
-  <p>The requested URL <code>/error</code> was not found on this server.  <ins>That’s all we know.</ins>";
+            string fileExtension = Path.GetExtension(filePath).ToLower();
 
-
-            string text = System.IO.File.ReadAllText(@"/home/bolarinwa/Programming/C#/SearchEngine/src/article.html");
-
-            // Display the file contents to the console. Variable text is a string.
-            // System.Console.WriteLine("Contents of WriteText.txt = {0}", text);
-
-            //Use the default configuration for AngleSharp
-            var config = Configuration.Default;
-
-            //Create a new context for evaluating webpages with the given config
-            var context = BrowsingContext.New(config);
-
-            //Just get the DOM representation
-            var document = await context.OpenAsync(req => req.Content(text));
-            // var document = await context.OpenAsync(req => req.Content(source));
-
-            // Serialize it back to the console
-            // Console.WriteLine(document.DocumentElement.TextContent);
-
-            var body = document.QuerySelector("body");
-
-            foreach (var element in body.QuerySelectorAll("script"))
+            switch (fileExtension)
             {
-                element.Remove();
+                case ".xml":
+                    return new XmlParser(filePath);
+                case ".html":
+                    return new HtmlParser(filePath);
+                case ".txt":
+                    return new TxtParser(filePath);
+                case ".pdf":
+                    return new PDFParser(filePath);
+                case ".doc":
+                case ".docx":
+                    return new DocParser(filePath);
+                case ".ppt":
+                case ".ppts":
+                    return new PresentationParser(filePath);
+                case ".xlx":
+                case ".xls":
+                    return new SheetParser(filePath);
+                default:
+                    throw new ArgumentException("Unrecognized file type");
             }
+        }
+    }
 
-            Console.WriteLine(body.TextContent);
+    /// <summary>
+    /// General class for all parsers to extract semantic text
+    /// from files  
+    /// </summary>
+    public abstract class Parser
+    {
+        // Path of file to extract text from
+        protected string filePath;
+
+        public Parser(string filePath)
+        {
+            this.filePath = filePath;
         }
 
-        static async Task ReadXML()
+        /// <summary>
+        /// Parses semantic text out of file
+        /// </summary>
+        /// <returns>Semantic text in file</returns>
+        public abstract string Parse();
+    }
+
+    /// <summary>
+    /// Class to parse text from .txt files
+    /// </summary>
+    public class TxtParser : Parser
+    {
+        public TxtParser(string filePath) : base(filePath) { }
+
+        public override string Parse()
         {
-            // Load the XML file from our project directory containing the purchase orders
-            var filename = "books.xml";
-            var currentDirectory = Directory.GetCurrentDirectory();
-            var booksFilepath = Path.Combine(currentDirectory, "../files/" + filename);
+            string content = File.ReadAllText(filePath);
+            return content;
+        }
+    }
 
-            XElement books = XElement.Load(booksFilepath);
-            IEnumerable<XNode> NodesList = books.DescendantNodes();
-            StringBuilder sb = new StringBuilder("", NodesList.Count());
+    /// <summary>
+    /// Class to parse semantic content out of .ppt and .ppts files
+    /// </summary>
+    public class PresentationParser : Parser
+    {
+        private Presentation pptDocument;
+        public PresentationParser(string filePath) : base(filePath)
+        {
+            pptDocument = openFile(filePath);
+        }
 
-            foreach (XNode element in NodesList)
+        private Presentation openFile(string path_to_file)
+        {
+            Presentation ppt = new Presentation();
+            ppt.LoadFromFile(path_to_file);
+            return ppt;
+        }
+        public override string Parse()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < pptDocument.Slides.Count; i++)
             {
-                if (element.NodeType == System.Xml.XmlNodeType.Text)
+                for (int j = 0; j < pptDocument.Slides[i].Shapes.Count; j++)
                 {
-                    sb.Append(element.ToString() + "\n");
+                    if (pptDocument.Slides[i].Shapes[j] is IAutoShape)
+                    {
+                        IAutoShape shape = pptDocument.Slides[i].Shapes[j] as IAutoShape;
+                        if (shape.TextFrame != null)
+                        {
+                            foreach (TextParagraph tp in shape.TextFrame.Paragraphs)
+                            {
+                                sb.Append(tp.Text + " ");
+                            }
+                        }
+                    }
                 }
             }
 
-            Console.WriteLine("sb: \n" + sb.ToString());
+            return sb.ToString();
+        }
+    }
+
+    /// <summary>
+    /// Class to parse semantic content out of an xml file
+    /// </summary>
+    public class XmlParser : Parser
+    {
+        public XmlParser(string filePath) : base(filePath) { }
+
+        public override string Parse()
+        {
+            XElement xmlElement = XElement.Load(this.filePath);
+            IEnumerable<XNode> NodesList = xmlElement.DescendantNodes();
+            StringBuilder sb = new StringBuilder("", NodesList.Count());
+
+            foreach (XNode node in NodesList)
+            {
+                if (node.NodeType == System.Xml.XmlNodeType.Text)
+                {
+                    sb.Append(node.ToString() + " ");
+                }
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+    }
+
+    /// <summary>
+    /// Class to parse semantic content out of an html file
+    /// </summary>
+    public class HtmlParser : Parser
+    {
+        public HtmlParser(string filePath) : base(filePath) { }
+
+        public override string Parse()
+        {
+            HtmlDocument htmlDoc = new HtmlDocument();
+            htmlDoc.Load(filePath);
+
+            var node = htmlDoc.DocumentNode.SelectSingleNode("//body");
+
+            StringBuilder sb = new StringBuilder("", node.Descendants().Count());
+
+            //             foreach (var element in body.QuerySelectorAll("script"))
+            //             {
+            //                 element.Remove();
+            //             }
+
+            foreach (var nNode in node.Descendants())
+            {
+                if (nNode.NodeType == HtmlNodeType.Element)
+                {
+                    sb.Append(nNode.GetDirectInnerText().Trim() + " ");
+                }
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+    }
+
+    /// <summary>
+    /// Class to parse semantic content out of a pdf file
+    /// </summary>
+    public class PDFParser : Parser
+    {
+        public PDFParser(string filePath) : base(filePath) { }
+
+        public override string Parse()
+        {
+            StringBuilder sb = new StringBuilder("", 10);
+
+            using (PdfDocument document = PdfDocument.Open(this.filePath))
+                foreach (Page page in document.GetPages())
+                {
+                    string pageText = page.Text;
+
+                    foreach (Word word in page.GetWords())
+                    {
+                        sb.Append(word.Text + " ");
+                    }
+                }
+
+            return sb.ToString().TrimEnd();
+        }
+    }
+
+    /// <summary>
+    /// Class to parse semantic content out of a .doc or .docx file
+    /// </summary>
+    public class DocParser : Parser
+    {
+        public DocParser(string filePath) : base(filePath) { }
+
+        public override string Parse()
+        {
+            Document document = new Document();
+            document.LoadFromFile(this.filePath);
+
+            // remove embedded spire evaluation warning from
+            // first line of text
+            IEnumerable<string> lines = Regex.Split(document.GetText(), "\r\n|\r|\n").Skip(1);
+
+            return string.Join(Environment.NewLine, lines.ToArray());
+        }
+    }
+
+
+    /// <summary>
+    /// Class to parse semantic text out of .xls and .xlsx files
+    /// </summary>
+    public class SheetParser : Parser
+    {
+        private Workbook workbook;
+
+        public SheetParser(string path_to_file) : base(path_to_file)
+        {
+            workbook = openFile(path_to_file);
+        }
+        private Workbook openFile(string path_to_file)
+        {
+            var wb = new Workbook();
+            wb.LoadFromFile(path_to_file);
+            return wb;
         }
 
+        public override string Parse()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                Worksheet sheet = workbook.Worksheets[i];
+                if (sheet.IsEmpty)
+                {
+                    continue;
+                }
+                sb.AppendLine(string.Format("The cell text in worksheet{0} are as follows:", i.ToString()));
+                GetSheetCellText(sb, sheet);
 
-        // static async Task Main(string[] args)
-        // // static void Main(string[] args)
-        // {
-        //     // Console.WriteLine("Hello World!");
-        //     // await ReadHtml();
-        //     await ReadXML();
+                sb.AppendLine(string.Format("The comment text in worksheet{0} are as follows:", i.ToString()));
+                GetSheetCommentText(sb, sheet);
 
-        // }
+                sb.AppendLine(string.Format("The shape text in worksheet{0} are as follows:", i.ToString()));
+                GetSheetShapeText(sb, sheet);
+
+                sb.AppendLine(string.Format("The textbox text in worksheet{0} are as follows:", i.ToString()));
+                for (int j = 0; j < sheet.TextBoxes.Count; j++)
+                {
+                    sb.AppendLine(sheet.TextBoxes[j].Text);
+                }
+
+            }
+            return sb.ToString();
+        }
+
+        private void GetSheetCellText(StringBuilder sb, Worksheet sheet)
+        {
+            foreach (var cell in sheet.Cells)
+            {
+                if (!string.IsNullOrEmpty(cell.Text) || !string.IsNullOrEmpty(cell.NumberText))
+                {
+                    sb.Append(cell.Text + " ");
+                    sb.Append(cell.NumberText + " ");
+                }
+
+            }
+            sb.AppendLine();
+        }
+
+        private void GetSheetShapeText(StringBuilder sb, Worksheet sheet)
+        {
+            foreach (var shp in sheet.PrstGeomShapes)
+            {
+                sb.AppendLine(shp.Text);
+            }
+        }
+
+        private static void GetSheetCommentText(StringBuilder sb, Worksheet sheet)
+        {
+            foreach (var commt in sheet.Comments)
+            {
+                sb.AppendLine(commt.Text);
+            }
+        }
+
     }
+
 }
+
+
