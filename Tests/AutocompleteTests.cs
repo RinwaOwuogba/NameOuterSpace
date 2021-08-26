@@ -22,13 +22,13 @@ namespace Tests
             words.Add("Hello");
             words.Add("Goodbye");
             words.Add("sucks");
+
             Autocomplete autocomplete = new Autocomplete(words);
 
-            // Assert.AreEqual(words, autocomplete.words);
             Assert.AreEqual(words, autocomplete.getWords());
         }
 
-
+        [TestMethod]
         public void TestAutoComplete()
         {
             List<string> words = new List<string>();
@@ -40,6 +40,7 @@ namespace Tests
             words.Add("sucks");
 
             Autocomplete autocomplete = new Autocomplete(words);
+
             var result = autocomplete.auto("by");
             Assert.AreEqual(new[] { "bye" }, result);
 
