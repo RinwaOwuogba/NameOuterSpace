@@ -16,9 +16,27 @@ namespace SearchEngine
         private ILiteCollection<WordDocument> invertedIndex;
         private ILiteCollection<FileDocument> documentCollection;
 
+        /// <summary>
+        ///     connection string for the db instance
+        /// </summary>
         private string connectionString;
+        /// <summary>
+        ///     file path to where the documents that will be indexed are stored
+        /// </summary>
         private string pathToRepository;
+        /// <summary>
+        ///     Path to stop words
+        /// </summary>
         private string pathToStopWords;
+
+        /// <summary>
+        ///      Initialises a connection to the db
+        ///      Creates the Relevant Collections in the Db if they do not yet exist
+        ///      Creates The relevant meta information if it does not already exist
+        /// </summary>
+        /// <param name="pathToRepo"> string path to repository where to be indexed files are stored</param>
+        /// <param name="connectionString"> optional string arguement that denotes the path the db should store the local db in</param>
+        /// <param name="pathToStopWords"> optional string argument, path to stop words file</param>
         public Engine(
             string pathToRepo,
             string connectionString = "database.db",
@@ -58,16 +76,29 @@ namespace SearchEngine
 
         
         }
-
+        
+        /// <summary>
+        ///     utility method that gets the stop from a file and loads into memory
+        /// </summary>
+        /// <param name="pathtostopwords"> string; file path to stopwords txt</param>
+        /// <returns> A List of stop words </returns>
         private List<string> loadStopWords(string pathtostopwords){
             var stopwords = new List<string>(System.IO.File.ReadAllLines(pathtostopwords));
             return stopwords;
         }
 
+        /// <summary>
+        ///     Gets meta info from the db
+        /// </summary>
+        /// <returns> A meta details Object that holds all the relevant config data</returns>
         public MetaDetails GetMetaInfo(){
             return metaCollection.FindById(1);
         }
 
+        /// <summary>
+        ///     updates the meta details in db to reflect the updated meta details object
+        /// </summary>
+        /// <param name="updatedmeta"> the meta details object with updated properties</param>
         public void UpdateMetaInfo(MetaDetails updatedmeta){
             var meta = metaCollection.FindById(1);
             meta.indexedDocumentCount = updatedmeta.indexedDocumentCount;
@@ -116,8 +147,8 @@ namespace SearchEngine
             return document.Id;
         }
         public void DeleteDocument(int id){
-            documentCollection.Delete(id);
             DeleteDocumentReferencesFromInvertedIndex(id);
+            documentCollection.Delete(id);
             var meta = GetMetaInfo();
             meta.indexedDocumentCount--;
             UpdateMetaInfo(meta);
@@ -128,8 +159,11 @@ namespace SearchEngine
         }
 
         public void DeleteDocumentReferencesFromInvertedIndex(int docId){
-            IEnumerable<WordDocument> relevantWordDocs = invertedIndex
-                                                        .Find(x => x.Documents.ContainsKey(docId));
+            IEnumerable<WordDocument> allWordDocs = invertedIndex
+                                                        .FindAll();
+
+            var relevantWordDocs = allWordDocs.Where(x => x.Documents.ContainsKey(docId));
+            
             foreach(var worddoc in relevantWordDocs){
                 worddoc.RemoveDoc(docId);
             }
@@ -161,7 +195,7 @@ namespace SearchEngine
             return worddocs;
         }
         
-        public void AddWordDocument(int docId, Dictionary<string,int> words){
+        public void AddWordDocument(int docId, Dictionary<string,long> words){
             var additions = new List<WordDocument>();
 
             invertedIndex.EnsureIndex("Word");
@@ -181,9 +215,16 @@ namespace SearchEngine
                 additions.Add(worddoc);
 
             }
+            foreach (var y in additions)
+            {
+                Console.Write(y);
+            }
             invertedIndex.Upsert(additions);
         }
 
+        public int countInvertedIndex(){
+            return invertedIndex.Count(Query.All("Word"));
+        }
         public void DeleteWord(string word){
             invertedIndex.Delete(GetWordDocument(word).Id);
 
@@ -192,6 +233,7 @@ namespace SearchEngine
             db.DropCollection(invertedIndex.Name);
             db.DropCollection(metaCollection.Name);
             db.DropCollection(documentCollection.Name);
+            
         }
     }
 }

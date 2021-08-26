@@ -34,23 +34,41 @@ namespace SearchEngine{
 
     public class WordDocument{
         private string word;
-        public Dictionary<int, int> documents;
+        private Dictionary<int, long> documents;
 
-        public int Id{ get; set; }
-        public string Word { get => word;}
-        public Dictionary<int, int> Documents { get => documents; }
+        public ObjectId Id{ get; set; }
+        public string Word { get => word; private set => word = value.ToLower(); }
+        public Dictionary<int, long> Documents { get => documents; private set => documents = value; }
 
         public WordDocument(string word){
+            Id = ObjectId.NewObjectId();
             this.word = word.ToLower();
-            this.documents = new Dictionary<int, int>();
+            this.Documents = new Dictionary<int, long>();
+        }
+        
+        [BsonCtor]
+        public WordDocument(ObjectId _id, string word, Dictionary<int, long> doc){
+            Id = _id;
+            this.Word = word;
+            this.Documents = doc;
         }
 
         public void RemoveDoc(int docId){
             Documents.Remove(docId);
         }
 
-        public void AddDoc(int docId, int occurences){
+        public void AddDoc(int docId, long occurences){
             Documents.Add(docId, occurences);
+        }
+
+        public override string ToString()
+        {
+            string output = "";
+            output += Word + "\n";
+            foreach(var x in Documents.Keys){
+                output += "docid: " + x + " occurence:" + Documents[x] + "\n";
+            }
+            return output + "\n";
         }
 
     }
