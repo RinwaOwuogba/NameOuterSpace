@@ -11,20 +11,23 @@ namespace Tests
     {
         Engine engine;
 
-        [TestInitialize]    
-        public void SetUp(){
-            engine = new Engine("../../../TestFiles/", pathToStopWords: "../../../stopwords.txt", 
-            connectionString:"../../../database.db");
+        [TestInitialize]
+        public void SetUp()
+        {
+            engine = new Engine("../../../TestFiles/", pathToStopWords: "../../../stopwords.txt",
+            connectionString: "../../../database.db");
         }
 
         [TestCleanup]
-        public void TearDown(){
+        public void TearDown()
+        {
             File.Delete("../../../database.db");
             File.Delete("../../../database-log.db");
         }
 
         [TestMethod]
-        public void Test_MetaInfoCreatedOnInit(){
+        public void Test_MetaInfoCreatedOnInit()
+        {
             var meta = engine.GetMetaInfo();
 
             Assert.IsInstanceOfType(meta, typeof(MetaDetails));
@@ -55,7 +58,8 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Test_Engine_AddDocument_addsDocumentToDB(){
+        public void Test_Engine_AddDocument_addsDocumentToDB()
+        {
             var filename = "simple.html";
             var soon_to_be_outdatedmeta = engine.GetMetaInfo();
 
@@ -70,7 +74,8 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Test_Engine_DeleteDocumentByID_actuallyDeletesDocFromDB(){
+        public void Test_Engine_DeleteDocumentByID_actuallyDeletesDocFromDB()
+        {
             var filename1 = "simple.html";
             var filename2 = "simple.ppt";
             var docid1 = engine.AddDocument(filename1);
@@ -83,7 +88,8 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Test_Engine_DeleteDocumentByFilename_actuallyDeletesDocFromDB(){
+        public void Test_Engine_DeleteDocumentByFilename_actuallyDeletesDocFromDB()
+        {
             var filename1 = "simple.html";
             var filename2 = "simple.ppt";
             var docid1 = engine.AddDocument(filename1);
@@ -93,10 +99,11 @@ namespace Tests
 
             Assert.AreEqual(1, engine.GetMetaInfo().indexedDocumentCount);
             Assert.IsNull(engine.GetDocument(filename1));
-        }        
+        }
 
         [TestMethod]
-        public void Test_Engine_GetDocument_ByIDWorks(){
+        public void Test_Engine_GetDocument_ByIDWorks()
+        {
             var filename1 = "simple.html";
             var filename2 = "simple.ppt";
             var docid1 = engine.AddDocument(filename1);
@@ -123,7 +130,8 @@ namespace Tests
         // }
 
         [TestMethod]
-        public void Test_Engine_GetDocument_ByFileNameWorks(){
+        public void Test_Engine_GetDocument_ByFileNameWorks()
+        {
             var filename1 = "simple.html";
             var filename2 = "simple.ppt";
             var docid1 = engine.AddDocument(filename1);
@@ -136,7 +144,8 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Test_Engine_GetAllDocuments_WorksASExpected(){
+        public void Test_Engine_GetAllDocuments_WorksASExpected()
+        {
             var filename1 = "simple.html";
             var filename2 = "simple.ppt";
             var filename3 = "simple.xml";
@@ -151,7 +160,8 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Test_Engine_GetDocumentsByIDS_WorksAsExpected(){
+        public void Test_Engine_GetDocumentsByIDS_WorksAsExpected()
+        {
             var filename1 = "simple.html";
             var filename2 = "simple.ppt";
             var filename3 = "simple.xml";
@@ -159,13 +169,14 @@ namespace Tests
             engine.AddDocument(filename2);
             engine.AddDocument(filename3);
 
-            var docs = engine.GetDocuments(new List<int>(){1,2});
+            var docs = engine.GetDocuments(new List<int>() { 1, 2 });
 
             Assert.AreEqual(2, docs.Count);
         }
 
         [TestMethod]
-        public void Test_Engine_GetDocumentsByFilenames_WorksAsExpected(){
+        public void Test_Engine_GetDocumentsByFilenames_WorksAsExpected()
+        {
             var filename1 = "simple.html";
             var filename2 = "simple.ppt";
             var filename3 = "simple.xml";
@@ -173,13 +184,14 @@ namespace Tests
             engine.AddDocument(filename2);
             engine.AddDocument(filename3);
 
-            var docs = engine.GetDocuments(new List<string>(){filename3, filename2});
+            var docs = engine.GetDocuments(new List<string>() { filename3, filename2 });
 
             Assert.AreEqual(2, docs.Count);
         }
 
         [TestMethod]
-        public void Test_Engine_AddWordDocument_worksWellOnNewWord(){
+        public void Test_Engine_AddWordDocument_worksWellOnNewWord()
+        {
             var filename1 = "simple.html";
             var filename2 = "simple.ppt";
             var docid1 = engine.AddDocument(filename1);
@@ -188,11 +200,11 @@ namespace Tests
             var word1 = "dog";
             var word2 = "cat";
 
-            var doc1_forwardIndex = new Dictionary<string, int>();
+            var doc1_forwardIndex = new Dictionary<string, long>();
             doc1_forwardIndex.Add(word1, 3);
             doc1_forwardIndex.Add(word2, 2);
 
-            var doc2_forwardIndex = new Dictionary<string, int>();
+            var doc2_forwardIndex = new Dictionary<string, long>();
             doc2_forwardIndex.Add(word2, 2);
 
             engine.AddWordDocument(docid1, doc1_forwardIndex);
@@ -204,7 +216,8 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Test_Engine_GetAllWords_fetchesALLWordsInIndex(){
+        public void Test_Engine_GetAllWords_fetchesALLWordsInIndex()
+        {
             var filename1 = "simple.html";
             var filename2 = "simple.ppt";
             var docid1 = engine.AddDocument(filename1);
@@ -214,12 +227,12 @@ namespace Tests
             var word2 = "cat";
             var word3 = "chair";
 
-            var doc1_forwardIndex = new Dictionary<string, int>();
+            var doc1_forwardIndex = new Dictionary<string, long>();
             doc1_forwardIndex.Add(word1, 3);
             doc1_forwardIndex.Add(word2, 2);
             doc1_forwardIndex.Add(word3, 1);
 
-            var doc2_forwardIndex = new Dictionary<string, int>();
+            var doc2_forwardIndex = new Dictionary<string, long>();
             doc2_forwardIndex.Add(word2, 2);
             doc2_forwardIndex.Add(word3, 115);
 
@@ -232,10 +245,11 @@ namespace Tests
             CollectionAssert.Contains(words, word1);
         }
 
-        public void Test_Engine_DeleteWordDocument_works(){
-            
+        public void Test_Engine_DeleteWordDocument_works()
+        {
+
         }
 
     }
-    
+
 }

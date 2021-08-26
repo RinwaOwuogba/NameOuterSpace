@@ -5,15 +5,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SearchEngine;
 
 
-namespace Tests{
+namespace Tests
+{
 
-     [TestClass]
-    public class AutocompleteTest{
+    [TestClass]
+    public class AutocompleteTest
+    {
 
         [TestMethod]
         public void TestAutocompleteInit()
         {
-            List<string> words;
+            List<string> words = new List<string>();
+
             words.Add("Bye");
             words.Add("Good");
             words.Add("Hello");
@@ -21,21 +24,24 @@ namespace Tests{
             words.Add("sucks");
             Autocomplete autocomplete = new Autocomplete(words);
 
+            // Assert.AreEqual(words, autocomplete.words);
             Assert.AreEqual(words, autocomplete.getWords());
         }
 
 
         public void TestAutoComplete()
         {
-            List<string> words;
+            List<string> words = new List<string>();
+
             words.Add("Bye");
             words.Add("Good");
             words.Add("Hello");
             words.Add("Goodbye");
             words.Add("sucks");
+
             Autocomplete autocomplete = new Autocomplete(words);
             var result = autocomplete.auto("by");
-            Assert.AreEqual(["bye"], result);
+            Assert.AreEqual(new[] { "bye" }, result);
 
         }
     }
