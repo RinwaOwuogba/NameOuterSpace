@@ -184,7 +184,6 @@ namespace SearchEngine
         public WordDocument GetWordDocument(string word){
             invertedIndex.EnsureIndex("Word");
             var worddoc = invertedIndex.FindOne(Query.EQ("Word", word.ToLower()));
-            Console.WriteLine("lets see if it found" + worddoc.Word + worddoc.Id);
             return worddoc;
         }
 
@@ -196,7 +195,7 @@ namespace SearchEngine
             return worddocs;
         }
         
-        public void AddWordDocument(int docId, Dictionary<string,int> words){
+        public void AddWordDocument(int docId, Dictionary<string,long> words){
             var additions = new List<WordDocument>();
 
             invertedIndex.EnsureIndex("Word");

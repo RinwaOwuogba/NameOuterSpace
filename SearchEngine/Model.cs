@@ -34,20 +34,20 @@ namespace SearchEngine{
 
     public class WordDocument{
         private string word;
-        private Dictionary<int, int> documents;
+        private Dictionary<int, long> documents;
 
         public ObjectId Id{ get; set; }
         public string Word { get => word; private set => word = value.ToLower(); }
-        public Dictionary<int, int> Documents { get => documents; private set => documents = value; }
+        public Dictionary<int, long> Documents { get => documents; private set => documents = value; }
 
         public WordDocument(string word){
             Id = ObjectId.NewObjectId();
             this.word = word.ToLower();
-            this.Documents = new Dictionary<int, int>();
+            this.Documents = new Dictionary<int, long>();
         }
         
         [BsonCtor]
-        public WordDocument(ObjectId _id, string word, Dictionary<int, int> doc){
+        public WordDocument(ObjectId _id, string word, Dictionary<int, long> doc){
             Id = _id;
             this.Word = word;
             this.Documents = doc;
@@ -57,7 +57,7 @@ namespace SearchEngine{
             Documents.Remove(docId);
         }
 
-        public void AddDoc(int docId, int occurences){
+        public void AddDoc(int docId, long occurences){
             Documents.Add(docId, occurences);
         }
 

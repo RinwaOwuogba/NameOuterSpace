@@ -187,6 +187,31 @@ namespace Tests
 
             var word1 = "dog";
             var word2 = "cat";
+
+            var doc1_forwardIndex = new Dictionary<string, int>();
+            doc1_forwardIndex.Add(word1, 3);
+            doc1_forwardIndex.Add(word2, 2);
+
+            var doc2_forwardIndex = new Dictionary<string, int>();
+            doc2_forwardIndex.Add(word2, 2);
+
+            engine.AddWordDocument(docid1, doc1_forwardIndex);
+            engine.AddWordDocument(docid2, doc2_forwardIndex);
+
+            var worddoc = engine.GetWordDocument(word2);
+
+            Assert.AreEqual(worddoc.Documents.Count, 2);
+        }
+
+        [TestMethod]
+        public void Test_Engine_GetAllWords_fetchesALLWordsInIndex(){
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var docid1 = engine.AddDocument(filename1);
+            var docid2 = engine.AddDocument(filename2);
+
+            var word1 = "dog";
+            var word2 = "cat";
             var word3 = "chair";
 
             var doc1_forwardIndex = new Dictionary<string, int>();
@@ -202,16 +227,13 @@ namespace Tests
             engine.AddWordDocument(docid2, doc2_forwardIndex);
 
             var words = engine.GetAllWords();
-            var worddoc = engine.GetWordDocument(word2);
 
             Assert.AreEqual(words.Count, 3);
             CollectionAssert.Contains(words, word1);
-            Assert.AreEqual(worddoc.Documents.Count, 2);
         }
 
-        [TestMethod]
-        public void Test_Engine_GetAllWords_fetchesALLWordsInIndex(){
-
+        public void Test_Engine_DeleteWordDocument_works(){
+            
         }
 
     }
