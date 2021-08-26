@@ -170,9 +170,6 @@ namespace SearchEngine
             invertedIndex.Update(relevantWordDocs);
         }
        
-        public void UpdateDocumentName(string newFilename){
-
-        }
 
         public List<string> GetAllWords(){
             invertedIndex.EnsureIndex("Word");
@@ -214,10 +211,6 @@ namespace SearchEngine
                 }
                 additions.Add(worddoc);
 
-            }
-            foreach (var y in additions)
-            {
-                Console.Write(y);
             }
             invertedIndex.Upsert(additions);
         }

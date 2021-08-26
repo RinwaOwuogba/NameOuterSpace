@@ -245,11 +245,79 @@ namespace Tests
             CollectionAssert.Contains(words, word1);
         }
 
+        [TestMethod]
+
         public void Test_Engine_DeleteWordDocument_works()
         {
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var docid1 = engine.AddDocument(filename1);
+            var docid2 = engine.AddDocument(filename2);
 
+            var word1 = "dog";
+            var word2 = "cat";
+            var word3 = "chair";
+
+            var doc1_forwardIndex = new Dictionary<string, long>();
+            doc1_forwardIndex.Add(word1, 3);
+            doc1_forwardIndex.Add(word2, 2);
+            doc1_forwardIndex.Add(word3, 1);
+
+            var doc2_forwardIndex = new Dictionary<string, long>();
+            doc2_forwardIndex.Add(word2, 2);
+            doc2_forwardIndex.Add(word3, 115);
+
+            engine.AddWordDocument(docid1, doc1_forwardIndex);
+            engine.AddWordDocument(docid2, doc2_forwardIndex);
+
+            engine.DeleteWord(word1);
+            var deletedword = engine.GetWordDocument(word1);
+
+            var words = engine.GetAllWords();
+
+            Assert.IsNull(deletedword);
+            Assert.AreEqual(words.Count, 2);
+            CollectionAssert.DoesNotContain(words, word1);
+            
         }
 
+        [TestMethod]
+        public void Test_Engine_DeleteDocumentReferencesFromInvertedIndex_works(){
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var docid1 = engine.AddDocument(filename1);
+            var docid2 = engine.AddDocument(filename2);
+
+            var word1 = "dog";
+            var word2 = "cat";
+            var word3 = "chair";
+
+            var doc1_forwardIndex = new Dictionary<string, long>();
+            doc1_forwardIndex.Add(word1, 3);
+            doc1_forwardIndex.Add(word2, 2);
+            doc1_forwardIndex.Add(word3, 1);
+
+            var doc2_forwardIndex = new Dictionary<string, long>();
+            doc2_forwardIndex.Add(word2, 2);
+            doc2_forwardIndex.Add(word3, 115);
+
+            engine.AddWordDocument(docid1, doc1_forwardIndex);
+            engine.AddWordDocument(docid2, doc2_forwardIndex);
+
+            engine.DeleteDocumentReferencesFromInvertedIndex(docid1);
+
+            var worddocs = engine.GetWordDocuments(new List<string>(){word1, word2});
+
+            Assert.IsTrue(worddocs[0].Documents.ContainsKey(docid1));
+            Assert.IsTrue(worddocs[1].Documents.ContainsKey(docid1));
+            
+
+
+
+            
+            
+
+        }
     }
 
 }
