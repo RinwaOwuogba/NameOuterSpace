@@ -9,13 +9,16 @@ namespace Tests{
 
     public class TestCollectionModels
     {
-        [DataRow("test.txt")]
-        [DataRow("test.pdf")]
-        [DataRow("test.xlsx")]
-        [DataRow("test.docx")]
-        [DataRow("test.html")]
-        [DataRow("test.pptx")]
-        [DataRow("test.xml")]
+        [DataRow("simple.txt")]
+        [DataRow("simple.pdf")]
+        [DataRow("simple.xlsx")]
+        [DataRow("simple.xls")]
+        [DataRow("simple.docx")]
+        [DataRow("simple.doc")]
+        [DataRow("simple.html")]
+        [DataRow("simple.pptx")]
+        [DataRow("simple.ppt")]
+        [DataRow("simple.xml")]
         [DataTestMethod]
         public void Test_FileDocument_CalculateMD5Hash_WorksOnSupportedFiletypes(string filename)
         {
@@ -31,7 +34,7 @@ namespace Tests{
         [TestMethod]
         public void Test_FileDocument_CalculateMD5Hash_HashChangesIfFileContentChanges(){
             var pathToRepo = "../../../TestFiles/";
-            var filename = "test.txt";
+            var filename = "simple.txt";
             string initialhash;
             string changedhash;
 

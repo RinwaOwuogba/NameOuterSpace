@@ -19,11 +19,6 @@ namespace Tests
 
         [TestCleanup]
         public void TearDown(){
-            engine.Kill();
-        }
-
-        [ClassCleanup]
-        public static void TearDownClass(){
             File.Delete("../../../database.db");
             File.Delete("../../../database-log.db");
         }
@@ -59,7 +54,165 @@ namespace Tests
                                          meta.repositoryPath, meta.stopWords));
         }
 
-        // public void Test_Engine
+        [TestMethod]
+        public void Test_Engine_AddDocument_addsDocumentToDB(){
+            var filename = "simple.html";
+            var soon_to_be_outdatedmeta = engine.GetMetaInfo();
+
+            var docid = engine.AddDocument(filename);
+
+            var docinDb = engine.GetDocument(docid);
+
+            Assert.AreEqual(docid, 1);
+            Assert.AreEqual(filename, docinDb.Filename);
+            Assert.AreEqual(soon_to_be_outdatedmeta.indexedDocumentCount + 1,
+                            engine.GetMetaInfo().indexedDocumentCount);
+        }
+
+        [TestMethod]
+        public void Test_Engine_DeleteDocumentByID_actuallyDeletesDocFromDB(){
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var docid1 = engine.AddDocument(filename1);
+            var docid2 = engine.AddDocument(filename2);
+
+            engine.DeleteDocument(docid1);
+
+            Assert.AreEqual(1, engine.GetMetaInfo().indexedDocumentCount);
+            Assert.IsNull(engine.GetDocument(docid1));
+        }
+
+        [TestMethod]
+        public void Test_Engine_DeleteDocumentByFilename_actuallyDeletesDocFromDB(){
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var docid1 = engine.AddDocument(filename1);
+            var docid2 = engine.AddDocument(filename2);
+
+            engine.DeleteDocument(filename1);
+
+            Assert.AreEqual(1, engine.GetMetaInfo().indexedDocumentCount);
+            Assert.IsNull(engine.GetDocument(filename1));
+        }        
+
+        [TestMethod]
+        public void Test_Engine_GetDocument_ByIDWorks(){
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var docid1 = engine.AddDocument(filename1);
+            var docid2 = engine.AddDocument(filename2);
+
+            var doc = engine.GetDocument(docid2);
+
+            Assert.AreEqual(doc.Id, docid2);
+            Assert.AreEqual(doc.Filename, filename2);
+        }
+
+        // [TestMethod]
+
+        // public void Test_Engine_GetDocument_ByID_FailsWithBadID(){
+        //     var filename1 = "simple.html";
+        //     var filename2 = "simple.ppt";
+        //     var docid1 = engine.AddDocument(filename1);
+        //     var docid2 = engine.AddDocument(filename2);
+
+        //     var doc = engine.GetDocument(1000);
+
+        //     Assert.AreEqual(doc.Id, docid2);
+        //     Assert.AreEqual(doc.Filename, filename2);
+        // }
+
+        [TestMethod]
+        public void Test_Engine_GetDocument_ByFileNameWorks(){
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var docid1 = engine.AddDocument(filename1);
+            var docid2 = engine.AddDocument(filename2);
+
+            var doc = engine.GetDocument(filename1);
+
+            Assert.AreEqual(doc.Id, docid1);
+            Assert.AreEqual(doc.Filename, filename1);
+        }
+
+        [TestMethod]
+        public void Test_Engine_GetAllDocuments_WorksASExpected(){
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var filename3 = "simple.xml";
+            engine.AddDocument(filename1);
+            engine.AddDocument(filename2);
+            engine.AddDocument(filename3);
+
+            var docs = engine.GetAllDocuments();
+
+            Assert.AreEqual(3, docs.Count);
+            Assert.IsInstanceOfType(docs[0], typeof(FileDocument));
+        }
+
+        [TestMethod]
+        public void Test_Engine_GetDocumentsByIDS_WorksAsExpected(){
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var filename3 = "simple.xml";
+            engine.AddDocument(filename1);
+            engine.AddDocument(filename2);
+            engine.AddDocument(filename3);
+
+            var docs = engine.GetDocuments(new List<int>(){1,2});
+
+            Assert.AreEqual(2, docs.Count);
+        }
+
+        [TestMethod]
+        public void Test_Engine_GetDocumentsByFilenames_WorksAsExpected(){
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var filename3 = "simple.xml";
+            engine.AddDocument(filename1);
+            engine.AddDocument(filename2);
+            engine.AddDocument(filename3);
+
+            var docs = engine.GetDocuments(new List<string>(){filename3, filename2});
+
+            Assert.AreEqual(2, docs.Count);
+        }
+
+        [TestMethod]
+        public void Test_Engine_AddWordDocument_worksWellOnNewWord(){
+            var filename1 = "simple.html";
+            var filename2 = "simple.ppt";
+            var docid1 = engine.AddDocument(filename1);
+            var docid2 = engine.AddDocument(filename2);
+
+            var word1 = "dog";
+            var word2 = "cat";
+            var word3 = "chair";
+
+            var doc1_forwardIndex = new Dictionary<string, int>();
+            doc1_forwardIndex.Add(word1, 3);
+            doc1_forwardIndex.Add(word2, 2);
+            doc1_forwardIndex.Add(word3, 1);
+
+            var doc2_forwardIndex = new Dictionary<string, int>();
+            doc2_forwardIndex.Add(word2, 2);
+            doc2_forwardIndex.Add(word3, 115);
+
+            engine.AddWordDocument(docid1, doc1_forwardIndex);
+            engine.AddWordDocument(docid2, doc2_forwardIndex);
+
+            var words = engine.GetAllWords();
+            var worddoc = engine.GetWordDocument(word2);
+
+            Assert.AreEqual(words.Count, 3);
+            CollectionAssert.Contains(words, word1);
+            Assert.AreEqual(worddoc.Documents.Count, 2);
+        }
+
+        [TestMethod]
+        public void Test_Engine_GetAllWords_fetchesALLWordsInIndex(){
+
+        }
 
     }
     

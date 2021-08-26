@@ -17,7 +17,7 @@ namespace Tests
 
             string currentDirectory = Directory.GetCurrentDirectory();
 
-            string filePath = Path.Combine(currentDirectory, "../../../../Files/" + originalFileName);
+            string filePath = Path.Combine(currentDirectory, "../../../TestFiles/" + originalFileName);
             string[] stopWords = { "a" };
 
             Dictionary<string, long> reverseIndex = new Indexer(filePath, stopWords).Index();
