@@ -141,6 +141,10 @@ namespace SearchEngine
             }
         }
 
+        public List<string> getWords(){
+        return this.words;
+        }
+
 
         //this is the main function
         //it takes a string which might be a prefix or a word
