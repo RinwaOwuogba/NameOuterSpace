@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 namespace SearchEngine{
     //This is the trie class for a creating a trie tree
     public class trie{
-        private node root;
+        public node root;
 
         //The class in initialized by creating a root node which is usually an empty string.
         public trie(){
@@ -22,12 +23,13 @@ namespace SearchEngine{
         //and we go down the tree by checking the children of the current node
         //if the children is null we add the character there, if it is not then we move to the next one.
         //and we repeat this till the loop is complete
-        public void insert (String word){
+        public void insert (string word){
             node curr = root;
-            for (int i = 0; i < word.length(); i++){
-                char c = word.charAt(i);
+            for (int i = 0; i < word.Length; i++){
+                char c = word[i];
+                node temp = new node(c);
                 if(curr.children[c -'a'] == null){
-                    curr.children[c - 'a'] = c;
+                    curr.children[c - 'a'] = temp;
                 }
                 curr = curr.children[c - 'a'];
             }
@@ -50,10 +52,10 @@ namespace SearchEngine{
         }
 
         //this is the get node function it checks if a word is in the trie tree
-        private node getNode (string word){
+        public node getNode (string word){
             node curr = root;
-            for (int i = 0; i < word.length(); i++){
-                char c = word.charAt(i);
+            for (int i = 0; i < word.Length; i++){
+                char c = word[i];
                 if(curr.children[c - 'a'] == null){
                     return null;
                 }
@@ -67,10 +69,10 @@ namespace SearchEngine{
         //the isWord method basically checks if the node we are passing is a leaf node
         //if it is then we add it to the List
         //We use 26 in the loop here because each node in the trie can have up to 26 children
-        public void addAllwords(node node, String word, List<string> words){
+        public void addAllwords(node node, string word, List<string> words){
 
             if(node.isWord == true){
-                words.add(word);
+                words.Add(word);
             }
 
             for (int i = 0; i < 26; i++)
@@ -87,7 +89,7 @@ namespace SearchEngine{
 
 
         //this is the class for creating nodes for the trie tree
-        class node{
+        public class node{
             public char c;
             public bool isWord;
             public node[] children;
@@ -105,14 +107,14 @@ namespace SearchEngine{
 
     //The autocomplete class
     public class Autocomplete{
-        public List<T> words;
-
+        public List<string> words;
+        public List<string> result;
         public trie WordTree;
 
         //It is initialized by passing a List of strings to the constructor
         //A trie named WordTree is created on initialization
         //words from string List are also added to the WordTree at initialization
-        public Autocomplete(List<T> args){
+        public Autocomplete(List<string> args){
             this.words = args;
             this.WordTree = new trie();
             for (int i = 0; i < this.words.Count; i++) {
@@ -126,14 +128,16 @@ namespace SearchEngine{
         //using the trie methods created above it generates a list of words
         //the list of words is converting into a string array which is the return value
         public string[] auto(string args){
-            List<string> result;
             try{
-            if(this.WordTree.startWith(args) != null){
+                if(this.WordTree.startWith(args) != null){
                     var node = WordTree.startWith(args);
                     this.WordTree.addAllwords(node, args, result);
 
                     string[] myWords = result.ToArray();
                     return myWords;
+                }
+                else{
+                    return new[] {"error", "error"};
                 }
             }
             catch{
