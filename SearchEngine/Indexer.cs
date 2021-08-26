@@ -30,9 +30,9 @@ namespace SearchEngine
         /// <summary>
         /// Stop words to skip in reverse index
         /// </summary>
-        private string[] stopWords;
+        private Dictionary<string, Boolean> stopWords;
 
-        public Indexer(string filePath, string[] stopWords)
+        public Indexer(string filePath, Dictionary<string, Boolean> stopWords)
         {
             this.fileName = Path.GetFileNameWithoutExtension(filePath);
             this.filePath = filePath;
@@ -58,7 +58,7 @@ namespace SearchEngine
         /// <param name="text">Text to index</param>
         /// <param name="stopWords">Stop words to remove from index</param>
         /// <returns>Dictionary containing string forward index</returns>
-        public static Dictionary<string, long> IndexText(string text, string[] stopWords)
+        public static Dictionary<string, long> IndexText(string text, Dictionary<string, Boolean> stopWords)
         {
             // create tokens from text string
             EnglishRuleBasedTokenizer tokenizer = new EnglishRuleBasedTokenizer(true);
@@ -79,10 +79,7 @@ namespace SearchEngine
             {
                 string word = tokens[i];
 
-                if (Array.Exists<string>(
-                    stopWords,
-                    stopWord => stopWord == word
-                ))
+                if (stopWords.ContainsKey(word))
                 {
                     continue;
                 }

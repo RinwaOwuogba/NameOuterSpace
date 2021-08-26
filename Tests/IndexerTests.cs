@@ -9,7 +9,6 @@ namespace Tests
     [TestClass]
     public class IndexerTests
     {
-
         [TestMethod]
         public void Indexer_IndexFile_ReturnsForwardIndexOfAFileContent()
         {
@@ -18,7 +17,9 @@ namespace Tests
             string currentDirectory = Directory.GetCurrentDirectory();
 
             string filePath = Path.Combine(currentDirectory, "../../../../Files/" + originalFileName);
-            string[] stopWords = { "a" };
+            Dictionary<string, Boolean> stopWords = new Dictionary<string, Boolean>();
+
+            stopWords.Add("a", true);
 
             Dictionary<string, long> forwardIndex = new Indexer(filePath, stopWords).IndexFile();
 
@@ -35,7 +36,9 @@ namespace Tests
         public void Indexer_IndexText_ReturnsForwardIndexOfAText()
         {
             string text = "booking flights online in china";
-            string[] stopWords = { "in" };
+            Dictionary<string, Boolean> stopWords = new Dictionary<string, Boolean>();
+
+            stopWords.Add("in", true);
 
             Dictionary<string, long> forwardIndex = Indexer.IndexText(text, stopWords);
 
