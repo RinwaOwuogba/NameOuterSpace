@@ -11,7 +11,7 @@ namespace Tests
     {
 
         [TestMethod]
-        public void Index_ShouldReturnAReverseIndexOfAFileContent()
+        public void Indexer_IndexFile_ReturnsForwardIndexOfAFileContent()
         {
             string originalFileName = "simple.html";
 
@@ -20,15 +20,36 @@ namespace Tests
             string filePath = Path.Combine(currentDirectory, "../../../TestFiles/" + originalFileName);
             string[] stopWords = { "a" };
 
-            Dictionary<string, long> reverseIndex = new Indexer(filePath, stopWords).Index();
+            Dictionary<string, long> forwardIndex = new Indexer(filePath, stopWords).IndexFile();
 
-            Assert.IsTrue(reverseIndex.ContainsKey("nest"));
-            Assert.IsTrue(reverseIndex.ContainsKey("first"));
-            Assert.IsTrue(reverseIndex.ContainsKey("more"));
+            Assert.IsTrue(forwardIndex.ContainsKey("nest"));
+            Assert.IsTrue(forwardIndex.ContainsKey("first"));
+            Assert.IsTrue(forwardIndex.ContainsKey("more"));
 
-            Assert.AreEqual(2, reverseIndex["nest"]);
-            Assert.AreEqual(1, reverseIndex["first"]);
-            Assert.AreEqual(1, reverseIndex["more"]);
+            Assert.AreEqual(2, forwardIndex["nest"]);
+            Assert.AreEqual(1, forwardIndex["first"]);
+            Assert.AreEqual(1, forwardIndex["more"]);
+        }
+
+        [TestMethod]
+        public void Indexer_IndexText_ReturnsForwardIndexOfAText()
+        {
+            string text = "booking flights online in china";
+            string[] stopWords = { "in" };
+
+            Dictionary<string, long> forwardIndex = Indexer.IndexText(text, stopWords);
+
+            Assert.IsTrue(forwardIndex.ContainsKey("book"));
+            Assert.IsTrue(forwardIndex.ContainsKey("flight"));
+            Assert.IsTrue(forwardIndex.ContainsKey("onlin"));
+            Assert.IsTrue(forwardIndex.ContainsKey("china"));
+
+            Assert.IsFalse(forwardIndex.ContainsKey("in"));
+
+            Assert.AreEqual(1, forwardIndex["book"]);
+            Assert.AreEqual(1, forwardIndex["flight"]);
+            Assert.AreEqual(1, forwardIndex["onlin"]);
+            Assert.AreEqual(1, forwardIndex["china"]);
         }
     }
 }

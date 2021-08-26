@@ -9,7 +9,7 @@ namespace Tests
     public class AutoDetectParserTests
     {
         [TestMethod]
-        public void GetContextParser_ThrowAnArgumentExceptionForAnInvalidFileType()
+        public void GetContextParser_ThrowsAnArgumentExceptionForAnInvalidFileType()
         {
             string fileName = "filedoesnotexist.xyz";
 
