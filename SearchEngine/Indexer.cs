@@ -28,7 +28,7 @@ namespace SearchEngine
         private string text;
 
         /// <summary>
-        /// Stop words to skip in reverse   index
+        /// Stop words to skip in reverse index
         /// </summary>
         private string[] stopWords;
 
@@ -39,15 +39,30 @@ namespace SearchEngine
             this.stopWords = stopWords;
         }
 
-        public Dictionary<string, long> Index()
+        /// <summary>
+        /// Generates the forward index for a file
+        /// </summary>
+        /// <returns>Dictionary containing file forward index</returns>
+        public Dictionary<string, long> IndexFile()
         {
             Parser parser = AutoDetectParser.GetContextParser(this.filePath);
 
             this.text = this.fileName + " " + parser.Parse();
 
+            return Indexer.IndexText(this.text, this.stopWords);
+        }
+
+        /// <summary>
+        /// Generates forward index of a string of text
+        /// </summary>
+        /// <param name="text">Text to index</param>
+        /// <param name="stopWords">Stop words to remove from index</param>
+        /// <returns>Dictionary containing string forward index</returns>
+        public static Dictionary<string, long> IndexText(string text, string[] stopWords)
+        {
             // create tokens from text string
             EnglishRuleBasedTokenizer tokenizer = new EnglishRuleBasedTokenizer(true);
-            string[] tokens = tokenizer.Tokenize(this.text);
+            string[] tokens = tokenizer.Tokenize(text);
 
             // stem tokens to root word e.g
             // happier -> happy
@@ -65,7 +80,7 @@ namespace SearchEngine
                 string word = tokens[i];
 
                 if (Array.Exists<string>(
-                    this.stopWords,
+                    stopWords,
                     stopWord => stopWord == word
                 ))
                 {
@@ -75,26 +90,25 @@ namespace SearchEngine
                 filteredWords.Add(word.ToLower());
             }
 
-            // create reverse index
-            Dictionary<string, long> reverseIndex =
+            // create forward index
+            Dictionary<string, long> forwardIndex =
                 new Dictionary<string, long>();
 
             foreach (string word in filteredWords)
             {
                 long numberOfOccurences = 0;
 
-                if (reverseIndex.TryGetValue(word, out numberOfOccurences))
+                if (forwardIndex.TryGetValue(word, out numberOfOccurences))
                 {
-                    reverseIndex[word] = numberOfOccurences + 1;
+                    forwardIndex[word] = numberOfOccurences + 1;
                 }
                 else
                 {
-                    reverseIndex.Add(word, 1);
+                    forwardIndex.Add(word, 1);
                 };
             }
 
-            return reverseIndex;
+            return forwardIndex;
         }
-
     }
 }
