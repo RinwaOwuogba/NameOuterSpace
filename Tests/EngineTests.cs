@@ -29,7 +29,6 @@ namespace Tests
         public void Test_MetaInfoCreatedOnInit()
         {
             var meta = engine.GetMetaInfo();
-
             Assert.IsInstanceOfType(meta, typeof(MetaDetails));
         }
 
@@ -207,8 +206,8 @@ namespace Tests
             var doc2_forwardIndex = new Dictionary<string, long>();
             doc2_forwardIndex.Add(word2, 2);
 
-            engine.AddWordDocument(docid1, doc1_forwardIndex);
-            engine.AddWordDocument(docid2, doc2_forwardIndex);
+            engine.AddIntoReverseIndex(docid1, doc1_forwardIndex);
+            engine.AddIntoReverseIndex(docid2, doc2_forwardIndex);
 
             var worddoc = engine.GetWordDocument(word2);
 
@@ -236,8 +235,8 @@ namespace Tests
             doc2_forwardIndex.Add(word2, 2);
             doc2_forwardIndex.Add(word3, 115);
 
-            engine.AddWordDocument(docid1, doc1_forwardIndex);
-            engine.AddWordDocument(docid2, doc2_forwardIndex);
+            engine.AddIntoReverseIndex(docid1, doc1_forwardIndex);
+            engine.AddIntoReverseIndex(docid2, doc2_forwardIndex);
 
             var words = engine.GetAllWords();
 
@@ -267,8 +266,8 @@ namespace Tests
             doc2_forwardIndex.Add(word2, 2);
             doc2_forwardIndex.Add(word3, 115);
 
-            engine.AddWordDocument(docid1, doc1_forwardIndex);
-            engine.AddWordDocument(docid2, doc2_forwardIndex);
+            engine.AddIntoReverseIndex(docid1, doc1_forwardIndex);
+            engine.AddIntoReverseIndex(docid2, doc2_forwardIndex);
 
             engine.DeleteWord(word1);
             var deletedword = engine.GetWordDocument(word1);
@@ -301,8 +300,8 @@ namespace Tests
             doc2_forwardIndex.Add(word2, 2);
             doc2_forwardIndex.Add(word3, 115);
 
-            engine.AddWordDocument(docid1, doc1_forwardIndex);
-            engine.AddWordDocument(docid2, doc2_forwardIndex);
+            engine.AddIntoReverseIndex(docid1, doc1_forwardIndex);
+            engine.AddIntoReverseIndex(docid2, doc2_forwardIndex);
 
             engine.DeleteDocumentReferencesFromInvertedIndex(docid1);
 
@@ -310,13 +309,6 @@ namespace Tests
 
             Assert.IsTrue(worddocs[0].Documents.ContainsKey(docid1));
             Assert.IsTrue(worddocs[1].Documents.ContainsKey(docid1));
-            
-
-
-
-            
-            
-
         }
     }
 

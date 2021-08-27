@@ -8,6 +8,9 @@ using LiteDB;
 namespace SearchEngine
 {
 
+    /// <summary>
+    ///     A Singleton Class That interfaces between the file database and other parts of the library
+    /// </summary>
     public class Engine
     {
         private LiteDatabase db;
@@ -44,6 +47,9 @@ namespace SearchEngine
             )
         {
             this.pathToRepository = pathToRepo;
+            this.connectionString = connectionString;
+            this.pathToStopWords = pathToStopWords;
+
             db = new LiteDatabase(connectionString);
             metaCollection = db.GetCollection<MetaDetails>("Meta");
             documentCollection = db.GetCollection<FileDocument>("Document");
@@ -107,33 +113,62 @@ namespace SearchEngine
             meta.stopWords = updatedmeta.stopWords;
             metaCollection.Update(meta);
         }
-
+        
+        /// <summary>
+        ///     fetches all the file documents from the db
+        /// </summary>
+        /// <returns> A List of all the file documents in the collections</returns>
         public List<FileDocument> GetAllDocuments(){
             documentCollection.EnsureIndex("Filename");
             var documents = new List<FileDocument>(documentCollection.Find(Query.All("Filename")));
             return documents;
         }
         
+        /// <summary>
+        ///     Gets all the file documents that correspond to the ids 
+        /// </summary>
+        /// <param name="ids"> a list of file document ids</param>
+        /// <returns> A list of File documents </returns>
         public List<FileDocument> GetDocuments(List<int> ids){
             var matcheddocs = new List<FileDocument>(documentCollection.Find(x => ids.Contains(x.Id)));
             return matcheddocs;
         }
 
+        /// <summary>
+        ///     Gets all the file documents that correspond to the filenames
+        /// </summary>
+        /// <param name="names"> a list of file names of the documents</param>
+        /// <returns> A list of File documents </returns>
         public List<FileDocument> GetDocuments(List<string> names){
             documentCollection.EnsureIndex("Filename");
             var matcheddocs = new List<FileDocument>(documentCollection.Find(x => names.Contains(x.Filename)));
             return matcheddocs;
         }
-
+        
+        /// <summary>
+        ///     returns a file document that belongs to the id given
+        /// </summary>
+        /// <param name="id">a file document id</param>
+        /// <returns> A single file document</returns>
         public FileDocument GetDocument(int id){
             return documentCollection.FindById(id);
         }
 
+        /// <summary>
+        ///     retiurns a file document that belongs to the filename given
+        /// </summary>
+        /// <param name="filename"> the file name of a document</param>
+        /// <returns>A single file document</returns>
         public FileDocument GetDocument(string filename){
             documentCollection.EnsureIndex("Filename");
             return documentCollection.FindOne(Query.EQ("Filename", filename));
         }       
         
+        /// <summary>
+        ///     adds a new file to the DB
+        /// </summary>
+        /// <param name="filename"> the name of the file to be added</param>
+        /// <returns>the file id of the newly stored document</returns>
         public int AddDocument(string filename){
             var document = new FileDocument()
             {
@@ -146,6 +181,11 @@ namespace SearchEngine
             UpdateMetaInfo(meta);
             return document.Id;
         }
+   
+        /// <summary>
+        ///     Deletes the document associated with the id from the database
+        /// </summary>
+        /// <param name="id">an id belonging to a document</param>
         public void DeleteDocument(int id){
             DeleteDocumentReferencesFromInvertedIndex(id);
             documentCollection.Delete(id);
@@ -154,10 +194,18 @@ namespace SearchEngine
             UpdateMetaInfo(meta);
         }
 
+        /// <summary>
+        ///     Deletes the document of the specified filename from the db
+        /// </summary>
+        /// <param name="filename">A file name of a document</param>
         public void DeleteDocument(string filename){
             DeleteDocument(GetDocument(filename).Id);
         }
 
+        /// <summary>
+        ///     Removes all instances of the document id from the reverse index
+        /// </summary>
+        /// <param name="docId">A document document id</param>
         public void DeleteDocumentReferencesFromInvertedIndex(int docId){
             IEnumerable<WordDocument> allWordDocs = invertedIndex
                                                         .FindAll();
@@ -170,7 +218,10 @@ namespace SearchEngine
             invertedIndex.Update(relevantWordDocs);
         }
        
-
+        /// <summary>
+        ///     Fetches all the words in the reverse index
+        /// </summary>
+        /// <returns> A list of all the words</returns>
         public List<string> GetAllWords(){
             invertedIndex.EnsureIndex("Word");
             var words = new List<string>();
@@ -178,12 +229,22 @@ namespace SearchEngine
             return words;
         }
 
+        /// <summary>
+        ///     Fetches the worddocument that is associated to a word in the reverse index 
+        /// </summary>
+        /// <param name="word"> a word in the reverse index</param>
+        /// <returns>A WordDocument Object</returns>
         public WordDocument GetWordDocument(string word){
             invertedIndex.EnsureIndex("Word");
             var worddoc = invertedIndex.FindOne(Query.EQ("Word", word.ToLower()));
             return worddoc;
         }
 
+        /// <summary>
+        ///     Fetches All the word documents that are associated with the list of words
+        /// </summary>
+        /// <param name="words"> A List of words in the reverse</param>
+        /// <returns>A list of WordDocuments </returns>
         public List<WordDocument> GetWordDocuments(List<string> words){
             invertedIndex.EnsureIndex("Word");
             var worddocs = new List<WordDocument>();
@@ -192,7 +253,12 @@ namespace SearchEngine
             return worddocs;
         }
         
-        public void AddWordDocument(int docId, Dictionary<string,long> words){
+        /// <summary>
+        ///     integrates a forward index into the reverse index 
+        /// </summary>
+        /// <param name="docId"> the docid that contains the words</param>
+        /// <param name="words"> a dictionary of words in the docid and thier number of occurencess</param>
+        public void AddIntoReverseIndex(int docId, Dictionary<string,long> words){
             var additions = new List<WordDocument>();
 
             invertedIndex.EnsureIndex("Word");
@@ -214,18 +280,30 @@ namespace SearchEngine
             }
             invertedIndex.Upsert(additions);
         }
-
+        
+        /// <summary>
+        ///     Gets the number of word documents in the inverted index
+        /// </summary>
+        /// <returns> The number of word documents in the inverted index</returns>
         public int countInvertedIndex(){
             return invertedIndex.Count(Query.All("Word"));
         }
+        
+        /// <summary>
+        ///     remove a word's assocaited worddocument from the reverse index  
+        /// </summary>
+        /// <param name="word"> a word in the reverse index</param>
         public void DeleteWord(string word){
             invertedIndex.Delete(GetWordDocument(word).Id);
 
         }
+
+        /// <summary>
+        ///     Destroys the Database and everything in it
+        /// </summary>
         public void Kill(){
-            db.DropCollection(invertedIndex.Name);
-            db.DropCollection(metaCollection.Name);
-            db.DropCollection(documentCollection.Name);
+            File.Delete(connectionString);
+            File.Delete(connectionString);
             
         }
     }
