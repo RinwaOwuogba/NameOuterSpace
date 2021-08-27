@@ -42,7 +42,8 @@ namespace Tests
             Autocomplete autocomplete = new Autocomplete(words);
 
             var result = autocomplete.auto("by");
-            Assert.AreEqual(new[] { "bye" }, result);
+            Console.WriteLine(result[0]);
+           CollectionAssert.AreEqual(new[] {"bye"}, result);
 
         }
     }

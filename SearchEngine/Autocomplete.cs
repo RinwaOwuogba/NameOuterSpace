@@ -29,9 +29,10 @@ namespace SearchEngine
         public void insert(string word)
         {
             node curr = root;
-            for (int i = 0; i < word.Length; i++)
+            var lword = word.ToLower();
+            for (int i = 0; i < lword.Length; i++)
             {
-                char c = word[i];
+                char c = lword[i];
                 node temp = new node(c);
                 if (curr.children[c - 'a'] == null)
                 {
@@ -51,8 +52,8 @@ namespace SearchEngine
         {
             if (getNode(word) != null)
             {
-                var node = getNode(word);
-                return node;
+                node trienode = getNode(word);
+                return trienode;
             }
             else
             {
@@ -63,7 +64,7 @@ namespace SearchEngine
         //this is the get node function it checks if a word is in the trie tree
         public node getNode(string word)
         {
-            node curr = root;
+            node curr = this.root;
             for (int i = 0; i < word.Length; i++)
             {
                 char c = word[i];
@@ -81,20 +82,23 @@ namespace SearchEngine
         //the isWord method basically checks if the node we are passing is a leaf node
         //if it is then we add it to the List
         //We use 26 in the loop here because each node in the trie can have up to 26 children
-        public void addAllwords(node node, string word, List<string> words)
+        public void addAllwords(node trienode, string word, List<string> words)
         {
 
-            if (node.isWord == true)
+            if (trienode.isWord == true)
             {
                 words.Add(word);
             }
 
             for (int i = 0; i < 26; i++)
             {
-                node next = node.children[((char)(i + 'a')) - 'a'];
+                node next = trienode.children[((char)(i + 'a')) - 'a'];
                 if (next != null)
                 {
                     addAllwords(next, word + (char)(i + 'a'), words);
+                }
+                else{
+                    continue;
                 }
             }
 
@@ -122,10 +126,11 @@ namespace SearchEngine
 
 
     //The autocomplete class
-    public class Autocomplete
+    public class Autocomplete : trie
     {
         public List<string> words;
         public List<string> result;
+        string[] myWords;
         public trie WordTree;
 
         //It is initialized by passing a List of strings to the constructor
@@ -152,25 +157,17 @@ namespace SearchEngine
         //the list of words is converting into a string array which is the return value
         public string[] auto(string args)
         {
-            try
-            {
-                if (this.WordTree.startWith(args) != null)
-                {
-                    var node = WordTree.startWith(args);
-                    this.WordTree.addAllwords(node, args, result);
-
-                    string[] myWords = result.ToArray();
-                    return myWords;
+            node trienode = this.WordTree.startWith(args);
+            
+                if (trienode != null){
+                
+                this.WordTree.addAllwords(trienode, args, this.result);
+                this.myWords = this.result.ToArray();
+                return this.myWords;
                 }
-                else
-                {
+                else{
                     return new[] { "error", "error" };
                 }
-            }
-            catch
-            {
-                return new[] { "error", "error" };
-            }
         }
     }
 }
