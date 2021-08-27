@@ -28,13 +28,13 @@ namespace SearchEngine
         private string text;
 
         /// <summary>
-        /// Stop words to skip in reverse index
+        /// Stop words to skip in forward index
         /// </summary>
-        private Dictionary<string, Boolean> stopWords;
+        private HashSet<string> stopWords;
 
-        public Indexer(string filePath, Dictionary<string, Boolean> stopWords)
+        public Indexer(string filePath, HashSet<string> stopWords)
         {
-            this.fileName = Path.GetFileNameWithoutExtension(filePath);
+            this.fileName = Path.GetFileName(filePath);
             this.filePath = filePath;
             this.stopWords = stopWords;
         }
@@ -43,13 +43,15 @@ namespace SearchEngine
         /// Generates the forward index for a file
         /// </summary>
         /// <returns>Dictionary containing file forward index</returns>
-        public Dictionary<string, long> IndexFile()
+        public (ForwardIndex index, long recordLength) IndexFile()
         {
             Parser parser = AutoDetectParser.GetContextParser(this.filePath);
 
             this.text = this.fileName + " " + parser.Parse();
 
-            return Indexer.IndexText(this.text, this.stopWords);
+            ForwardIndex index = Indexer.IndexText(this.text, this.stopWords);
+
+            return (index, this.text.Length);
         }
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace SearchEngine
         /// <param name="text">Text to index</param>
         /// <param name="stopWords">Stop words to remove from index</param>
         /// <returns>Dictionary containing string forward index</returns>
-        public static Dictionary<string, long> IndexText(string text, Dictionary<string, Boolean> stopWords)
+        public static ForwardIndex IndexText(string text, HashSet<string> stopWords)
         {
             // create tokens from text string
             EnglishRuleBasedTokenizer tokenizer = new EnglishRuleBasedTokenizer(true);
@@ -79,7 +81,7 @@ namespace SearchEngine
             {
                 string word = tokens[i];
 
-                if (stopWords.ContainsKey(word))
+                if (stopWords.Contains(word))
                 {
                     continue;
                 }
@@ -88,8 +90,7 @@ namespace SearchEngine
             }
 
             // create forward index
-            Dictionary<string, long> forwardIndex =
-                new Dictionary<string, long>();
+            ForwardIndex forwardIndex = new ForwardIndex();
 
             foreach (string word in filteredWords)
             {

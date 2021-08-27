@@ -16,13 +16,15 @@ namespace Tests
 
             string currentDirectory = Directory.GetCurrentDirectory();
 
-            string filePath = Path.Combine(currentDirectory, "../../../../Files/" + originalFileName);
-            Dictionary<string, Boolean> stopWords = new Dictionary<string, Boolean>();
+            string filePath = Path.Combine(currentDirectory, "../../../TestFiles/" + originalFileName);
+            HashSet<string> stopWords = new HashSet<string>();
 
-            stopWords.Add("a", true);
+            stopWords.Add("a");
 
-            Dictionary<string, long> forwardIndex = new Indexer(filePath, stopWords).IndexFile();
+            (ForwardIndex forwardIndex, long recordLength) =
+                new Indexer(filePath, stopWords).IndexFile();
 
+            Assert.AreEqual(46, recordLength);
             Assert.IsTrue(forwardIndex.ContainsKey("nest"));
             Assert.IsTrue(forwardIndex.ContainsKey("first"));
             Assert.IsTrue(forwardIndex.ContainsKey("more"));
@@ -36,9 +38,9 @@ namespace Tests
         public void Indexer_IndexText_ReturnsForwardIndexOfAText()
         {
             string text = "booking flights online in china";
-            Dictionary<string, Boolean> stopWords = new Dictionary<string, Boolean>();
+            HashSet<string> stopWords = new HashSet<string>();
 
-            stopWords.Add("in", true);
+            stopWords.Add("in");
 
             Dictionary<string, long> forwardIndex = Indexer.IndexText(text, stopWords);
 
