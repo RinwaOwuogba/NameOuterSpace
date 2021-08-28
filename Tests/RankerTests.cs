@@ -166,8 +166,6 @@ namespace Tests
 
 
             CollectionAssert.AreEquivalent(expectedQueryTermWeights, ranker.queryTermWeights);
-            // CollectionAssert.AreEquivalent(expectedQueryTermWeights, ranker.queryTermWeights);
-            // CollectionAssert.AreEquivalent(expectedQueryTermWeights, ranker.queryTermWeights);
         }
     }
 }
