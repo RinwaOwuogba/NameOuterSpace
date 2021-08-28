@@ -29,16 +29,15 @@ namespace SearchEngine
         public void insert(string word)
         {
             node curr = root;
-            var lword = word.ToLower();
-            for (int i = 0; i < lword.Length; i++)
+            for (int i = 0; i < word.Length; i++)
             {
-                char c = lword[i];
+                char c = word[i];
                 node temp = new node(c);
-                if (curr.children[c - 'a'] == null)
+                if (curr.children[c - '!'] == null)
                 {
-                    curr.children[c - 'a'] = temp;
+                    curr.children[c - '!'] = temp;
                 }
-                curr = curr.children[c - 'a'];
+                curr = curr.children[c - '!'];
             }
             curr.isWord = true;
         }
@@ -68,11 +67,11 @@ namespace SearchEngine
             for (int i = 0; i < word.Length; i++)
             {
                 char c = word[i];
-                if (curr.children[c - 'a'] == null)
+                if (curr.children[c - '!'] == null)
                 {
                     return null;
                 }
-                curr = curr.children[c - 'a'];
+                curr = curr.children[c - '!'];
             }
 
             return curr;
@@ -87,15 +86,22 @@ namespace SearchEngine
 
             if (trienode.isWord == true)
             {
-                words.Add(word);
+                if(word == null){
+                    Console.WriteLine("There is an error");
+                }
+                else if(words != null){
+                    words.Add(word);
+                }
+                
             }
 
-            for (int i = 0; i < 26; i++)
+            for (int i = 0; i < 94; i++)
             {
-                node next = trienode.children[((char)(i + 'a')) - 'a'];
+                node next = trienode.children[((char)(i + '!')) - '!'];
+                string nextWord = word + (char)(i + '!');
                 if (next != null)
                 {
-                    addAllwords(next, word + (char)(i + 'a'), words);
+                    this.addAllwords(next, nextWord, words);
                 }
                 else{
                     continue;
@@ -118,7 +124,7 @@ namespace SearchEngine
             {
                 this.c = c;
                 this.isWord = false;
-                this.children = new node[26];
+                this.children = new node[94];
             }
 
         }
@@ -130,7 +136,6 @@ namespace SearchEngine
     {
         public List<string> words;
         public List<string> result;
-        string[] myWords;
         public trie WordTree;
 
         //It is initialized by passing a List of strings to the constructor
@@ -140,6 +145,7 @@ namespace SearchEngine
         {
             this.words = args;
             this.WordTree = new trie();
+            this.result = new List<string>();
             for (int i = 0; i < this.words.Count; i++)
             {
                 this.WordTree.insert(this.words[i]);
@@ -158,12 +164,12 @@ namespace SearchEngine
         public string[] auto(string args)
         {
             node trienode = this.WordTree.startWith(args);
-            
+            string[] myWords;
                 if (trienode != null){
                 
                 this.WordTree.addAllwords(trienode, args, this.result);
-                this.myWords = this.result.ToArray();
-                return this.myWords;
+                myWords = this.result.ToArray();
+                return myWords;
                 }
                 else{
                     return new[] { "error", "error" };
