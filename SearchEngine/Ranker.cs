@@ -5,57 +5,205 @@ using System.IO;
 namespace SearchEngine
 {
     /// <summary>
+    /// Class to store a documents rank in relevance
+    /// to a query
+    /// </summary>
+    public class DocumentRank : IComparable<DocumentRank>
+    {
+        public int DocID { get; }
+        public double Rank { get; }
+
+        public DocumentRank(int docId, double rank)
+        {
+            this.DocID = docId;
+            this.Rank = rank;
+        }
+
+        /// <summary>
+        /// Compares the rank of the current instance with
+        /// the rank of another instance of the same type
+        /// </summary>
+        /// <param name="docRank"></param>
+        /// <returns></returns>
+        public int CompareTo(DocumentRank docRank)
+        {
+            if (!(docRank is DocumentRank))
+            {
+                throw new ArgumentException("obj is not the same type as this instance");
+            }
+
+            return this.Rank.CompareTo(docRank.Rank);
+        }
+    }
+
+    /// <summary>
     /// Class to retrieve all relevant documents to a
     /// particular query ranked in order of relevance
     /// </summary>
     public class Ranker
     {
-        public Engine engine;
-        public ParserQuery ParserQuery { get; }
+        /// <summary>
+        /// Engine to use in accessing reverse index
+        /// </summary>
+        private IEngine engine;
 
-        public Ranker(ParserQuery query, Engine engine)
+        /// <summary>
+        /// Query to rank relevant documents for
+        /// </summary>
+        public ParsedQuery ParsedQuery { get; }
+
+        /// <summary>
+        /// Dictionary mapping document ID to term weights in
+        /// document
+        /// </summary>
+        public Dictionary<int, Dictionary<string, double>> documentTermWeights
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
+        /// Documents rank according to query relevance
+        /// </summary>
+        public List<DocumentRank> documentRanks { get; private set; }
+
+        /// <summary>
+        /// Weight of query terms in relation to query
+        /// </summary>
+        public Dictionary<string, double> queryTermWeights
+        {
+            get;
+            protected set;
+        }
+
+        private List<WordDocument> wordDocumentsList;
+
+        public Ranker(ParsedQuery query, IEngine engine)
         {
             this.engine = engine;
-            this.ParserQuery = query;
+            this.ParsedQuery = query;
+
+            this.documentTermWeights = new Dictionary<int, Dictionary<string, double>>();
+            this.wordDocumentsList = this.wordDocumentsList = this.engine.GetWordDocuments(
+                new List<string>(this.ParsedQuery.QueryIndex.Keys)
+            );
+        }
+
+        /// <summary>
+        /// Returns relevant documents to the current query sorted in
+        /// descending / ascending order (not sure) yet by relevance
+        /// </summary>
+        public void Rank()
+        {
+            this.AggregateQueryTermWeights();
+            this.AggregateDocumentTermWeights();
+            this.CalculateDocumentsQueryRelevance();
+            this.documentRanks.Sort();
         }
 
 
         /// <summary>
-        /// Gets the cumulative weight of every document across word
-        /// documents list
+        /// Collects the weight of every term in the current query relative
+        /// to the query itself
         /// </summary>
-        /// <param name="wordDocumentsList">Collection of word-documents entries</param>
-        /// <returns>Dictionary mapping document ID to cumulative term weight</returns>
-        public Dictionary<int, double> AggregateTermWeights(List<WordDocument> wordDocumentsList)
+        public void AggregateQueryTermWeights()
         {
-            Dictionary<int, double> documentWeights = new Dictionary<int, double>();
+            this.queryTermWeights = new Dictionary<string, double>();
 
-            // foreach (WordDocument wordDocument in wordDocumentsList)
-            // {
-            //     wordDocument.Documents.
-            // }
+            long maxTermFreq = this.ParsedQuery.GetMaxQueryFreq();
+            long documentsInCollection = this.engine.GetAllDocumentsCount();
 
-            return documentWeights;
+            foreach (WordDocument wordDocument in this.wordDocumentsList)
+            {
+                long totalTermOccurrenceInCollection = wordDocument.totalOccurrence;
+                double termIDF =
+                    Math.Log2(
+                        (documentsInCollection - totalTermOccurrenceInCollection) /
+                        totalTermOccurrenceInCollection
+                    );
+
+                double termWeightInQuery =
+                    (0.5 + ((0.5 * this.ParsedQuery.QueryIndex[wordDocument.Word]) /
+                    maxTermFreq)) * termIDF;
+
+                this.queryTermWeights.Add(wordDocument.Word, termWeightInQuery);
+            }
         }
 
         /// <summary>
-        /// Calculates the weight of a query term in a particular
-        /// document using Harman (1986) document similarity formula
+        /// Collects the weight of every term in the current query relative to 
+        /// every relevant document
         /// </summary>
-        /// <param name="term">ParserQuery term to calculate weight</param>
-        /// <param name="IDF">Inverse document frequency of query term</param>
-        /// <returns></returns>
-        public static double CalculateTermWeight(
-            double normalizedDocumentTermFrequency,
-            double IDF,
-            long maxQueryTermFreq,
-            long recordLength
-        )
+        public void AggregateDocumentTermWeights()
         {
-            double numerator = Math.Log2(normalizedDocumentTermFrequency + 1) * IDF;
-            double denominator = Math.Log2(recordLength);
+            this.documentTermWeights = new Dictionary<int, Dictionary<string, double>>();
+            long documentsInCollection = this.engine.GetAllDocumentsCount();
 
-            return numerator / denominator;
+            foreach (WordDocument wordDocument in this.wordDocumentsList)
+            {
+                long totalTermOccurrenceInCollection = wordDocument.totalOccurrence;
+                double termIDF =
+                    Math.Log2(
+                        (documentsInCollection - totalTermOccurrenceInCollection) /
+                        totalTermOccurrenceInCollection
+                    );
+
+                foreach (KeyValuePair<int, long> document in wordDocument.Documents)
+                {
+                    // calculate term weight in document
+                    double termWeightInDocument = 0;
+                    termWeightInDocument = document.Value * termIDF;
+
+                    // add term weight to collection of document term weights
+                    if (this.documentTermWeights.ContainsKey(document.Key))
+                    {
+                        this.documentTermWeights[document.Key][wordDocument.Word] = termWeightInDocument;
+                    }
+                    else
+                    {
+                        this.documentTermWeights.Add(document.Key, new Dictionary<string, double>());
+
+                        this.documentTermWeights[document.Key][wordDocument.Word] = termWeightInDocument;
+                    }
+                }
+            }
         }
+
+        /// <summary>
+        /// Calculates relevance of each related document to the current query
+        /// </summary>
+        public void CalculateDocumentsQueryRelevance()
+        {
+            this.documentRanks = new List<DocumentRank>();
+
+            foreach (KeyValuePair<int, Dictionary<string, double>> document in this.documentTermWeights)
+            {
+                double similarity = 0;
+                double queryDocumentDotProduct = 0;
+
+                double queryQueryDotProduct = 0;
+                double documentDocumentDotProduct = 0;
+
+                foreach (KeyValuePair<string, long> queryTermEntry in this.ParsedQuery.QueryIndex)
+                {
+                    double weightInQuery = this.queryTermWeights[queryTermEntry.Key];
+                    double weightInDocument = document.Value[queryTermEntry.Key];
+
+                    queryDocumentDotProduct += weightInQuery * weightInDocument;
+
+                    queryQueryDotProduct += Math.Pow(weightInQuery, 2);
+                    documentDocumentDotProduct += Math.Pow(weightInDocument, 2);
+                }
+
+                // calculate document query similarity by cosine measure
+                // with in-document weight
+                similarity =
+                    queryDocumentDotProduct /
+                    Math.Sqrt((queryQueryDotProduct * documentDocumentDotProduct));
+
+                this.documentRanks.Add(new DocumentRank(document.Key, similarity));
+            }
+        }
+
     }
 }
