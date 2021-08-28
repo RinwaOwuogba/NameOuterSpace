@@ -50,8 +50,8 @@ namespace SearchEngine
                 case ".ppt":
                 case ".pptx":
                     return new PresentationParser(filePath);
-                case ".xlx":
                 case ".xls":
+                case ".xlsx":
                     return new SheetParser(filePath);
                 default:
                     throw new ArgumentException("Unrecognized file type");
