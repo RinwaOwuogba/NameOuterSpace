@@ -21,7 +21,7 @@ namespace Tests
 
             stopWords.Add("a");
 
-            Dictionary<string, long> forwardIndex = new Indexer(filePath, stopWords).IndexFile();
+            Dictionary<string, long> forwardIndex = new Indexer(stopWords).IndexFile(filePath);
 
             Assert.IsTrue(forwardIndex.ContainsKey("nest"));
             Assert.IsTrue(forwardIndex.ContainsKey("first"));
@@ -40,7 +40,7 @@ namespace Tests
 
             stopWords.Add("in");
 
-            Dictionary<string, long> forwardIndex = Indexer.IndexText(text, stopWords);
+            Dictionary<string, long> forwardIndex = new Indexer(stopWords).IndexText(text);
 
             Assert.IsTrue(forwardIndex.ContainsKey("book"));
             Assert.IsTrue(forwardIndex.ContainsKey("flight"));
@@ -64,7 +64,7 @@ namespace Tests
 
             stopWords.Add("a");
 
-            Dictionary<string, long> forwardIndex = Indexer.IndexText(text, stopWords);
+            Dictionary<string, long> forwardIndex = new Indexer(stopWords).IndexText(text);
 
             CollectionAssert.Contains(forwardIndex.Keys, "bank");
             CollectionAssert.Contains(forwardIndex.Keys, "blah");
