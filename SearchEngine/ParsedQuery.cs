@@ -1,13 +1,15 @@
+using System.Collections.Generic;
+
 namespace SearchEngine
 {
     /// <summary>
     /// Representation of a parsed natural language query
     /// </summary>
-    public class ParsedQuery
+    public class ParsedQuery : IParsedQuery
     {
         public string NaturalLangQuery { get; }
-        public ForwardIndex QueryIndex { get; }
-        public ParsedQuery(string naturalLanguageQuery, ForwardIndex queryIndex)
+        public Dictionary<string, long> QueryIndex { get; }
+        public ParsedQuery(string naturalLanguageQuery, Dictionary<string, long> queryIndex)
         {
             this.NaturalLangQuery = naturalLanguageQuery;
             this.QueryIndex = queryIndex;

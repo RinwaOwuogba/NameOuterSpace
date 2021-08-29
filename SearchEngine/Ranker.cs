@@ -5,38 +5,6 @@ using System.IO;
 namespace SearchEngine
 {
     /// <summary>
-    /// Class to store a documents rank in relevance
-    /// to a query
-    /// </summary>
-    public class DocumentRank : IComparable<DocumentRank>
-    {
-        public int DocID { get; }
-        public double Rank { get; }
-
-        public DocumentRank(int docId, double rank)
-        {
-            this.DocID = docId;
-            this.Rank = rank;
-        }
-
-        /// <summary>
-        /// Compares the rank of the current instance with
-        /// the rank of another instance of the same type
-        /// </summary>
-        /// <param name="docRank"></param>
-        /// <returns></returns>
-        public int CompareTo(DocumentRank docRank)
-        {
-            if (!(docRank is DocumentRank))
-            {
-                throw new ArgumentException("obj is not the same type as this instance");
-            }
-
-            return this.Rank.CompareTo(docRank.Rank);
-        }
-    }
-
-    /// <summary>
     /// Class to retrieve all relevant documents to a
     /// particular query ranked in order of relevance
     /// </summary>
@@ -65,7 +33,7 @@ namespace SearchEngine
         /// <summary>
         /// Documents rank according to query relevance
         /// </summary>
-        public List<DocumentRank> documentRanks { get; private set; }
+        public List<KeyValuePair<int, double>> documentRanks { get; private set; }
 
         /// <summary>
         /// Weight of query terms in relation to query
@@ -97,8 +65,16 @@ namespace SearchEngine
         {
             this.AggregateQueryTermWeights();
             this.AggregateDocumentTermWeights();
-            this.CalculateDocumentsQueryRelevance();
-            this.documentRanks.Sort();
+
+            this.documentRanks = Ranker.CalculateDocumentsQueryRelevance(
+                this.documentTermWeights,
+                this.ParsedQuery,
+                this.queryTermWeights
+            );
+
+            this.documentRanks.Sort(
+                (docRank1, docRank2) => docRank2.Key.CompareTo(docRank1.Key)
+            );
         }
 
 
@@ -171,12 +147,19 @@ namespace SearchEngine
 
         /// <summary>
         /// Calculates relevance of each related document to the current query
+        /// using cosine similarity formula
+        /// 
+        /// http://orion.lcg.ufrj.br/Dr.Dobbs/books/book5/chap14.htm
         /// </summary>
-        public void CalculateDocumentsQueryRelevance()
+        public static List<KeyValuePair<int, double>> CalculateDocumentsQueryRelevance(
+            Dictionary<int, Dictionary<string, double>> documentTermWeights,
+            IParsedQuery parsedQuery,
+            Dictionary<string, double> queryTermWeights
+        )
         {
-            this.documentRanks = new List<DocumentRank>();
+            List<KeyValuePair<int, double>> documentRanks = new List<KeyValuePair<int, double>>();
 
-            foreach (KeyValuePair<int, Dictionary<string, double>> document in this.documentTermWeights)
+            foreach (KeyValuePair<int, Dictionary<string, double>> document in documentTermWeights)
             {
                 double similarity = 0;
                 double queryDocumentDotProduct = 0;
@@ -184,9 +167,9 @@ namespace SearchEngine
                 double queryQueryDotProduct = 0;
                 double documentDocumentDotProduct = 0;
 
-                foreach (KeyValuePair<string, long> queryTermEntry in this.ParsedQuery.QueryIndex)
+                foreach (KeyValuePair<string, long> queryTermEntry in parsedQuery.QueryIndex)
                 {
-                    double weightInQuery = this.queryTermWeights[queryTermEntry.Key];
+                    double weightInQuery = queryTermWeights[queryTermEntry.Key];
                     double weightInDocument = document.Value[queryTermEntry.Key];
 
                     queryDocumentDotProduct += weightInQuery * weightInDocument;
@@ -195,14 +178,16 @@ namespace SearchEngine
                     documentDocumentDotProduct += Math.Pow(weightInDocument, 2);
                 }
 
-                // calculate document query similarity by cosine measure
+                // calculate document query similarity by cosine similarity measure
                 // with in-document weight
                 similarity =
                     queryDocumentDotProduct /
                     Math.Sqrt((queryQueryDotProduct * documentDocumentDotProduct));
 
-                this.documentRanks.Add(new DocumentRank(document.Key, similarity));
+                documentRanks.Add(new KeyValuePair<int, double>(document.Key, similarity));
             }
+
+            return documentRanks;
         }
 
     }

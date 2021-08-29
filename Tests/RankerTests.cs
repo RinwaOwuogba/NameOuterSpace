@@ -44,14 +44,12 @@ namespace Tests
             engineMock.Setup(
                 engine => engine.GetAllDocumentsCount()
             ).Returns(DOCUMENTS_IN_COLLECTION);
-
         }
 
 
         [TestMethod]
         public void Ranker_AggregateDocumentTermWeights_CalculatesTermWeightsInDocuments()
         {
-
             string query = "books bought in china";
             ParsedQuery parsedQuery = QueryParser.Parse(query, stopWords);
             List<string> queryWords = new List<string>(parsedQuery.QueryIndex.Keys);
@@ -149,23 +147,81 @@ namespace Tests
                 {
                     {"book",
                         (
-                            0.5 + ((0.5 * parsedQuery.QueryIndex["book"]) /
-                            maxTermFreq) * termIdfs["book"]
+                            (0.5 + ((0.5 * parsedQuery.QueryIndex["book"]) /
+                            maxTermFreq)) * termIdfs["book"]
                         )
                     },
                     {"china",                         (
-                            0.5 + ((0.5 * parsedQuery.QueryIndex["china"]) /
-                            maxTermFreq) * termIdfs["china"]
+                            (0.5 + ((0.5 * parsedQuery.QueryIndex["china"]) /
+                            maxTermFreq)) * termIdfs["china"]
                         )
                     },
                     {"bought",                         (
-                            0.5 + ((0.5 * parsedQuery.QueryIndex["bought"]) /
-                            maxTermFreq) * termIdfs["bought"]
+                            (0.5 + ((0.5 * parsedQuery.QueryIndex["bought"]) /
+                            maxTermFreq)) * termIdfs["bought"]
                         )}
                 };
 
 
             CollectionAssert.AreEquivalent(expectedQueryTermWeights, ranker.queryTermWeights);
+        }
+
+        [TestMethod]
+        public void Ranker_CalculateDocumentsQueryRelevance_CalculatesAccurateDocumentsRelevance()
+        {
+            Dictionary<int, Dictionary<string, double>> documentTermWeights =
+                new Dictionary<int, Dictionary<string, double>>
+                {
+                    {1, new Dictionary<string, double> {
+                        {"book", 5.33330},
+                        {"china", 3.12323},
+                        {"bought", 0}
+                    }},
+                    {2, new Dictionary<string, double> {
+                        { "book", 3.12243},
+                        { "china", 6.23434},
+                        { "bought", 2.233443}
+                    }},
+                    {3, new Dictionary<string, double> {
+                        { "book", 10.23232323},
+                        { "china", 1.23232234356},
+                        { "bought", 4.9876332}
+                    }}
+                };
+
+            Mock<IParsedQuery> parsedQueryMock = new Mock<IParsedQuery>();
+            parsedQueryMock.Setup(query => query.QueryIndex).Returns(
+                new Dictionary<string, long> {
+                   {"book", 1},
+                   {"china", 1},
+                   {"bought", 1}
+                }
+            );
+
+            Dictionary<string, double> queryTermWeights = new Dictionary<string, double>
+                {
+                    {"book", 1.234},
+                    {"china", 1.545},
+                    {"bought", 1.324}
+                };
+
+            List<KeyValuePair<int, double>> computedDocumentRanks = Ranker.CalculateDocumentsQueryRelevance(
+                documentTermWeights,
+                parsedQueryMock.Object,
+                queryTermWeights
+            );
+
+            List<KeyValuePair<int, double>> expectedDocumentRanks = new List<KeyValuePair<int, double>> {
+                new KeyValuePair<int, double>(1, 0.7755706389),
+                new KeyValuePair<int, double>(2, 0.9437225296),
+                new KeyValuePair<int, double>(3, 0.7756734768)
+            };
+
+            const double DELTA = 0.0000000001;
+
+            Assert.AreEqual(expectedDocumentRanks[0].Value, computedDocumentRanks[0].Value, DELTA);
+            Assert.AreEqual(expectedDocumentRanks[1].Value, computedDocumentRanks[1].Value, DELTA);
+            Assert.AreEqual(expectedDocumentRanks[2].Value, computedDocumentRanks[2].Value, DELTA);
         }
     }
 }

@@ -8,6 +8,14 @@ namespace SearchEngine
         long GetAllDocumentsCount();
     }
 
+
+    public interface IParsedQuery
+    {
+        string NaturalLangQuery { get; }
+        Dictionary<string, long> QueryIndex { get; }
+        long GetMaxQueryFreq();
+    }
+
     /// <summary>
     /// Forward index of a text
     /// </summary>
