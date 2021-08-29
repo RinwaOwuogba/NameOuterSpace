@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Collections;
+using System.Transactions;
 using System.Linq;
 using System.Collections.Generic;
 using LiteDB;
@@ -176,9 +176,6 @@ namespace SearchEngine
                 MD5Hash = FileDocument.CalculateMD5Hash(this.pathToRepository + filename)
             };
             documentCollection.Insert(document);
-            var meta = GetMetaInfo();
-            meta.indexedDocumentCount++;
-            UpdateMetaInfo(meta);
             return document.Id;
         }
    
@@ -187,11 +184,20 @@ namespace SearchEngine
         /// </summary>
         /// <param name="id">an id belonging to a document</param>
         public void DeleteDocument(int id){
-            DeleteDocumentReferencesFromInvertedIndex(id);
-            documentCollection.Delete(id);
-            var meta = GetMetaInfo();
-            meta.indexedDocumentCount--;
-            UpdateMetaInfo(meta);
+            try
+                {
+                    using (TransactionScope scope = new TransactionScope())
+                    {
+                        DeleteDocumentReferencesFromInvertedIndex(id);
+                        documentCollection.Delete(id);
+                        scope.Complete();
+                    }
+                }
+                catch (TransactionAbortedException ex)
+                {
+                    Console.WriteLine("oops" + " " + ex);
+                }
+            
         }
 
         /// <summary>
@@ -210,12 +216,14 @@ namespace SearchEngine
             IEnumerable<WordDocument> allWordDocs = invertedIndex
                                                         .FindAll();
 
-            var relevantWordDocs = allWordDocs.Where(x => x.Documents.ContainsKey(docId));
-            
+            var relevantWordDocs = allWordDocs.Where(x => x.Documents.ContainsKey(docId)).ToList<WordDocument>();
             foreach(var worddoc in relevantWordDocs){
                 worddoc.RemoveDoc(docId);
             }
-            invertedIndex.Update(relevantWordDocs);
+            var relevantids = relevantWordDocs.Select(x => x.Id).ToHashSet<ObjectId>();
+
+            invertedIndex.DeleteMany(x => relevantids.Contains(x.Id));
+            invertedIndex.Upsert(relevantWordDocs);
         }
        
         /// <summary>
@@ -285,7 +293,7 @@ namespace SearchEngine
         ///     Gets the number of word documents in the inverted index
         /// </summary>
         /// <returns> The number of word documents in the inverted index</returns>
-        public int countInvertedIndex(){
+        public long CountInvertedIndex(){
             return invertedIndex.Count(Query.All("Word"));
         }
         
@@ -303,7 +311,7 @@ namespace SearchEngine
         /// </summary>
         public void Kill(){
             File.Delete(connectionString);
-            File.Delete(connectionString);
+            File.Delete(connectionString.Replace(".db","-log.db"));
             
         }
     }
