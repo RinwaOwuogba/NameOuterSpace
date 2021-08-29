@@ -4,13 +4,14 @@ using System.Security.Cryptography;
 using System.IO;
 using LiteDB;
 
-namespace SearchEngine{
+namespace SearchEngine
+{
 
     /// <summary>
     ///     Represents A collection of Details in the Database
     /// </summary>
     public class MetaDetails
-    {   
+    {
         /// <summary>
         ///     The Id that will be used to access a document
         /// </summary>
@@ -18,13 +19,13 @@ namespace SearchEngine{
         /// <summary>
         /// The Path to the repo where the documents will be stored
         /// </summary>
-        public string repositoryPath{ get; set; }
-        
+        public string repositoryPath { get; set; }
+
         /// <summary>
         ///     The number of documents that have been indexed so far
         /// </summary>
         public int indexedDocumentCount { get; set; }
-        
+
         /// <summary>
         ///     Keeps track of the last time the repo was traversed
         /// </summary>
@@ -38,7 +39,8 @@ namespace SearchEngine{
     /// <summary>
     ///     Represents a file in in collection of Files
     /// </summary>
-    public class FileDocument{
+    public class FileDocument
+    {
         public int Id { get; set; }
 
         /// <summary>
@@ -73,7 +75,8 @@ namespace SearchEngine{
     ///     Represents A Word and a list of its associated docs
     ///     The full Collection is the inverted index, a collection of Word Documents
     /// </summary>
-    public class WordDocument{
+    public class WordDocument
+    {
 
         /// <summary>
         ///     A word in the reverse index
@@ -103,11 +106,16 @@ namespace SearchEngine{
         public Dictionary<int, long> Documents { get => documents; private set => documents = value; }
         public long TotalOccurence { get => totalOccurence; private set => totalOccurence = value; }
 
+
+        public long totalOccurrence = 0;
+
+
         /// <summary>
         ///     1st constructor for WordDocument
         /// </summary>
         /// <param name="word"> the word that will be stored in the index</param>
-        public WordDocument(string word){
+        public WordDocument(string word)
+        {
             Id = ObjectId.NewObjectId();
             this.word = word.ToLower();
             this.Documents = new Dictionary<int, long>();
@@ -153,7 +161,8 @@ namespace SearchEngine{
         {
             string output = "";
             output += Word + "\n";
-            foreach(var x in Documents.Keys){
+            foreach (var x in Documents.Keys)
+            {
                 output += "docid: " + x + " occurence:" + Documents[x] + "\n";
             }
             return output;

@@ -29,7 +29,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void TestAutoComplete()
+        public void TestAutocompleteInit2()
         {
             List<string> words = new List<string>();
 
@@ -37,15 +37,36 @@ namespace Tests
             words.Add("Good");
             words.Add("Hello");
             words.Add("Goodbye");
-            words.Add("sucks");
+            words.Add("12");
 
             Autocomplete autocomplete = new Autocomplete(words);
 
-            var result = autocomplete.auto("by");
+            Assert.AreEqual(words, autocomplete.getWords());
+        }
+
+        [TestMethod]
+        public void TestAutoComplete()
+        {
+            List<string> words = new List<string>();
+            string[] result;
+
+            words.Add("Bye");
+            words.Add("Good");
+            words.Add("Hello");
+            words.Add("Goodbye");
+            words.Add("sucks");
+            words.Add("bye");
+            words.Add("1987");
+
+            Autocomplete autocomplete = new Autocomplete(words);
+            string test = "19";
+            result = autocomplete.auto(test);
             Console.WriteLine(result[0]);
-           CollectionAssert.AreEqual(new[] {"bye"}, result);
+           CollectionAssert.AreEqual(new[] {"1987"}, result);
 
         }
+
+
     }
 
 }
