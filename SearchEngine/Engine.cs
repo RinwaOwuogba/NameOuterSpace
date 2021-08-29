@@ -11,7 +11,7 @@ namespace SearchEngine
     /// <summary>
     ///     A Singleton Class That interfaces between the file database and other parts of the library
     /// </summary>
-    public class Engine
+    public class Engine:IEngine
     {
         private LiteDatabase db;
 
@@ -163,6 +163,16 @@ namespace SearchEngine
             documentCollection.EnsureIndex("Filename");
             return documentCollection.FindOne(Query.EQ("Filename", filename));
         }       
+
+        /// <summary>
+        ///     get the number of documents
+        /// </summary>
+        /// <returns> the number of indexed documents</returns>
+        public long GetAllDocumentsCount(){
+
+            return documentCollection.Count(Query.All("Id"));
+
+        }
         
         /// <summary>
         ///     adds a new file to the DB
@@ -220,6 +230,8 @@ namespace SearchEngine
             foreach(var worddoc in relevantWordDocs){
                 worddoc.RemoveDoc(docId);
             }
+
+            // relevantWordDocs = relevantWordDocs.Where(x => x.Documents.Count >= 1).ToList<WordDocument>();
             var relevantids = relevantWordDocs.Select(x => x.Id).ToHashSet<ObjectId>();
 
             invertedIndex.DeleteMany(x => relevantids.Contains(x.Id));

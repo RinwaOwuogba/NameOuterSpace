@@ -192,10 +192,11 @@ namespace SearchEngine
 
                 foreach (var file in FilesToBeRemoved)
                 {
+                    Console.WriteLine("oohoo");
                     engine.DeleteDocument(file);
                 }
                 Console.WriteLine("i dey");
-
+                
                 foreach (var file in FilesToBeIndexed)
                 {
                     Console.WriteLine(repoBeingWatched + "  " + file);

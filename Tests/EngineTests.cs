@@ -34,6 +34,7 @@ namespace Tests
         }
 
         [TestMethod]
+
         public void Test_Engine_MetaInfo_UpdateMetaInfoWorks()
         {
             var meta = engine.GetMetaInfo();
@@ -61,7 +62,7 @@ namespace Tests
         public void Test_Engine_AddDocument_addsDocumentToDB()
         {
             var filename = "simple.html";
-            var soon_to_be_outdatedmeta = engine.GetMetaInfo();
+            var soon_to_be_outdated_count = engine.GetAllDocumentsCount();
 
             var docid = engine.AddDocument(filename);
 
@@ -69,8 +70,8 @@ namespace Tests
 
             Assert.AreEqual(docid, 1);
             Assert.AreEqual(filename, docinDb.Filename);
-            Assert.AreEqual(soon_to_be_outdatedmeta.indexedDocumentCount + 1,
-                            engine.GetMetaInfo().indexedDocumentCount);
+            Assert.AreEqual(soon_to_be_outdated_count + 1,
+                            engine.GetAllDocumentsCount());
         }
 
         [TestMethod]
@@ -83,7 +84,7 @@ namespace Tests
 
             engine.DeleteDocument(docid1);
 
-            Assert.AreEqual(1, engine.GetMetaInfo().indexedDocumentCount);
+            Assert.AreEqual(1, engine.GetAllDocumentsCount());
             Assert.IsNull(engine.GetDocument(docid1));
         }
 
@@ -97,7 +98,7 @@ namespace Tests
 
             engine.DeleteDocument(filename1);
 
-            Assert.AreEqual(1, engine.GetMetaInfo().indexedDocumentCount);
+            Assert.AreEqual(1, engine.GetAllDocumentsCount());
             Assert.IsNull(engine.GetDocument(filename1));
         }
 
@@ -311,7 +312,7 @@ namespace Tests
         [TestMethod]
         public void Test_Count_InvertedIndex()
         {
-            File.WriteAllText("temp.txt", "greg monday creek");
+            File.WriteAllText("temp.txt", "greg monday");
             var i = new Indexer("temp.txt", new HashSet<string>());
             var dex = i.IndexFile();
 
@@ -319,6 +320,16 @@ namespace Tests
 
             Assert.AreEqual(4, engine.CountInvertedIndex());
             File.Delete("temp.txt");
+        }
+
+        [TestMethod]
+        public void Test_GetAllDocumentsCount(){
+            engine.AddDocument("simple.txt");
+            engine.AddDocument("simple.html");
+
+            var count = engine.GetAllDocumentsCount();
+
+            Assert.AreEqual(count, 2);
         }
     }
 
