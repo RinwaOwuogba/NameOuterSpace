@@ -15,9 +15,4 @@ namespace SearchEngine
         Dictionary<string, long> QueryIndex { get; }
         long GetMaxQueryFreq();
     }
-
-    /// <summary>
-    /// Forward index of a text
-    /// </summary>
-    public class ForwardIndex : Dictionary<string, long> { }
 }
