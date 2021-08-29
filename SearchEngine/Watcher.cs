@@ -200,8 +200,8 @@ namespace SearchEngine
                 foreach (var file in FilesToBeIndexed)
                 {
                     Console.WriteLine(repoBeingWatched + "  " + file);
-                    var i = new Indexer(repoBeingWatched + file, meta.stopWords.ToHashSet<string>());
-                    var dex = i.IndexFile();
+                    var i = new Indexer(meta.stopWords.ToHashSet<string>());
+                    var dex = i.IndexFile(repoBeingWatched + file);
 
                     try
                     {

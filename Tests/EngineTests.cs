@@ -290,11 +290,11 @@ namespace Tests
             var docid1 = engine.AddDocument(filename1);
             var docid2 = engine.AddDocument(filename2);
 
-            var i = new Indexer(meta.repositoryPath + filename1, meta.stopWords.ToHashSet<string>());
-            var dex1 = i.IndexFile();
+            var i = new Indexer(meta.stopWords.ToHashSet<string>());
+            var dex1 = i.IndexFile(meta.repositoryPath + filename1);
 
-            var j = new Indexer(meta.repositoryPath + filename2, meta.stopWords.ToHashSet<string>());
-            var dex2 = j.IndexFile();
+            var j = new Indexer(meta.stopWords.ToHashSet<string>());
+            var dex2 = j.IndexFile(meta.repositoryPath + filename2);
 
             var wordsharedbyboth = "babe";
 
@@ -313,8 +313,8 @@ namespace Tests
         public void Test_Count_InvertedIndex()
         {
             File.WriteAllText("temp.txt", "greg monday");
-            var i = new Indexer("temp.txt", new HashSet<string>());
-            var dex = i.IndexFile();
+            var i = new Indexer(new HashSet<string>());
+            var dex = i.IndexFile("temp.txt");
 
             engine.AddIntoReverseIndex(1, dex);
 

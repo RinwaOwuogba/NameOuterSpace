@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using SearchEngine;
 using Moq;
 
@@ -50,8 +49,9 @@ namespace Tests
         [TestMethod]
         public void Ranker_AggregateDocumentTermWeights_CalculatesTermWeightsInDocuments()
         {
-            string query = "books bought in china";
-            ParsedQuery parsedQuery = QueryParser.Parse(query, stopWords);
+            string naturalLangQuery = "books bought in china";
+
+            ParsedQuery parsedQuery = new ParsedQuery(naturalLangQuery, new Indexer(stopWords));
             List<string> queryWords = new List<string>(parsedQuery.QueryIndex.Keys);
 
             engineMock.Setup(
@@ -111,7 +111,7 @@ namespace Tests
         public void Ranker_AggregateTermWeightsInQuery_CalculatesTermWeightsInQuery()
         {
             string query = "books bought in china";
-            ParsedQuery parsedQuery = QueryParser.Parse(query, stopWords);
+            ParsedQuery parsedQuery = new ParsedQuery(query, new Indexer(new HashSet<string>()));
             List<string> queryWords = new List<string>(parsedQuery.QueryIndex.Keys);
 
             engineMock.Setup(

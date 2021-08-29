@@ -9,10 +9,10 @@ namespace SearchEngine
     {
         public string NaturalLangQuery { get; }
         public Dictionary<string, long> QueryIndex { get; }
-        public ParsedQuery(string naturalLanguageQuery, Dictionary<string, long> queryIndex)
+        public ParsedQuery(string naturalLanguageQuery, Indexer indexer)
         {
             this.NaturalLangQuery = naturalLanguageQuery;
-            this.QueryIndex = queryIndex;
+            this.QueryIndex = indexer.IndexText(naturalLanguageQuery);
         }
 
         /// <summary>
