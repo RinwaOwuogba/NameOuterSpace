@@ -9,12 +9,21 @@ using System.Collections.Generic;
 
 namespace SearchEngine
 {
-    //This is the trie class for a creating a trie tree
-    public class trie
-    {
+    
+    ///<summary>
+    /// Class to create a trie data structure to store words for the autocomplete module
+    ///<summary>
+    public class trie{
+
+        ///<summary>
+        ///A trie node, it is usually the root node of the trie tree to be created.
+        ///<summary>
         public node root;
 
-        //The class in initialized by creating a root node which is usually an empty string.
+        ///<summary>
+        ///The trie class is initialized with a root node which is just an empty string
+        ///<summary>
+        ///<returns>A proper instance of the trie class<returns>
         public trie()
         {
             this.root = new node('\0');
@@ -33,11 +42,11 @@ namespace SearchEngine
             {
                 char c = word[i];
                 node temp = new node(c);
-                if (curr.children[c - '!'] == null)
+                if (curr.children[c - ' '] == null)
                 {
-                    curr.children[c - '!'] = temp;
+                    curr.children[c - ' '] = temp;
                 }
-                curr = curr.children[c - '!'];
+                curr = curr.children[c - ' '];
             }
             curr.isWord = true;
         }
@@ -67,11 +76,11 @@ namespace SearchEngine
             for (int i = 0; i < word.Length; i++)
             {
                 char c = word[i];
-                if (curr.children[c - '!'] == null)
+                if (curr.children[c - ' '] == null)
                 {
                     return null;
                 }
-                curr = curr.children[c - '!'];
+                curr = curr.children[c - ' '];
             }
 
             return curr;
@@ -95,10 +104,10 @@ namespace SearchEngine
                 
             }
 
-            for (int i = 0; i < 94; i++)
+            for (int i = 0; i < 95; i++)
             {
-                node next = trienode.children[((char)(i + '!')) - '!'];
-                string nextWord = word + (char)(i + '!');
+                node next = trienode.children[((char)(i + ' ')) - ' '];
+                string nextWord = word + (char)(i + ' ');
                 if (next != null)
                 {
                     this.addAllwords(next, nextWord, words);
@@ -112,7 +121,9 @@ namespace SearchEngine
 
 
 
-        //this is the class for creating nodes for the trie tree
+        ///<summary>
+        ///This is the class for creating a trie node
+        ///<summary>
         public class node
         {
             public char c;
@@ -120,11 +131,16 @@ namespace SearchEngine
             public node[] children;
 
 
+            ///<summary>
+            ///The node initialized with a character variable
+            ///<summary>
+            ///<returns>A proper instance of a trie node.<returns>
+            ///<param name='c'>Character to be stored in the trie tree.<param>
             public node(char c)
             {
                 this.c = c;
                 this.isWord = false;
-                this.children = new node[94];
+                this.children = new node[95];
             }
 
         }
@@ -172,7 +188,7 @@ namespace SearchEngine
                 return myWords;
                 }
                 else{
-                    return new[] { "error", "error" };
+                    return new[] { " "};
                 }
         }
     }

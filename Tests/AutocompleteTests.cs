@@ -53,16 +53,16 @@ namespace Tests
             words.Add("Bye");
             words.Add("Good");
             words.Add("Hello");
-            words.Add("Goodbye");
+            words.Add("Goodbye this is the end");
             words.Add("sucks");
             words.Add("bye");
             words.Add("1987");
 
             Autocomplete autocomplete = new Autocomplete(words);
-            string test = "19";
+            string test = "Good";
             result = autocomplete.auto(test);
             Console.WriteLine(result[0]);
-           CollectionAssert.AreEqual(new[] {"1987"}, result);
+           CollectionAssert.AreEqual(new[] {"Good", "Goodbye this is the end"}, result);
 
         }
 
