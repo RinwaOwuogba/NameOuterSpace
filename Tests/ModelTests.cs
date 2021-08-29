@@ -50,10 +50,12 @@ namespace Tests{
         public void Test_WordDocument_AddDoc(){
             var worddoc = new WordDocument("Dream");
             var docid = 4;
+            var dococcurence = 7;
 
-            worddoc.AddDoc(docid, 7);
+            worddoc.AddDoc(docid, dococcurence);
 
             Assert.AreEqual(worddoc.Documents.Count, 1);
+            Assert.AreEqual(dococcurence, worddoc.TotalOccurence);
         }
 
         [TestMethod]
@@ -61,11 +63,16 @@ namespace Tests{
             var worddoc = new WordDocument("Dream");
             int doc1 = 3;
             int doc2 = 5;
-            worddoc.AddDoc(doc1, 3);
-            worddoc.AddDoc(doc2, 7);
+            var doc1occurs = 2;
+            var doc2occurs = 5;
+
+            worddoc.AddDoc(doc1, doc1occurs);
+            worddoc.AddDoc(doc2, doc2occurs);
 
             worddoc.RemoveDoc(doc1);
             Assert.AreEqual(worddoc.Documents.Count, 1);
+            Assert.AreEqual(doc2occurs, worddoc.TotalOccurence);
+
         }
     }
 

@@ -2,10 +2,11 @@ using System.Collections.Generic;
 
 namespace SearchEngine
 {
-    /// <summary>
-    /// Representation of a natural language query
-    /// </summary>
-    public class ParserQuery : Dictionary<string, long> { }
+    public interface IEngine
+    {
+        List<WordDocument> GetWordDocuments(List<string> words);
+        long GetAllDocumentsCount();
+    }
 
     /// <summary>
     /// Forward index of a text

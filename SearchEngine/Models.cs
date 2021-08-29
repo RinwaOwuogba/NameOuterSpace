@@ -4,13 +4,14 @@ using System.Security.Cryptography;
 using System.IO;
 using LiteDB;
 
-namespace SearchEngine{
+namespace SearchEngine
+{
 
     /// <summary>
     ///     Represents A collection of Details in the Database
     /// </summary>
     public class MetaDetails
-    {   
+    {
         /// <summary>
         ///     The Id that will be used to access a document
         /// </summary>
@@ -18,13 +19,13 @@ namespace SearchEngine{
         /// <summary>
         /// The Path to the repo where the documents will be stored
         /// </summary>
-        public string repositoryPath{ get; set; }
-        
+        public string repositoryPath { get; set; }
+
         /// <summary>
         ///     The number of documents that have been indexed so far
         /// </summary>
         public int indexedDocumentCount { get; set; }
-        
+
         /// <summary>
         ///     Keeps track of the last time the repo was traversed
         /// </summary>
@@ -38,7 +39,8 @@ namespace SearchEngine{
     /// <summary>
     ///     Represents a file in in collection of Files
     /// </summary>
-    public class FileDocument{
+    public class FileDocument
+    {
         public int Id { get; set; }
 
         /// <summary>
@@ -73,7 +75,8 @@ namespace SearchEngine{
     ///     Represents A Word and a list of its associated docs
     ///     The full Collection is the inverted index, a collection of Word Documents
     /// </summary>
-    public class WordDocument{
+    public class WordDocument
+    {
 
         /// <summary>
         ///     A word in the reverse index
@@ -84,10 +87,12 @@ namespace SearchEngine{
         ///     A dictionary that contains all the document Ids that have the word in them and the occurence of the word
         /// </summary>
         private Dictionary<int, long> documents;
-        
+
         /// <summary>
         ///     An object Id property used to uniquely identify a document
         /// </summary>
+
+        private long totalOccurence;
         public ObjectId Id{ get; set; }
 
         /// <summary>
@@ -99,17 +104,24 @@ namespace SearchEngine{
         ///     Accompanying Document Property for documents field
         /// </summary>
         public Dictionary<int, long> Documents { get => documents; private set => documents = value; }
+        public long TotalOccurence { get => totalOccurence; private set => totalOccurence = value; }
+
+
+        public long totalOccurrence = 0;
+
 
         /// <summary>
         ///     1st constructor for WordDocument
         /// </summary>
         /// <param name="word"> the word that will be stored in the index</param>
-        public WordDocument(string word){
+        public WordDocument(string word)
+        {
             Id = ObjectId.NewObjectId();
             this.word = word.ToLower();
             this.Documents = new Dictionary<int, long>();
+            this.totalOccurence = 0;
         }
-        
+
 
         /// <summary>
         ///     The Constructor that the db uses to initialise a WordDoc object
@@ -118,26 +130,30 @@ namespace SearchEngine{
         /// <param name="word">the word that wiil be stored in the index </param>
         /// <param name="doc"> a dictionary of Docids and the word's occurence</param>
         [BsonCtor]
-        public WordDocument(ObjectId _id, string word, Dictionary<int, long> doc){
+        public WordDocument(ObjectId _id, string word, Dictionary<int, long> doc, long totalOccurence)
+        {
             Id = _id;
             this.Word = word;
             this.Documents = doc;
+            this.totalOccurence = totalOccurence;
         }
 
         /// <summary>
-        ///     remove a doc id from the dictionary
+        ///     remove a doc id from the dictionary and decrements the total occurence of the word
         /// </summary>
         /// <param name="docId"> a docid that maps to a document in the db</param>
         public void RemoveDoc(int docId){
+            totalOccurence -= documents.GetValueOrDefault(docId, 0);
             Documents.Remove(docId);
         }
 
         /// <summary>
-        ///     add a doc id to the dictionary
+        ///     add a doc id to the dictionary and increments the total occurence of the word 
         /// </summary>
         /// <param name="docId">a docid that maps to a document in the db</param>
         /// <param name="occurences"> the number of times the word appears in the doc</param>
         public void AddDoc(int docId, long occurences){
+            totalOccurence += occurences;
             Documents.Add(docId, occurences);
         }
 
@@ -145,7 +161,8 @@ namespace SearchEngine{
         {
             string output = "";
             output += Word + "\n";
-            foreach(var x in Documents.Keys){
+            foreach (var x in Documents.Keys)
+            {
                 output += "docid: " + x + " occurence:" + Documents[x] + "\n";
             }
             return output;

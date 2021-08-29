@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SearchEngine;
 
@@ -245,7 +246,6 @@ namespace Tests
         }
 
         [TestMethod]
-
         public void Test_Engine_DeleteWordDocument_works()
         {
             var filename1 = "simple.html";
@@ -282,33 +282,41 @@ namespace Tests
 
         [TestMethod]
         public void Test_Engine_DeleteDocumentReferencesFromInvertedIndex_works(){
-            var filename1 = "simple.html";
-            var filename2 = "simple.ppt";
+            var filename1 = "deletetest1.txt";
+            var filename2 = "deletetestdeux.txt";
+            var meta = engine.GetMetaInfo();
             var docid1 = engine.AddDocument(filename1);
             var docid2 = engine.AddDocument(filename2);
 
-            var word1 = "dog";
-            var word2 = "cat";
-            var word3 = "chair";
+            var i = new Indexer(meta.repositoryPath + filename1, meta.stopWords.ToHashSet<string>());
+            var dex1 = i.IndexFile().index;
 
-            var doc1_forwardIndex = new Dictionary<string, long>();
-            doc1_forwardIndex.Add(word1, 3);
-            doc1_forwardIndex.Add(word2, 2);
-            doc1_forwardIndex.Add(word3, 1);
+            var j = new Indexer(meta.repositoryPath + filename2, meta.stopWords.ToHashSet<string>());
+            var dex2 = j.IndexFile().index;
 
-            var doc2_forwardIndex = new Dictionary<string, long>();
-            doc2_forwardIndex.Add(word2, 2);
-            doc2_forwardIndex.Add(word3, 115);
+            var wordsharedbyboth = "babe";
 
-            engine.AddIntoReverseIndex(docid1, doc1_forwardIndex);
-            engine.AddIntoReverseIndex(docid2, doc2_forwardIndex);
+            engine.AddIntoReverseIndex(docid1, dex1);
+            engine.AddIntoReverseIndex(docid2, dex2);
+
+            var words = engine.GetAllWords();
 
             engine.DeleteDocumentReferencesFromInvertedIndex(docid1);
 
-            var worddocs = engine.GetWordDocuments(new List<string>(){word1, word2});
+            var worddocs = engine.GetWordDocument(wordsharedbyboth);
+            Assert.IsFalse(worddocs.Documents.ContainsKey(docid1));
+        }
 
-            Assert.IsTrue(worddocs[0].Documents.ContainsKey(docid1));
-            Assert.IsTrue(worddocs[1].Documents.ContainsKey(docid1));
+        [TestMethod]
+        public void Test_Count_InvertedIndex(){
+            File.WriteAllText("temp.txt", "greg monday creek");
+            var i = new Indexer("temp.txt", new HashSet<string>());
+            var dex = i.IndexFile().index;
+            
+            engine.AddIntoReverseIndex(1, dex);
+
+            Assert.AreEqual(4, engine.CountInvertedIndex());
+            File.Delete("temp.txt");
         }
     }
 
