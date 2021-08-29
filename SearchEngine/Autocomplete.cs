@@ -42,11 +42,11 @@ namespace SearchEngine
             {
                 char c = word[i];
                 node temp = new node(c);
-                if (curr.children[c - ' '] == null)
+                if (curr.children[c - (char)0] == null)
                 {
-                    curr.children[c - ' '] = temp;
+                    curr.children[c - (char)0] = temp;
                 }
-                curr = curr.children[c - ' '];
+                curr = curr.children[c - (char)0];
             }
             curr.isWord = true;
         }
@@ -76,11 +76,11 @@ namespace SearchEngine
             for (int i = 0; i < word.Length; i++)
             {
                 char c = word[i];
-                if (curr.children[c - ' '] == null)
+                if (curr.children[c - (char)0] == null)
                 {
                     return null;
                 }
-                curr = curr.children[c - ' '];
+                curr = curr.children[c - (char)0];
             }
 
             return curr;
@@ -104,10 +104,10 @@ namespace SearchEngine
                 
             }
 
-            for (int i = 0; i < 95; i++)
+            for (int i = 0; i < 256; i++)
             {
-                node next = trienode.children[((char)(i + ' ')) - ' '];
-                string nextWord = word + (char)(i + ' ');
+                node next = trienode.children[((char)(i + (char)0)) - (char)0];
+                string nextWord = word + (char)(i + (char)0);
                 if (next != null)
                 {
                     this.addAllwords(next, nextWord, words);
@@ -140,7 +140,7 @@ namespace SearchEngine
             {
                 this.c = c;
                 this.isWord = false;
-                this.children = new node[95];
+                this.children = new node[256];
             }
 
         }
