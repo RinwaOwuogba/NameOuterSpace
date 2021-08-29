@@ -26,7 +26,7 @@ namespace SearchEngine
             HashSet<string> stopWords
         )
         {
-            ForwardIndex queryIndex = Indexer.IndexText(naturalLangQuery, stopWords);
+            Dictionary<string, long> queryIndex = Indexer.IndexText(naturalLangQuery, stopWords);
 
             return new ParsedQuery(naturalLangQuery, queryIndex);
         }

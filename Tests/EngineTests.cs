@@ -277,11 +277,12 @@ namespace Tests
             Assert.IsNull(deletedword);
             Assert.AreEqual(words.Count, 2);
             CollectionAssert.DoesNotContain(words, word1);
-            
+
         }
 
         [TestMethod]
-        public void Test_Engine_DeleteDocumentReferencesFromInvertedIndex_works(){
+        public void Test_Engine_DeleteDocumentReferencesFromInvertedIndex_works()
+        {
             var filename1 = "deletetest1.txt";
             var filename2 = "deletetestdeux.txt";
             var meta = engine.GetMetaInfo();
@@ -289,10 +290,10 @@ namespace Tests
             var docid2 = engine.AddDocument(filename2);
 
             var i = new Indexer(meta.repositoryPath + filename1, meta.stopWords.ToHashSet<string>());
-            var dex1 = i.IndexFile().index;
+            var dex1 = i.IndexFile();
 
             var j = new Indexer(meta.repositoryPath + filename2, meta.stopWords.ToHashSet<string>());
-            var dex2 = j.IndexFile().index;
+            var dex2 = j.IndexFile();
 
             var wordsharedbyboth = "babe";
 
@@ -308,11 +309,12 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Test_Count_InvertedIndex(){
+        public void Test_Count_InvertedIndex()
+        {
             File.WriteAllText("temp.txt", "greg monday creek");
             var i = new Indexer("temp.txt", new HashSet<string>());
-            var dex = i.IndexFile().index;
-            
+            var dex = i.IndexFile();
+
             engine.AddIntoReverseIndex(1, dex);
 
             Assert.AreEqual(4, engine.CountInvertedIndex());

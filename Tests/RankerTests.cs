@@ -217,6 +217,7 @@ namespace Tests
                 new KeyValuePair<int, double>(3, 0.7756734768)
             };
 
+            // acceptable error margin 
             const double DELTA = 0.0000000001;
 
             Assert.AreEqual(expectedDocumentRanks[0].Value, computedDocumentRanks[0].Value, DELTA);

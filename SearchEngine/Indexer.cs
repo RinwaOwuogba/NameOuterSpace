@@ -1,7 +1,7 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.IO;
-using OpenNLP.Tools.Tokenize;
 using Porter2Stemmer;
 
 namespace SearchEngine
@@ -43,15 +43,15 @@ namespace SearchEngine
         /// Generates the forward index for a file
         /// </summary>
         /// <returns>Dictionary containing file forward index</returns>
-        public (ForwardIndex index, long recordLength) IndexFile()
+        public Dictionary<string, long> IndexFile()
         {
             Parser parser = AutoDetectParser.GetContextParser(this.filePath);
 
             this.text = this.fileName + " " + parser.Parse();
 
-            ForwardIndex index = Indexer.IndexText(this.text, this.stopWords);
+            Dictionary<string, long> index = Indexer.IndexText(this.text, this.stopWords);
 
-            return (index, this.text.Length);
+            return index;
         }
 
         /// <summary>
@@ -60,11 +60,17 @@ namespace SearchEngine
         /// <param name="text">Text to index</param>
         /// <param name="stopWords">Stop words to remove from index</param>
         /// <returns>Dictionary containing string forward index</returns>
-        public static ForwardIndex IndexText(string text, HashSet<string> stopWords)
+        public static Dictionary<string, long> IndexText(string text, HashSet<string> stopWords)
         {
-            // create tokens from text string
-            EnglishRuleBasedTokenizer tokenizer = new EnglishRuleBasedTokenizer(true);
-            string[] tokens = tokenizer.Tokenize(text);
+            // splits text string into individual tokens
+            string[] tokens = Regex.Split(
+                Regex.Replace(text,
+                    "[^a-zA-Z0-9']",
+                    " "
+                )
+                .Trim(),
+                "\\s+"
+            );
 
             // stem tokens to root word e.g
             // happier -> happy
@@ -90,7 +96,7 @@ namespace SearchEngine
             }
 
             // create forward index
-            ForwardIndex forwardIndex = new ForwardIndex();
+            Dictionary<string, long> forwardIndex = new Dictionary<string, long>();
 
             foreach (string word in filteredWords)
             {
