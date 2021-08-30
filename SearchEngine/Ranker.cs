@@ -126,17 +126,16 @@ namespace SearchEngine
         public void AggregateDocumentTermWeights()
         {
             this.documentTermWeights = new Dictionary<int, Dictionary<string, double>>();
-            long documentsInCollection = this.engine.GetAllDocumentsCount();
+            long noOfDocumentsInCollection = this.engine.GetAllDocumentsCount();
 
             foreach (WordDocument wordDocument in this.wordDocumentsList)
             {
                 long totalTermOccurrenceInCollection = wordDocument.totalOccurrence;
-                double termIDF =
-                    Math.Log2(
-                        (documentsInCollection - totalTermOccurrenceInCollection) /
-                        totalTermOccurrenceInCollection
-                    );
 
+                double termIDF =
+                    Math.Log2(noOfDocumentsInCollection / totalTermOccurrenceInCollection) + 1;
+
+                //  - totalTermOccurrenceInCollection
                 foreach (KeyValuePair<int, long> document in wordDocument.Documents)
                 {
                     // calculate term weight in document
