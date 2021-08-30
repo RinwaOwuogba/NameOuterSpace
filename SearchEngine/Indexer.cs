@@ -10,7 +10,7 @@ namespace SearchEngine
     /// Class to compute the reverse index of a file's
     /// text content
     /// </summary>
-    public class Indexer
+    public class Indexer : IIndexer
     {
         /// <summary>
         /// Stop words to skip in forward index

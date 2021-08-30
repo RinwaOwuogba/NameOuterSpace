@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace SearchEngine
 {
@@ -33,7 +32,11 @@ namespace SearchEngine
         /// <summary>
         /// Documents rank according to query relevance
         /// </summary>
-        public List<KeyValuePair<int, double>> documentRanks { get; private set; }
+        public List<KeyValuePair<int, double>> documentRanks
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// Weight of query terms in relation to query
@@ -44,8 +47,19 @@ namespace SearchEngine
             protected set;
         }
 
+        /// <summary>
+        /// List of word documents <see cref="WordDocument" /> from the inverted index
+        /// that relate to the current query
+        /// </summary>
         private List<WordDocument> wordDocumentsList;
 
+        /// <summary>
+        /// Constructor for a ranker instance
+        /// </summary>
+        /// <param name="query">Query to fetch results for</param>
+        /// <param name="engine">An instance of the engine class that
+        /// implements the <see cref="IEngine" /> interface
+        /// </param>
         public Ranker(ParsedQuery query, IEngine engine)
         {
             this.engine = engine;
@@ -58,7 +72,7 @@ namespace SearchEngine
         }
 
         /// <summary>
-        /// Returns relevant documents to the current query sorted in
+        /// Calulates relevant documents to the current query sorted in
         /// descending / ascending order (not sure) yet by relevance
         /// </summary>
         public void Rank()
@@ -77,7 +91,6 @@ namespace SearchEngine
             );
         }
 
-
         /// <summary>
         /// Collects the weight of every term in the current query relative
         /// to the query itself
@@ -86,7 +99,7 @@ namespace SearchEngine
         {
             this.queryTermWeights = new Dictionary<string, double>();
 
-            long maxTermFreq = this.ParsedQuery.GetMaxQueryFreq();
+            long maxTermFreq = this.ParsedQuery.GetMaxQueryTermFreq();
             long documentsInCollection = this.engine.GetAllDocumentsCount();
 
             foreach (WordDocument wordDocument in this.wordDocumentsList)

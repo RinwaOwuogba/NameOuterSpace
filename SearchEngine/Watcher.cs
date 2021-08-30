@@ -196,7 +196,7 @@ namespace SearchEngine
                     engine.DeleteDocument(file);
                 }
                 Console.WriteLine("i dey");
-                
+
                 foreach (var file in FilesToBeIndexed)
                 {
                     Console.WriteLine(repoBeingWatched + "  " + file);
