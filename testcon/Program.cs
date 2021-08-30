@@ -60,7 +60,7 @@ namespace testcon
 
                 Console.WriteLine(engine.GetWordDocument("john"));
                 stopwatch.Start();
-                var d = querier.Query("john opuye yam");
+                List<FileDocument> d = querier.Query("john opuye yam");
                 stopwatch.Stop();
 
                 Console.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
@@ -69,7 +69,10 @@ namespace testcon
                 {
                     Console.WriteLine(x.Filename + "  " + x.Id + "yipee");
                 }
-            string s = "";
+                if (d.Count == 0) Console.WriteLine("Omo, no results sha");
+
+                // if (d.l)
+                string s = "";
                 // foreach (var x in engine.GetAllWords())
                 //     {
                 //         //Console.WriteLine(x.Filename + "  " + x.Id);
@@ -80,19 +83,22 @@ namespace testcon
                 Console.WriteLine("-----------------------------------------");
                 Thread.Sleep(5000);
 
-           }
+            }
         }
 
-        static void p(object something){
+        static void p(object something)
+        {
             Console.WriteLine(something);
         }
 
-        static void pl<t>(List<t> l){
-            foreach(var o in l){
+        static void pl<t>(List<t> l)
+        {
+            foreach (var o in l)
+            {
                 p(o);
             }
         }
-     
-    
+
+
     }
 }

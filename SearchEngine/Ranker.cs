@@ -53,6 +53,8 @@ namespace SearchEngine
         /// </summary>
         private List<WordDocument> wordDocumentsList;
 
+        private long noOfDocumentsInCollection;
+
         /// <summary>
         /// Constructor for a ranker instance
         /// </summary>
@@ -66,9 +68,11 @@ namespace SearchEngine
             this.ParsedQuery = query;
 
             this.documentTermWeights = new Dictionary<int, Dictionary<string, double>>();
-            this.wordDocumentsList = this.wordDocumentsList = this.engine.GetWordDocuments(
+            this.wordDocumentsList = this.engine.GetWordDocuments(
                 new List<string>(this.ParsedQuery.QueryIndex.Keys)
             );
+            this.noOfDocumentsInCollection = this.engine.GetAllDocumentsCount();
+
         }
 
         /// <summary>
@@ -100,16 +104,15 @@ namespace SearchEngine
             this.queryTermWeights = new Dictionary<string, double>();
 
             long maxTermFreq = this.ParsedQuery.GetMaxQueryTermFreq();
-            long noOfDocumentsInCollection = this.engine.GetAllDocumentsCount();
 
             foreach (WordDocument wordDocument in this.wordDocumentsList)
             {
                 // skip adding term to query term weights
                 // if term doesn't exist in inverse index
-                if (wordDocument.totalOccurrence < 1) continue;
+                if (wordDocument.TotalOccurrence < 1) continue;
 
                 double termIDF =
-                    Math.Log2(noOfDocumentsInCollection / wordDocument.totalOccurrence) + 1;
+                    Math.Log2(noOfDocumentsInCollection / wordDocument.TotalOccurrence) + 1;
 
                 double termWeightInQuery =
                     (0.5 + ((0.5 * this.ParsedQuery.QueryIndex[wordDocument.Word]) /
@@ -126,16 +129,15 @@ namespace SearchEngine
         public void AggregateDocumentTermWeights()
         {
             this.documentTermWeights = new Dictionary<int, Dictionary<string, double>>();
-            long noOfDocumentsInCollection = this.engine.GetAllDocumentsCount();
 
             foreach (WordDocument wordDocument in this.wordDocumentsList)
             {
                 // skip adding term to document term weights
                 // if term doesn't exist in inverse index
-                if (wordDocument.totalOccurrence < 1) continue;
+                if (wordDocument.TotalOccurrence < 1) continue;
 
                 double termIDF =
-                    Math.Log2(noOfDocumentsInCollection / wordDocument.totalOccurrence) + 1;
+                    Math.Log2(noOfDocumentsInCollection / wordDocument.TotalOccurrence) + 1;
 
                 foreach (KeyValuePair<int, long> document in wordDocument.Documents)
                 {
@@ -155,6 +157,7 @@ namespace SearchEngine
                         this.documentTermWeights[document.Key][wordDocument.Word] = termWeightInDocument;
                     }
                 }
+
             }
         }
 
