@@ -82,6 +82,7 @@ namespace SearchEngine
         ///     A word in the reverse index
         /// </summary>
         private string word;
+        private long totalOccurrence;
 
         /// <summary>
         ///     A dictionary that contains all the document Ids that have the word in them and the occurence of the word
@@ -92,8 +93,7 @@ namespace SearchEngine
         ///     An object Id property used to uniquely identify a document
         /// </summary>
 
-        private long totalOccurence;
-        public ObjectId Id{ get; set; }
+        public ObjectId Id { get; set; }
 
         /// <summary>
         ///     Accompanying Word Property for word field
@@ -104,8 +104,7 @@ namespace SearchEngine
         ///     Accompanying Document Property for documents field
         /// </summary>
         public Dictionary<int, long> Documents { get => documents; private set => documents = value; }
-        public long TotalOccurence { get => totalOccurence; private set => totalOccurence = value; }
-
+        public long TotalOccurence { get => totalOccurrence; private set => totalOccurrence = value; }
 
         /// <summary>
         ///     1st constructor for WordDocument
@@ -116,7 +115,7 @@ namespace SearchEngine
             Id = ObjectId.NewObjectId();
             this.word = word.ToLower();
             this.Documents = new Dictionary<int, long>();
-            this.totalOccurence = 0;
+            this.totalOccurrence = 0;
         }
 
 
@@ -127,20 +126,21 @@ namespace SearchEngine
         /// <param name="word">the word that wiil be stored in the index </param>
         /// <param name="doc"> a dictionary of Docids and the word's occurence</param>
         [BsonCtor]
-        public WordDocument(ObjectId _id, string word, Dictionary<int, long> doc, long totalOccurence)
+        public WordDocument(ObjectId _id, string word, Dictionary<int, long> doc, long totalOccurrence)
         {
             Id = _id;
             this.Word = word;
             this.Documents = doc;
-            this.totalOccurence = totalOccurence;
+            this.totalOccurrence = totalOccurrence;
         }
 
         /// <summary>
         ///     remove a doc id from the dictionary and decrements the total occurence of the word
         /// </summary>
         /// <param name="docId"> a docid that maps to a document in the db</param>
-        public void RemoveDoc(int docId){
-            totalOccurence -= documents.GetValueOrDefault(docId, 0);
+        public void RemoveDoc(int docId)
+        {
+            totalOccurrence -= documents.GetValueOrDefault(docId, 0);
             Documents.Remove(docId);
         }
 
@@ -149,8 +149,9 @@ namespace SearchEngine
         /// </summary>
         /// <param name="docId">a docid that maps to a document in the db</param>
         /// <param name="occurences"> the number of times the word appears in the doc</param>
-        public void AddDoc(int docId, long occurences){
-            totalOccurence += occurences;
+        public void AddDoc(int docId, long occurences)
+        {
+            totalOccurrence += occurences;
             Documents.Add(docId, occurences);
         }
 

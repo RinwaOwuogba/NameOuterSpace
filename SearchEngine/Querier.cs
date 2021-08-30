@@ -20,7 +20,7 @@ namespace SearchEngine
         public Querier(Engine eng)
         {
             engine = eng;
-            this.indexer =  new Indexer(this.engine.GetMetaInfo().stopWords.ToHashSet<string>());
+            this.indexer = new Indexer(this.engine.GetMetaInfo().stopWords.ToHashSet<string>());
         }
 
         public string[] GetCompletions(string word)
@@ -28,13 +28,15 @@ namespace SearchEngine
             autocomplete = new Autocomplete(engine.GetAllWords());
             return autocomplete.auto(word);
         }
-        
-        public List<FileDocument> Query(string query){
+
+        public List<FileDocument> Query(string query)
+        {
             parsedquery = new ParsedQuery(query, this.indexer);
             var d = parsedquery.QueryIndex;
             
             Stopwatch stopwatch = new Stopwatch();
             var ranker = new Ranker(parsedquery, this.engine);
+
             ranker.Rank();
             var ranks = ranker.documentRanks;  
             stopwatch.Start();
@@ -47,7 +49,7 @@ namespace SearchEngine
             return engine.GetDocuments(ranks.Select(x => x.Key).ToHashSet());
 
         }
-        
+
 
     }
 }
