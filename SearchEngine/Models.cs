@@ -107,9 +107,6 @@ namespace SearchEngine
         public long TotalOccurence { get => totalOccurence; private set => totalOccurence = value; }
 
 
-        public long totalOccurrence = 0;
-
-
         /// <summary>
         ///     1st constructor for WordDocument
         /// </summary>

@@ -3,6 +3,8 @@ using System.IO;
 using System.Transactions;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
+
 using LiteDB;
 
 namespace SearchEngine
@@ -29,12 +31,20 @@ namespace SearchEngine
         
         public List<FileDocument> Query(string query){
             parsedquery = new ParsedQuery(query, this.indexer);
+            var d = parsedquery.QueryIndex;
             
+            Stopwatch stopwatch = new Stopwatch();
             var ranker = new Ranker(parsedquery, this.engine);
             ranker.Rank();
-            var ranks = ranker.documentRanks;
-            
-            return engine.GetDocuments(ranks.Select(x => x.Key).ToList());
+            var ranks = ranker.documentRanks;  
+            stopwatch.Start();
+                        
+            stopwatch.Stop();
+
+                Console.WriteLine("Elapsed in ranking Time is {0} ms", stopwatch.ElapsedMilliseconds);
+           
+
+            return engine.GetDocuments(ranks.Select(x => x.Key).ToHashSet());
 
         }
         

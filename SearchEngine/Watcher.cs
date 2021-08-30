@@ -218,7 +218,7 @@ namespace SearchEngine
                     }
 
                 }
-                Thread.Sleep(30000);
+                Thread.Sleep(200000);
 
             }
 

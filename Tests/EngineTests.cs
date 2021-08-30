@@ -170,7 +170,7 @@ namespace Tests
             engine.AddDocument(filename2);
             engine.AddDocument(filename3);
 
-            var docs = engine.GetDocuments(new List<int>() { 1, 2 });
+            var docs = engine.GetDocuments(new HashSet<int>() { 1, 2 });
 
             Assert.AreEqual(2, docs.Count);
         }
@@ -185,7 +185,7 @@ namespace Tests
             engine.AddDocument(filename2);
             engine.AddDocument(filename3);
 
-            var docs = engine.GetDocuments(new List<string>() { filename3, filename2 });
+            var docs = engine.GetDocuments(new HashSet<string>() { filename3, filename2 });
 
             Assert.AreEqual(2, docs.Count);
         }

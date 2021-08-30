@@ -129,7 +129,7 @@ namespace SearchEngine
         /// </summary>
         /// <param name="ids"> a list of file document ids</param>
         /// <returns> A list of File documents </returns>
-        public List<FileDocument> GetDocuments(List<int> ids){
+        public List<FileDocument> GetDocuments(HashSet<int> ids){
             var matcheddocs = new List<FileDocument>(documentCollection.Find(x => ids.Contains(x.Id)));
             return matcheddocs;
         }
@@ -139,7 +139,7 @@ namespace SearchEngine
         /// </summary>
         /// <param name="names"> a list of file names of the documents</param>
         /// <returns> A list of File documents </returns>
-        public List<FileDocument> GetDocuments(List<string> names){
+        public List<FileDocument> GetDocuments(HashSet<string> names){
             documentCollection.EnsureIndex("Filename");
             var matcheddocs = new List<FileDocument>(documentCollection.Find(x => names.Contains(x.Filename)));
             return matcheddocs;
@@ -265,7 +265,7 @@ namespace SearchEngine
         /// </summary>
         /// <param name="words"> A List of words in the reverse</param>
         /// <returns>A list of WordDocuments </returns>
-        public List<WordDocument> GetWordDocuments(List<string> words){
+        public List<WordDocument> GetWordDocuments(HashSet<string> words){
             invertedIndex.EnsureIndex("Word");
             var worddocs = new List<WordDocument>();
             worddocs = invertedIndex.Find(x => words.Select(y => y.ToLower())

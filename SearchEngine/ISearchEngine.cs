@@ -4,7 +4,7 @@ namespace SearchEngine
 {
     public interface IEngine
     {
-        List<WordDocument> GetWordDocuments(List<string> words);
+        List<WordDocument> GetWordDocuments(HashSet<string> words);
         long GetAllDocumentsCount();
     }
 

@@ -32,7 +32,7 @@ namespace testcon
 
             var watch = new Watcher(engine);
             var querier = new Querier(engine);
-            Watcher.IndexInBackGround(watch);
+            // Watcher.IndexInBackGround(watch);
             Stopwatch stopwatch = new Stopwatch();
 
             // foreach( var x in watch.getValidFilesFromRepo(meta.repositoryPath)){
@@ -57,19 +57,22 @@ namespace testcon
                 //                 Console.WriteLine(x);
                 //             }
                 //    // }
-
-                Console.WriteLine(engine.GetWordDocument("john"));
+                
+                Console.WriteLine(engine.GetWordDocument("opuy"));
                 stopwatch.Start();
-                var d = querier.Query("john opuye yam");
+                // var d = querier.Query("john opuye yam");                var d = querier.Query("john opuye yam");
+                engine.GetAllWords();
+            
                 stopwatch.Stop();
 
                 Console.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
                 //engine.GetAllDocuments()
-                foreach (var x in d)
-                {
-                    Console.WriteLine(x.Filename + "  " + x.Id + "yipee");
-                }
-            string s = "";
+                // foreach (var x in d)
+                // {
+                //     Console.WriteLine(x.Filename + "  " + x.Id + "yipee");
+                // }
+                break;
+                string s = "";
                 // foreach (var x in engine.GetAllWords())
                 //     {
                 //         //Console.WriteLine(x.Filename + "  " + x.Id);
@@ -78,7 +81,7 @@ namespace testcon
                 // File.WriteAllText("showthem.txt", s);
                 Console.WriteLine(engine.CountInvertedIndex());
                 Console.WriteLine("-----------------------------------------");
-                Thread.Sleep(5000);
+                // Thread.Sleep(5000);
 
            }
         }

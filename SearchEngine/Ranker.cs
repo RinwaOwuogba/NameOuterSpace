@@ -67,7 +67,7 @@ namespace SearchEngine
 
             this.documentTermWeights = new Dictionary<int, Dictionary<string, double>>();
             this.wordDocumentsList = this.wordDocumentsList = this.engine.GetWordDocuments(
-                new List<string>(this.ParsedQuery.QueryIndex.Keys)
+                new HashSet<string>(this.ParsedQuery.QueryIndex.Keys)
             );
         }
 
