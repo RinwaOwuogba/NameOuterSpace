@@ -36,20 +36,6 @@ namespace SearchEngine
             ranker.Rank();
             var ranks = ranker.documentRanks;
 
-            ///
-            /// 
-            var wordList = this.engine.GetWordDocuments(
-                new List<string>(this.parsedquery.QueryIndex.Keys)
-            );
-
-            foreach (WordDocument item in wordList)
-            {
-                Console.WriteLine("item: " + item.Word + " item.TotalOccurrence: " + item.TotalOccurrence);
-                Console.WriteLine("item.Documents.Count " + item.Documents.Count);
-                Console.WriteLine("``````````````````` ");
-            }
-            ///
-
             return engine.GetDocuments(ranks.Select(x => x.Key).ToList());
 
         }

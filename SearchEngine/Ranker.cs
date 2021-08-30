@@ -109,10 +109,10 @@ namespace SearchEngine
             {
                 // skip adding term to query term weights
                 // if term doesn't exist in inverse index
-                if (wordDocument.TotalOccurrence < 1) continue;
+                if (wordDocument.TotalOccurence < 1) continue;
 
                 double termIDF =
-                    Math.Log2(noOfDocumentsInCollection / wordDocument.TotalOccurrence) + 1;
+                    Math.Log2(noOfDocumentsInCollection / wordDocument.TotalOccurence) + 1;
 
                 double termWeightInQuery =
                     (0.5 + ((0.5 * this.ParsedQuery.QueryIndex[wordDocument.Word]) /
@@ -134,10 +134,10 @@ namespace SearchEngine
             {
                 // skip adding term to document term weights
                 // if term doesn't exist in inverse index
-                if (wordDocument.TotalOccurrence < 1) continue;
+                if (wordDocument.TotalOccurence < 1) continue;
 
                 double termIDF =
-                    Math.Log2(noOfDocumentsInCollection / wordDocument.TotalOccurrence) + 1;
+                    Math.Log2(noOfDocumentsInCollection / wordDocument.TotalOccurence) + 1;
 
                 foreach (KeyValuePair<int, long> document in wordDocument.Documents)
                 {

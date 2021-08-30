@@ -103,7 +103,7 @@ namespace SearchEngine
         ///     Accompanying Document Property for documents field
         /// </summary>
         public Dictionary<int, long> Documents { get => documents; private set => documents = value; }
-        public long TotalOccurrence { get => totalOccurrence; private set => totalOccurrence = value; }
+        public long TotalOccurence { get => totalOccurrence; private set => totalOccurrence = value; }
 
         public long totalOccurrence = 0;
 
