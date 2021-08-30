@@ -100,16 +100,14 @@ namespace SearchEngine
             this.queryTermWeights = new Dictionary<string, double>();
 
             long maxTermFreq = this.ParsedQuery.GetMaxQueryTermFreq();
-            long documentsInCollection = this.engine.GetAllDocumentsCount();
+            long noOfDocumentsInCollection = this.engine.GetAllDocumentsCount();
 
             foreach (WordDocument wordDocument in this.wordDocumentsList)
             {
                 long totalTermOccurrenceInCollection = wordDocument.totalOccurrence;
                 double termIDF =
-                    Math.Log2(
-                        (documentsInCollection - totalTermOccurrenceInCollection) /
-                        totalTermOccurrenceInCollection
-                    );
+                    Math.Log2(noOfDocumentsInCollection / totalTermOccurrenceInCollection) + 1;
+
 
                 double termWeightInQuery =
                     (0.5 + ((0.5 * this.ParsedQuery.QueryIndex[wordDocument.Word]) /
@@ -135,7 +133,6 @@ namespace SearchEngine
                 double termIDF =
                     Math.Log2(noOfDocumentsInCollection / totalTermOccurrenceInCollection) + 1;
 
-                //  - totalTermOccurrenceInCollection
                 foreach (KeyValuePair<int, long> document in wordDocument.Documents)
                 {
                     // calculate term weight in document
