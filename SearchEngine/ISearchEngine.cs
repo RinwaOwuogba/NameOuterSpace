@@ -8,7 +8,6 @@ namespace SearchEngine
         long GetAllDocumentsCount();
     }
 
-
     public interface IParsedQuery
     {
         string NaturalLangQuery { get; }

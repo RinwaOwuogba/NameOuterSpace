@@ -7,7 +7,14 @@ namespace SearchEngine
     /// </summary>
     public class ParsedQuery : IParsedQuery
     {
+        /// <summary>
+        /// Natural language query
+        /// </summary>
         public string NaturalLangQuery { get; }
+
+        /// <summary>
+        /// Query representation of natural language query
+        /// </summary>
         public Dictionary<string, long> QueryIndex { get; }
         public ParsedQuery(string naturalLanguageQuery, IIndexer indexer)
         {

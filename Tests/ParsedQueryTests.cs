@@ -1,5 +1,4 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using SearchEngine;
 using Moq;
@@ -22,7 +21,6 @@ namespace Tests
                     { "bought", 1},
                     { "china", 2},
                     { "about", 1},
-
                 });
 
             ParsedQuery parsedQuery = new ParsedQuery(naturalLangQuery, mockedIndexer.Object);
