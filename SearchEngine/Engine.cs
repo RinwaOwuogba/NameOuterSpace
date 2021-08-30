@@ -268,8 +268,7 @@ namespace SearchEngine
         public List<WordDocument> GetWordDocuments(HashSet<string> words){
             invertedIndex.EnsureIndex("Word");
             var worddocs = new List<WordDocument>();
-            worddocs = invertedIndex.Find(x => words.Select(y => y.ToLower())
-                                                    .Contains(x.Word)).ToList<WordDocument>();
+            worddocs = invertedIndex.Find(x => words.Contains(x.Word)).ToList<WordDocument>();
             return worddocs;
         }
         

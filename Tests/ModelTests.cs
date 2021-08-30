@@ -55,7 +55,7 @@ namespace Tests
             var docid = 4;
             var dococcurence = 7;
 
-            worddoc.AddDoc(docid, dococcurence); TotalOccurence
+            worddoc.AddDoc(docid, dococcurence);
 
             Assert.AreEqual(worddoc.Documents.Count, 1);
             Assert.AreEqual(dococcurence, worddoc.TotalOccurence);
@@ -71,7 +71,7 @@ namespace Tests
             var doc2occurs = 5;
 
             worddoc.AddDoc(doc1, doc1occurs);
-            worddoc.AddDoc(doc2, doc2occurs); TotalOccurence
+            worddoc.AddDoc(doc2, doc2occurs);
 
             worddoc.RemoveDoc(doc1);
             Assert.AreEqual(worddoc.Documents.Count, 1);

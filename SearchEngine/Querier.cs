@@ -34,19 +34,23 @@ namespace SearchEngine
             parsedquery = new ParsedQuery(query, this.indexer);
             var d = parsedquery.QueryIndex;
             
-            Stopwatch stopwatch = new Stopwatch();
+            // Stopwatch stopwatch = new Stopwatch();
+             
+            // stopwatch.Start();
             var ranker = new Ranker(parsedquery, this.engine);
-
             ranker.Rank();
-            var ranks = ranker.documentRanks;  
-            stopwatch.Start();
-                        
-            stopwatch.Stop();
+            var ranks = ranker.documentRanks;       
+            // stopwatch.Stop();
 
-                Console.WriteLine("Elapsed in ranking Time is {0} ms", stopwatch.ElapsedMilliseconds);
-           
+            //     Console.WriteLine("Elapsed in ranking Time is {0} ms", stopwatch.ElapsedMilliseconds);
 
-            return engine.GetDocuments(ranks.Select(x => x.Key).ToHashSet());
+            // Stopwatch qstopwatch = new Stopwatch();
+
+            // qstopwatch.Start();
+            var x = engine.GetDocuments(ranks.Select(x => x.Key).ToHashSet());
+            // qstopwatch.Stop();
+            // Console.WriteLine("Elapsed in fetching Time is {0} ms", qstopwatch.ElapsedMilliseconds);
+            return x;
 
         }
 

@@ -22,19 +22,16 @@ namespace Tests
             mockWordDocument1.AddDoc(1, 50);
             mockWordDocument1.AddDoc(2, 3);
             mockWordDocument1.AddDoc(3, 10);
-            mockWordDocument1.totalOccurrence = 63;
 
             WordDocument mockWordDocument2 = new WordDocument("china");
             mockWordDocument2.AddDoc(1, 3);
             mockWordDocument2.AddDoc(2, 6);
             mockWordDocument2.AddDoc(3, 1);
-            mockWordDocument2.totalOccurrence = 10;
 
             WordDocument mockWordDocument3 = new WordDocument("bought");
             mockWordDocument3.AddDoc(1, 0);
             mockWordDocument3.AddDoc(2, 2);
             mockWordDocument3.AddDoc(3, 4);
-            mockWordDocument3.totalOccurrence = 6;
 
             mockWordDocumentList.Add(mockWordDocument1);
             mockWordDocumentList.Add(mockWordDocument2);
@@ -52,7 +49,7 @@ namespace Tests
             string naturalLangQuery = "books bought in china";
 
             ParsedQuery parsedQuery = new ParsedQuery(naturalLangQuery, new Indexer(stopWords));
-            List<string> queryWords = new List<string>(parsedQuery.QueryIndex.Keys);
+            var queryWords = new HashSet<string>(parsedQuery.QueryIndex.Keys);
 
             engineMock.Setup(
                 engine => engine.GetWordDocuments(queryWords)
@@ -115,7 +112,7 @@ namespace Tests
             List<string> queryWords = new List<string>(parsedQuery.QueryIndex.Keys);
 
             engineMock.Setup(
-                engine => engine.GetWordDocuments(queryWords)
+                engine => engine.GetWordDocuments(new HashSet<string>(queryWords))
             ).Returns(mockWordDocumentList);
 
             Ranker ranker = new Ranker(parsedQuery, engineMock.Object);

@@ -60,32 +60,15 @@ namespace testcon
                 
                 Console.WriteLine(engine.GetWordDocument("opuy"));
                 stopwatch.Start();
-<<<<<<< HEAD
-                // var d = querier.Query("john opuye yam");                var d = querier.Query("john opuye yam");
-                engine.GetAllWords();
-            
-=======
-                List<FileDocument> d = querier.Query("john opuye yam");
->>>>>>> 2091c562e4939c01bb0f9010940d0d502a4e0192
+                var d = querier.Query("john opuye");
                 stopwatch.Stop();
 
                 Console.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
-                //engine.GetAllDocuments()
-<<<<<<< HEAD
-                // foreach (var x in d)
-                // {
-                //     Console.WriteLine(x.Filename + "  " + x.Id + "yipee");
-                // }
-                break;
-=======
                 foreach (var x in d)
                 {
                     Console.WriteLine(x.Filename + "  " + x.Id + "yipee");
                 }
-                if (d.Count == 0) Console.WriteLine("Omo, no results sha");
-
-                // if (d.l)
->>>>>>> 2091c562e4939c01bb0f9010940d0d502a4e0192
+                break;
                 string s = "";
                 // foreach (var x in engine.GetAllWords())
                 //     {
@@ -93,7 +76,6 @@ namespace testcon
                 //         s += x + "\n";
                 //     }
                 // File.WriteAllText("showthem.txt", s);
-                Console.WriteLine(engine.CountInvertedIndex());
                 Console.WriteLine("-----------------------------------------");
                 // Thread.Sleep(5000);
 
