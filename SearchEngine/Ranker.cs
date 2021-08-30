@@ -77,7 +77,6 @@ namespace SearchEngine
             );
         }
 
-
         /// <summary>
         /// Collects the weight of every term in the current query relative
         /// to the query itself
@@ -86,7 +85,7 @@ namespace SearchEngine
         {
             this.queryTermWeights = new Dictionary<string, double>();
 
-            long maxTermFreq = this.ParsedQuery.GetMaxQueryFreq();
+            long maxTermFreq = this.ParsedQuery.GetMaxQueryTermFreq();
             long documentsInCollection = this.engine.GetAllDocumentsCount();
 
             foreach (WordDocument wordDocument in this.wordDocumentsList)

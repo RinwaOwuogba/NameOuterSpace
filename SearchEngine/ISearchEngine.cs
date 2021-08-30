@@ -13,6 +13,12 @@ namespace SearchEngine
     {
         string NaturalLangQuery { get; }
         Dictionary<string, long> QueryIndex { get; }
-        long GetMaxQueryFreq();
+        long GetMaxQueryTermFreq();
+    }
+
+    public interface IIndexer
+    {
+        Dictionary<string, long> IndexFile(string filePath);
+        Dictionary<string, long> IndexText(string text);
     }
 }

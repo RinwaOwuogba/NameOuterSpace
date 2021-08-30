@@ -9,7 +9,7 @@ namespace SearchEngine
     {
         public string NaturalLangQuery { get; }
         public Dictionary<string, long> QueryIndex { get; }
-        public ParsedQuery(string naturalLanguageQuery, Indexer indexer)
+        public ParsedQuery(string naturalLanguageQuery, IIndexer indexer)
         {
             this.NaturalLangQuery = naturalLanguageQuery;
             this.QueryIndex = indexer.IndexText(naturalLanguageQuery);
@@ -20,7 +20,7 @@ namespace SearchEngine
         /// current query representation
         /// </summary>
         /// <returns>Maximum frequency of any term in the current query</returns>
-        public long GetMaxQueryFreq()
+        public long GetMaxQueryTermFreq()
         {
             long maxFreq = 0;
 

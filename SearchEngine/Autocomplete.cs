@@ -1,19 +1,14 @@
 using System;
-using System.Collections;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Xml.Linq;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace SearchEngine
 {
-    
+
     ///<summary>
     /// Class to create a trie data structure to store words for the autocomplete module
     ///<summary>
-    public class trie{
+    public class trie
+    {
 
         ///<summary>
         ///A trie node, it is usually the root node of the trie tree to be created.
@@ -100,13 +95,15 @@ namespace SearchEngine
 
             if (trienode.isWord == true)
             {
-                if(word == null){
+                if (word == null)
+                {
                     Console.WriteLine("There is an error");
                 }
-                else if(words != null){
+                else if (words != null)
+                {
                     words.Add(word);
                 }
-                
+
             }
 
             for (int i = 0; i < 256; i++)
@@ -117,7 +114,8 @@ namespace SearchEngine
                 {
                     this.addAllwords(next, nextWord, words);
                 }
-                else{
+                else
+                {
                     continue;
                 }
             }
@@ -173,8 +171,9 @@ namespace SearchEngine
             }
         }
 
-        public List<string> getWords(){
-        return this.words;
+        public List<string> getWords()
+        {
+            return this.words;
         }
 
 
@@ -186,15 +185,17 @@ namespace SearchEngine
         {
             node trienode = this.WordTree.startWith(args);
             string[] myWords;
-                if (trienode != null){
-                
+            if (trienode != null)
+            {
+
                 this.WordTree.addAllwords(trienode, args, this.result);
                 myWords = this.result.ToArray();
                 return myWords;
-                }
-                else{
-                    return new[] { " "};
-                }
+            }
+            else
+            {
+                return new[] { " " };
+            }
         }
     }
 }

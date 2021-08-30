@@ -120,7 +120,7 @@ namespace Tests
 
             Ranker ranker = new Ranker(parsedQuery, engineMock.Object);
             ranker.AggregateQueryTermWeights();
-            long maxTermFreq = parsedQuery.GetMaxQueryFreq();
+            long maxTermFreq = parsedQuery.GetMaxQueryTermFreq();
 
             Dictionary<string, double> termIdfs =
                 new Dictionary<string, double>
