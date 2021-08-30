@@ -42,11 +42,16 @@ namespace SearchEngine
             {
                 char c = word[i];
                 node temp = new node(c);
-                if (curr.children[c - (char)0] == null)
-                {
-                    curr.children[c - (char)0] = temp;
+                if(c - (char)0 > 255 || c - (char)0 < 0){
+                    continue;
                 }
-                curr = curr.children[c - (char)0];
+                else{
+                    if (curr.children[c - (char)0] == null)
+                    {
+                        curr.children[c - (char)0] = temp;
+                    }
+                    curr = curr.children[c - (char)0];
+                }
             }
             curr.isWord = true;
         }
