@@ -1,0 +1,8 @@
+@startuml
+class Indexer {
+    + Indexer(stopWords:HashSet<string>)
+    + IndexFile(filePath:string) : Dictionary<string, long>
+    + IndexText(text:string) : Dictionary<string, long>
+}
+IIndexer <|-- Indexer
+@enduml

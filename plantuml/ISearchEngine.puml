@@ -1,0 +1,17 @@
+@startuml
+interface IEngine {
+    GetWordDocuments(words:HashSet<string>) : List<WordDocument>
+    GetAllDocumentsCount() : long
+}
+interface IParsedQuery {
+    NaturalLangQuery : string <<get>>
+    GetMaxQueryTermFreq() : long
+}
+interface IIndexer {
+    IndexFile(filePath:string) : Dictionary<string, long>
+    IndexText(text:string) : Dictionary<string, long>
+}
+class "Dictionary`2"<T1,T2> {
+}
+IParsedQuery --> "QueryIndex<string,long>" "Dictionary`2"
+@enduml
