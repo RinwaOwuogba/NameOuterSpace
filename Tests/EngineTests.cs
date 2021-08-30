@@ -34,6 +34,7 @@ namespace Tests
         }
 
         [TestMethod]
+
         public void Test_Engine_MetaInfo_UpdateMetaInfoWorks()
         {
             var meta = engine.GetMetaInfo();
@@ -61,7 +62,7 @@ namespace Tests
         public void Test_Engine_AddDocument_addsDocumentToDB()
         {
             var filename = "simple.html";
-            var soon_to_be_outdatedmeta = engine.GetMetaInfo();
+            var soon_to_be_outdated_count = engine.GetAllDocumentsCount();
 
             var docid = engine.AddDocument(filename);
 
@@ -69,8 +70,8 @@ namespace Tests
 
             Assert.AreEqual(docid, 1);
             Assert.AreEqual(filename, docinDb.Filename);
-            Assert.AreEqual(soon_to_be_outdatedmeta.indexedDocumentCount + 1,
-                            engine.GetMetaInfo().indexedDocumentCount);
+            Assert.AreEqual(soon_to_be_outdated_count + 1,
+                            engine.GetAllDocumentsCount());
         }
 
         [TestMethod]
@@ -83,7 +84,7 @@ namespace Tests
 
             engine.DeleteDocument(docid1);
 
-            Assert.AreEqual(1, engine.GetMetaInfo().indexedDocumentCount);
+            Assert.AreEqual(1, engine.GetAllDocumentsCount());
             Assert.IsNull(engine.GetDocument(docid1));
         }
 
@@ -97,7 +98,7 @@ namespace Tests
 
             engine.DeleteDocument(filename1);
 
-            Assert.AreEqual(1, engine.GetMetaInfo().indexedDocumentCount);
+            Assert.AreEqual(1, engine.GetAllDocumentsCount());
             Assert.IsNull(engine.GetDocument(filename1));
         }
 
@@ -277,22 +278,23 @@ namespace Tests
             Assert.IsNull(deletedword);
             Assert.AreEqual(words.Count, 2);
             CollectionAssert.DoesNotContain(words, word1);
-            
+
         }
 
         [TestMethod]
-        public void Test_Engine_DeleteDocumentReferencesFromInvertedIndex_works(){
+        public void Test_Engine_DeleteDocumentReferencesFromInvertedIndex_works()
+        {
             var filename1 = "deletetest1.txt";
             var filename2 = "deletetestdeux.txt";
             var meta = engine.GetMetaInfo();
             var docid1 = engine.AddDocument(filename1);
             var docid2 = engine.AddDocument(filename2);
 
-            var i = new Indexer(meta.repositoryPath + filename1, meta.stopWords.ToHashSet<string>());
-            var dex1 = i.IndexFile().index;
+            var i = new Indexer(meta.stopWords.ToHashSet<string>());
+            var dex1 = i.IndexFile(meta.repositoryPath + filename1);
 
-            var j = new Indexer(meta.repositoryPath + filename2, meta.stopWords.ToHashSet<string>());
-            var dex2 = j.IndexFile().index;
+            var j = new Indexer(meta.stopWords.ToHashSet<string>());
+            var dex2 = j.IndexFile(meta.repositoryPath + filename2);
 
             var wordsharedbyboth = "babe";
 
@@ -308,15 +310,26 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Test_Count_InvertedIndex(){
-            File.WriteAllText("temp.txt", "greg monday creek");
-            var i = new Indexer("temp.txt", new HashSet<string>());
-            var dex = i.IndexFile().index;
-            
+        public void Test_Count_InvertedIndex()
+        {
+            File.WriteAllText("temp.txt", "greg monday");
+            var i = new Indexer(new HashSet<string>());
+            var dex = i.IndexFile("temp.txt");
+
             engine.AddIntoReverseIndex(1, dex);
 
             Assert.AreEqual(4, engine.CountInvertedIndex());
             File.Delete("temp.txt");
+        }
+
+        [TestMethod]
+        public void Test_GetAllDocumentsCount(){
+            engine.AddDocument("simple.txt");
+            engine.AddDocument("simple.html");
+
+            var count = engine.GetAllDocumentsCount();
+
+            Assert.AreEqual(count, 2);
         }
     }
 

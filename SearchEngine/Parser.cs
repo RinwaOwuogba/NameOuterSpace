@@ -16,23 +16,6 @@ using Spire.Xls;
 namespace SearchEngine
 {
     /// <summary>
-    /// Class to get the representation for a natural
-    /// language query
-    /// </summary>
-    public class QueryParser
-    {
-        public static ParsedQuery Parse(
-            string naturalLangQuery,
-            HashSet<string> stopWords
-        )
-        {
-            ForwardIndex queryIndex = Indexer.IndexText(naturalLangQuery, stopWords);
-
-            return new ParsedQuery(naturalLangQuery, queryIndex);
-        }
-    }
-
-    /// <summary>
     /// Class to automatically handle parsing of semantic text from files
     /// </summary>
     public class AutoDetectParser
