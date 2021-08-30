@@ -28,11 +28,12 @@ namespace testcon
 
             //     var doc4 = new SheetParser("../repository/testsheet2.xlsx");
             //   Console.WriteLine(doc4.Text);
-            var engine = new Engine("../Tests/TestFiles/");
+            var engine = new Engine("../repository/");
 
             var watch = new Watcher(engine);
+            //watch.watch();
             var querier = new Querier(engine);
-            // Watcher.IndexInBackGround(watch);
+            Watcher.IndexInBackGround(watch);
             Stopwatch stopwatch = new Stopwatch();
 
             // foreach( var x in watch.getValidFilesFromRepo(meta.repositoryPath)){
@@ -57,27 +58,28 @@ namespace testcon
                 //                 Console.WriteLine(x);
                 //             }
                 //    // }
-                
-                Console.WriteLine(engine.GetWordDocument("opuy"));
+
+                Console.WriteLine(engine.GetWordDocument("mina"));
                 stopwatch.Start();
-                var d = querier.Query("john opuye");
+                Console.WriteLine("got here, while");
+                var d = querier.Query("drake mina cake");
                 stopwatch.Stop();
 
                 Console.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
                 foreach (var x in d)
                 {
-                    Console.WriteLine(x.Filename + "  " + x.Id + "yipee");
+                    Console.WriteLine(x.Item1 + "  " + x.Item2 + "yipee");
                 }
                 break;
-                string s = "";
-                // foreach (var x in engine.GetAllWords())
+                // string s = "";
+                // // foreach (var x in engine.GetAllWords())
                 //     {
                 //         //Console.WriteLine(x.Filename + "  " + x.Id);
                 //         s += x + "\n";
                 //     }
                 // File.WriteAllText("showthem.txt", s);
                 Console.WriteLine("-----------------------------------------");
-                // Thread.Sleep(5000);
+                 Thread.Sleep(5000);
 
             }
         }

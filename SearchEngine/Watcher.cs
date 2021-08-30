@@ -5,9 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
-using Hangfire;
-using Hangfire.Server;
-using Hangfire.LiteDB;
+
 
 
 namespace SearchEngine
@@ -218,7 +216,7 @@ namespace SearchEngine
                     }
 
                 }
-                Thread.Sleep(200000);
+                Thread.Sleep(900000);
 
             }
 

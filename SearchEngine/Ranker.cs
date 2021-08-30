@@ -32,7 +32,7 @@ namespace SearchEngine
         /// <summary>
         /// Documents rank according to query relevance
         /// </summary>
-        public List<KeyValuePair<int, double>> documentRanks
+        public Dictionary<int, double> documentRanks
         {
             get;
             private set;
@@ -88,10 +88,6 @@ namespace SearchEngine
                 this.documentTermWeights,
                 this.ParsedQuery,
                 this.queryTermWeights
-            );
-
-            this.documentRanks.Sort(
-                (docRank1, docRank2) => docRank2.Key.CompareTo(docRank1.Key)
             );
         }
 
@@ -167,13 +163,13 @@ namespace SearchEngine
         /// 
         /// http://orion.lcg.ufrj.br/Dr.Dobbs/books/book5/chap14.htm
         /// </summary>
-        public static List<KeyValuePair<int, double>> CalculateDocumentsQueryRelevance(
+        public static Dictionary<int, double> CalculateDocumentsQueryRelevance(
             Dictionary<int, Dictionary<string, double>> documentTermWeights,
             IParsedQuery parsedQuery,
             Dictionary<string, double> queryTermWeights
         )
         {
-            List<KeyValuePair<int, double>> documentRanks = new List<KeyValuePair<int, double>>();
+            var documentRanks = new Dictionary<int, double>();
 
             foreach (KeyValuePair<int, Dictionary<string, double>> document in documentTermWeights)
             {
@@ -183,10 +179,10 @@ namespace SearchEngine
                 double queryQueryDotProduct = 0;
                 double documentDocumentDotProduct = 0;
 
-                foreach (KeyValuePair<string, double> documentTermEntry in document.Value)
+                foreach (KeyValuePair<string, double> queryTermEntry in queryTermWeights)
                 {
-                    double weightInDocument = documentTermEntry.Value;
-                    double weightInQuery = queryTermWeights[documentTermEntry.Key];
+                    double weightInQuery = queryTermEntry.Value;
+                    double weightInDocument = document.Value[queryTermEntry.Key];
 
                     queryDocumentDotProduct += weightInQuery * weightInDocument;
 
@@ -208,7 +204,7 @@ namespace SearchEngine
                 }
 
 
-                documentRanks.Add(new KeyValuePair<int, double>(document.Key, similarity));
+                documentRanks.Add(document.Key, similarity);
             }
 
             return documentRanks;
