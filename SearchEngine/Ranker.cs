@@ -193,9 +193,17 @@ namespace SearchEngine
 
                 // calculate document query similarity by cosine similarity measure
                 // with in-document weight
-                similarity =
-                    queryDocumentDotProduct /
-                    Math.Sqrt((queryQueryDotProduct * documentDocumentDotProduct));
+                if (queryDocumentDotProduct != 0)
+                {
+                    similarity =
+                        queryDocumentDotProduct /
+                        Math.Sqrt((queryQueryDotProduct * documentDocumentDotProduct));
+                }
+                else
+                {
+                    similarity = 0;
+                }
+
 
                 documentRanks.Add(new KeyValuePair<int, double>(document.Key, similarity));
             }
