@@ -430,7 +430,5 @@ FodyWeavers.xsd
 .idea/
 *.sln.iml
 
-
-repository/**
 bin/
 obj/
