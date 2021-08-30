@@ -104,10 +104,12 @@ namespace SearchEngine
 
             foreach (WordDocument wordDocument in this.wordDocumentsList)
             {
-                long totalTermOccurrenceInCollection = wordDocument.totalOccurrence;
-                double termIDF =
-                    Math.Log2(noOfDocumentsInCollection / totalTermOccurrenceInCollection) + 1;
+                // skip adding term to query term weights
+                // if term doesn't exist in inverse index
+                if (wordDocument.totalOccurrence < 1) continue;
 
+                double termIDF =
+                    Math.Log2(noOfDocumentsInCollection / wordDocument.totalOccurrence) + 1;
 
                 double termWeightInQuery =
                     (0.5 + ((0.5 * this.ParsedQuery.QueryIndex[wordDocument.Word]) /
@@ -128,10 +130,12 @@ namespace SearchEngine
 
             foreach (WordDocument wordDocument in this.wordDocumentsList)
             {
-                long totalTermOccurrenceInCollection = wordDocument.totalOccurrence;
+                // skip adding term to document term weights
+                // if term doesn't exist in inverse index
+                if (wordDocument.totalOccurrence < 1) continue;
 
                 double termIDF =
-                    Math.Log2(noOfDocumentsInCollection / totalTermOccurrenceInCollection) + 1;
+                    Math.Log2(noOfDocumentsInCollection / wordDocument.totalOccurrence) + 1;
 
                 foreach (KeyValuePair<int, long> document in wordDocument.Documents)
                 {
@@ -176,9 +180,9 @@ namespace SearchEngine
                 double queryQueryDotProduct = 0;
                 double documentDocumentDotProduct = 0;
 
-                foreach (KeyValuePair<string, long> queryTermEntry in parsedQuery.QueryIndex)
+                foreach (KeyValuePair<string, double> queryTermEntry in queryTermWeights)
                 {
-                    double weightInQuery = queryTermWeights[queryTermEntry.Key];
+                    double weightInQuery = queryTermEntry.Value;
                     double weightInDocument = document.Value[queryTermEntry.Key];
 
                     queryDocumentDotProduct += weightInQuery * weightInDocument;
@@ -189,7 +193,7 @@ namespace SearchEngine
 
                 // calculate document query similarity by cosine similarity measure
                 // with in-document weight
-                if (queryDocumentDotProduct != 0)
+                if (documentDocumentDotProduct != 0)
                 {
                     similarity =
                         queryDocumentDotProduct /
