@@ -183,10 +183,10 @@ namespace SearchEngine
                 double queryQueryDotProduct = 0;
                 double documentDocumentDotProduct = 0;
 
-                foreach (KeyValuePair<string, double> queryTermEntry in queryTermWeights)
+                foreach (KeyValuePair<string, double> documentTermEntry in document.Value)
                 {
-                    double weightInQuery = queryTermEntry.Value;
-                    double weightInDocument = document.Value[queryTermEntry.Key];
+                    double weightInDocument = documentTermEntry.Value;
+                    double weightInQuery = queryTermWeights[documentTermEntry.Key];
 
                     queryDocumentDotProduct += weightInQuery * weightInDocument;
 
