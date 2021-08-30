@@ -11,13 +11,14 @@ namespace SearchEngine
     {
         private Engine engine;
         private Autocomplete autocomplete;
-        private ParsedQuery parser;
+        private ParsedQuery parsedquery;
         private Indexer indexer;
 
 
         public Querier(Engine eng)
         {
             engine = eng;
+            this.indexer =  new Indexer(this.engine.GetMetaInfo().stopWords.ToHashSet<string>());
         }
 
         public string[] GetCompletions(string word)
@@ -25,18 +26,15 @@ namespace SearchEngine
             autocomplete = new Autocomplete(engine.GetAllWords());
             return autocomplete.auto(word);
         }
-
-        public void Query(string query){
-            this.indexer =  new Indexer(this.engine.getmetainfo.stopwords);
-            this.parser = new ParsedQuery(query, this.indexer);
-            var ranker = new Ranker(this.parser, this.engine);
+        
+        public List<FileDocument> Query(string query){
+            parsedquery = new ParsedQuery(query, this.indexer);
+            
+            var ranker = new Ranker(parsedquery, this.engine);
             ranker.Rank();
             var ranks = ranker.documentRanks;
-            var ids = new List<int>();
-            for(files in ranks){
-                ids.Add(files.Key);
-            }
-            var result = engine.GetDocuments(ids);
+            
+            return engine.GetDocuments(ranks.Select(x => x.Key).ToList());
 
         }
         
