@@ -38,7 +38,7 @@ namespace SearchEngine
         /// </summary>
         /// <param name="eng">an instance of engine</param>
         public Querier(Engine eng)
-        {   
+        {
             engine = eng;
             var meta = engine.GetMetaInfo();
             pathtorepo = meta.repositoryPath;
@@ -72,15 +72,16 @@ namespace SearchEngine
             var ranks = ranker.documentRanks;
 
             var filedocs = engine.GetDocuments(ranks.Keys.ToHashSet());
-            
-            var filesAndRanks = new List<Tuple<string, double>> ();
-            foreach(var docs in filedocs){
+
+            var filesAndRanks = new List<Tuple<string, double>>();
+            foreach (var docs in filedocs)
+            {
                 filesAndRanks.Add(new Tuple<string, double>(pathtorepo + docs.Filename, ranks[docs.Id]));
             }
             filesAndRanks.Sort(
                 (docRank1, docRank2) => docRank2.Item2.CompareTo(docRank1.Item2)
             );
-            Console.WriteLine(filesAndRanks[0].Item2);
+            // Console.WriteLine(filesAndRanks[0].Item2);
             return filesAndRanks;
 
         }
