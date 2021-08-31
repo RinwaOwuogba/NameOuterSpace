@@ -59,10 +59,10 @@ namespace testcon
                 //             }
                 //    // }
 
-                Console.WriteLine(engine.GetWordDocument("mina"));
+                Console.WriteLine(engine.GetWordDocument("this is a simple sentence"));
                 stopwatch.Start();
                 Console.WriteLine("got here, while");
-                var d = querier.Query("drake mina cake");
+                var d = querier.Query("this is a simple sentence");
                 stopwatch.Stop();
 
                 Console.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
