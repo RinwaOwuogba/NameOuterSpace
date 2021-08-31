@@ -31,9 +31,8 @@ namespace testcon
             var engine = new Engine("../repository/");
 
             var watch = new Watcher(engine);
-            //watch.watch();
             var querier = new Querier(engine);
-            Watcher.IndexInBackGround(watch);
+            //Watcher.IndexInBackGround(watch);
             Stopwatch stopwatch = new Stopwatch();
 
             // foreach( var x in watch.getValidFilesFromRepo(meta.repositoryPath)){
@@ -62,15 +61,14 @@ namespace testcon
                 Console.WriteLine(engine.GetWordDocument("mina"));
                 stopwatch.Start();
                 Console.WriteLine("got here, while");
-                var d = querier.Query("drake mina cake");
+                List<Tuple<string, double>> d = querier.Query("mina");
                 stopwatch.Stop();
 
                 Console.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
-                foreach (var x in d)
+                foreach (Tuple<string, double> x in d)
                 {
-                    Console.WriteLine(x.Item1 + "  " + x.Item2 + "yipee");
+                    Console.WriteLine(x.Item1 + "  " + x.Item2 + "");
                 }
-                break;
                 // string s = "";
                 // // foreach (var x in engine.GetAllWords())
                 //     {
@@ -78,6 +76,7 @@ namespace testcon
                 //         s += x + "\n";
                 //     }
                 // File.WriteAllText("showthem.txt", s);
+                break;
                 Console.WriteLine("-----------------------------------------");
                  Thread.Sleep(5000);
 

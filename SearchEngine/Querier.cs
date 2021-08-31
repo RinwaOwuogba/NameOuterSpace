@@ -66,24 +66,13 @@ namespace SearchEngine
         {
             parsedquery = new ParsedQuery(query, this.indexer);
             var d = parsedquery.QueryIndex;
-            
-            // Stopwatch stopwatch = new Stopwatch();
-             
-            // stopwatch.Start();
+
             var ranker = new Ranker(parsedquery, this.engine);
             ranker.Rank();
             var ranks = ranker.documentRanks;
-            // stopwatch.Stop();
 
-            // Console.WriteLine("Elapsed in ranking Time is {0} ms", stopwatch.ElapsedMilliseconds);
-
-            // Stopwatch qstopwatch = new Stopwatch();
-
-            // qstopwatch.Start();
             var filedocs = engine.GetDocuments(ranks.Keys.ToHashSet());
-            // qstopwatch.Stop();
-            // Console.WriteLine("Elapsed in fetching Time is {0} ms", qstopwatch.ElapsedMilliseconds);
-
+            
             var filesAndRanks = new List<Tuple<string, double>> ();
             foreach(var docs in filedocs){
                 filesAndRanks.Add(new Tuple<string, double>(pathtorepo + docs.Filename, ranks[docs.Id]));
@@ -91,6 +80,7 @@ namespace SearchEngine
             filesAndRanks.Sort(
                 (docRank1, docRank2) => docRank2.Item2.CompareTo(docRank1.Item2)
             );
+            Console.WriteLine(filesAndRanks[0].Item2);
             return filesAndRanks;
 
         }
