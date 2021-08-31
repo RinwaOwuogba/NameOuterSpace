@@ -125,13 +125,11 @@ namespace SearchEngine
         public void AggregateDocumentTermWeights()
         {
             this.documentTermWeights = new Dictionary<int, Dictionary<string, double>>();
-
             foreach (WordDocument wordDocument in this.wordDocumentsList)
             {
                 // skip adding term to document term weights
                 // if term doesn't exist in inverse index
                 if (wordDocument.TotalOccurence < 1) continue;
-
                 double termIDF =
                     Math.Log2(noOfDocumentsInCollection / wordDocument.TotalOccurence) + 1;
 
@@ -169,6 +167,9 @@ namespace SearchEngine
             Dictionary<string, double> queryTermWeights
         )
         {
+            foreach(var v in documentTermWeights){
+                
+            }
             var documentRanks = new Dictionary<int, double>();
 
             foreach (KeyValuePair<int, Dictionary<string, double>> document in documentTermWeights)
@@ -182,8 +183,7 @@ namespace SearchEngine
                 foreach (KeyValuePair<string, double> queryTermEntry in queryTermWeights)
                 {
                     double weightInQuery = queryTermEntry.Value;
-                    // Console.WriteLine(document.Value[queryTermEntry.Key]);
-                    double weightInDocument = document.Value[queryTermEntry.Key];
+                    double weightInDocument = document.Value.GetValueOrDefault(queryTermEntry.Key, 0);
 
                     queryDocumentDotProduct += weightInQuery * weightInDocument;
 

@@ -137,7 +137,6 @@ namespace SearchEngine
             {
                 if (file.MD5Hash != FileDocument.CalculateMD5Hash(directorypath + file.Filename))
                 {
-                    Console.WriteLine("filename in gIF" + file.Filename);
                     changedfiles.Add(file.Filename);
                 }
             }
@@ -153,7 +152,6 @@ namespace SearchEngine
             var meta = engine.GetMetaInfo();
             while (true)
             {
-                Console.WriteLine("in here");
 
                 HashSet<string> validFiles = getValidFilesFromRepo(meta.repositoryPath);
                 HashSet<string> FilesToBeIndexed = new HashSet<string>();
@@ -190,14 +188,11 @@ namespace SearchEngine
 
                 foreach (var file in FilesToBeRemoved)
                 {
-                    Console.WriteLine("oohoo");
                     engine.DeleteDocument(file);
                 }
-                Console.WriteLine("i dey");
 
                 foreach (var file in FilesToBeIndexed)
                 {
-                    Console.WriteLine(repoBeingWatched + "  " + file);
                     var i = new Indexer(meta.stopWords.ToHashSet<string>());
                     var dex = i.IndexFile(repoBeingWatched + file);
 
@@ -216,6 +211,7 @@ namespace SearchEngine
                     }
 
                 }
+                Console.WriteLine("Index porcess complete, will crawl repo agin in 15 minutes");
                 Thread.Sleep(900000);
 
             }

@@ -202,24 +202,24 @@ namespace Tests
                     {"bought", 1.324}
                 };
 
-            List<KeyValuePair<int, double>> computedDocumentRanks = Ranker.CalculateDocumentsQueryRelevance(
+            Dictionary<int, double> computedDocumentRanks = Ranker.CalculateDocumentsQueryRelevance(
                 documentTermWeights,
                 parsedQueryMock.Object,
                 queryTermWeights
             );
 
-            List<KeyValuePair<int, double>> expectedDocumentRanks = new List<KeyValuePair<int, double>> {
-                new KeyValuePair<int, double>(1, 0.7755706389),
-                new KeyValuePair<int, double>(2, 0.9437225296),
-                new KeyValuePair<int, double>(3, 0.7756734768)
-            };
+            Dictionary<int, double> expectedDocumentRanks = new Dictionary<int, double>();
+            expectedDocumentRanks.Add(1, 0.7755706389);
+                expectedDocumentRanks.Add(2, 0.9437225296);
+                expectedDocumentRanks.Add(3, 0.7756734768);
+
 
             // acceptable error margin 
             const double DELTA = 0.0000000001;
 
-            Assert.AreEqual(expectedDocumentRanks[0].Value, computedDocumentRanks[0].Value, DELTA);
-            Assert.AreEqual(expectedDocumentRanks[1].Value, computedDocumentRanks[1].Value, DELTA);
-            Assert.AreEqual(expectedDocumentRanks[2].Value, computedDocumentRanks[2].Value, DELTA);
+            Assert.AreEqual(expectedDocumentRanks[1], computedDocumentRanks[1], DELTA);
+            Assert.AreEqual(expectedDocumentRanks[2], computedDocumentRanks[2], DELTA);
+            Assert.AreEqual(expectedDocumentRanks[3], computedDocumentRanks[3], DELTA);
         }
     }
 }
