@@ -1,0 +1,25 @@
+@startuml
+class Engine {
+    + Engine(pathToRepo:string, connectionString:string, pathToStopWords:string)
+    + GetMetaInfo() : MetaDetails
+    + UpdateMetaInfo(updatedmeta:MetaDetails) : void
+    + GetAllDocuments() : List<FileDocument>
+    + GetDocuments(ids:HashSet<int>) : List<FileDocument>
+    + GetDocuments(names:HashSet<string>) : List<FileDocument>
+    + GetDocument(id:int) : FileDocument
+    + GetDocument(filename:string) : FileDocument
+    + GetAllDocumentsCount() : long
+    + AddDocument(filename:string) : int
+    + DeleteDocument(id:int) : void
+    + DeleteDocument(filename:string) : void
+    + DeleteDocumentReferencesFromInvertedIndex(docId:int) : void
+    + GetAllWords() : List<string>
+    + GetWordDocument(word:string) : WordDocument
+    + GetWordDocuments(words:HashSet<string>) : List<WordDocument>
+    + AddIntoReverseIndex(docId:int, words:Dictionary<string,long>) : void
+    + CountInvertedIndex() : long
+    + DeleteWord(word:string) : void
+    + Kill() : void
+}
+IEngine <|-- Engine
+@enduml

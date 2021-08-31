@@ -1,0 +1,7 @@
+@startuml
+class Watcher {
+    + Watcher(eng:Engine)
+    + {static} IndexInBackGround(watcher:Watcher) : void
+    + watch() : void
+}
+@enduml
