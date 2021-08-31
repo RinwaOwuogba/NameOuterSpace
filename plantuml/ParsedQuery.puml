@@ -1,0 +1,11 @@
+@startuml
+class ParsedQuery {
+    + NaturalLangQuery : string <<get>>
+    + ParsedQuery(naturalLanguageQuery:string, indexer:IIndexer)
+    + GetMaxQueryTermFreq() : long
+}
+class "Dictionary`2"<T1,T2> {
+}
+IParsedQuery <|-- ParsedQuery
+ParsedQuery --> "QueryIndex<string,long>" "Dictionary`2"
+@enduml

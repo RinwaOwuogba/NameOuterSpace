@@ -1,0 +1,7 @@
+@startuml
+class Querier {
+    + Querier(eng:Engine)
+    + GetCompletions(word:string) : string[]
+    + Query(query:string) : List<Tuple<string, double>>
+}
+@enduml

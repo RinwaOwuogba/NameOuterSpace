@@ -1,0 +1,15 @@
+@startuml
+class Ranker {
+    + Ranker(query:ParsedQuery, engine:IEngine)
+    + Rank() : void
+    + AggregateQueryTermWeights() : void
+    + AggregateDocumentTermWeights() : void
+    + {static} CalculateDocumentsQueryRelevance(documentTermWeights:Dictionary<int, Dictionary<string, double>>, parsedQuery:IParsedQuery, queryTermWeights:Dictionary<string, double>) : Dictionary<int, double>
+}
+class "Dictionary`2"<T1,T2> {
+}
+Ranker --> "ParsedQuery" ParsedQuery
+Ranker --> "documentTermWeights<int,Dictionary<string, double>>" "Dictionary`2"
+Ranker --> "documentRanks<int,double>" "Dictionary`2"
+Ranker --> "queryTermWeights<string,double>" "Dictionary`2"
+@enduml

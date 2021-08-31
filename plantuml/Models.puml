@@ -1,0 +1,30 @@
+@startuml
+class MetaDetails {
+    + Id : int <<get>> <<set>>
+    + repositoryPath : string <<get>> <<set>>
+    + indexedDocumentCount : int <<get>> <<set>>
+    + lastRepoTraverseTime : DateTime? <<get>> <<set>>
+}
+class FileDocument {
+    + Id : int <<get>> <<set>>
+    + Filename : string <<get>> <<set>>
+    + MD5Hash : string <<get>> <<set>>
+    + {static} CalculateMD5Hash(pathToFile:string) : string
+}
+class WordDocument {
+    + Word : string <<get>>
+    + TotalOccurence : long <<get>>
+    + WordDocument(word:string)
+    + WordDocument(_id:ObjectId, word:string, doc:Dictionary<int, long>, totalOccurrence:long)
+    + RemoveDoc(docId:int) : void
+    + AddDoc(docId:int, occurences:long) : void
+    + <<override>> ToString() : string
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MetaDetails --> "stopWords<string>" "List`1"
+WordDocument --> "Id" ObjectId
+WordDocument --> "Documents<int,long>" "Dictionary`2"
+@enduml
