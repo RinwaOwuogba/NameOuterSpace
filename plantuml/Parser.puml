@@ -1,0 +1,44 @@
+@startuml
+class AutoDetectParser {
+    + {static} GetContextParser(filePath:string) : Parser
+}
+abstract class Parser {
+    + Parser(filePath:string)
+    + {abstract} Parse() : string
+}
+class TxtParser {
+    + TxtParser(filePath:string)
+    + <<override>> Parse() : string
+}
+class PresentationParser {
+    + PresentationParser(filePath:string)
+    + <<override>> Parse() : string
+}
+class XmlParser {
+    + XmlParser(filePath:string)
+    + <<override>> Parse() : string
+}
+class HtmlParser {
+    + HtmlParser(filePath:string)
+    + <<override>> Parse() : string
+}
+class PDFParser {
+    + PDFParser(filePath:string)
+    + <<override>> Parse() : string
+}
+class DocParser {
+    + DocParser(filePath:string)
+    + <<override>> Parse() : string
+}
+class SheetParser {
+    + SheetParser(path_to_file:string)
+    + <<override>> Parse() : string
+}
+Parser <|-- TxtParser
+Parser <|-- PresentationParser
+Parser <|-- XmlParser
+Parser <|-- HtmlParser
+Parser <|-- PDFParser
+Parser <|-- DocParser
+Parser <|-- SheetParser
+@enduml

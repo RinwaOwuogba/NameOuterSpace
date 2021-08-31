@@ -1,0 +1,27 @@
+@startuml
+class trie {
+    + trie()
+    + insert(word:string) : void
+    + startWith(word:string) : node
+    + getNode(word:string) : node
+    + addAllwords(trienode:node, word:string, words:List<string>) : void
+}
+class Autocomplete {
+    + Autocomplete(args:List<string>)
+    + getWords() : List<string>
+    + auto(args:string) : string[]
+}
+class node {
+    + c : char
+    + isWord : bool
+    + node(c:char)
+}
+class "List`1"<T> {
+}
+trie --> "root" node
+trie <|-- Autocomplete
+Autocomplete --> "words<string>" "List`1"
+Autocomplete --> "result<string>" "List`1"
+Autocomplete --> "WordTree" trie
+trie +-- node
+@enduml
