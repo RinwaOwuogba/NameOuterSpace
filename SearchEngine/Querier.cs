@@ -9,6 +9,27 @@ using LiteDB;
 
 namespace SearchEngine
 {
+    public class DocumentResultModel
+    {
+        string filePath;
+        double documentRank;
+        public string FilePath
+        {
+            get => filePath;
+        }
+
+        public double DocumentRank
+        {
+            get => documentRank;
+        }
+
+        public DocumentResultModel(string path, double rank)
+        {
+            this.filePath = path;
+            this.documentRank = rank;
+        }
+    }
+
     public class Querier
     {
         /// <summary>
@@ -62,7 +83,7 @@ namespace SearchEngine
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public List<Tuple<string, double>> Query(string query)
+        public List<DocumentResultModel> Query(string query)
         {
             parsedquery = new ParsedQuery(query, this.indexer);
             var d = parsedquery.QueryIndex;
@@ -73,13 +94,13 @@ namespace SearchEngine
 
             var filedocs = engine.GetDocuments(ranks.Keys.ToHashSet());
 
-            var filesAndRanks = new List<Tuple<string, double>>();
+            var filesAndRanks = new List<DocumentResultModel>();
             foreach (var docs in filedocs)
             {
-                filesAndRanks.Add(new Tuple<string, double>(pathtorepo + docs.Filename, ranks[docs.Id]));
+                filesAndRanks.Add(new DocumentResultModel(pathtorepo + docs.Filename, ranks[docs.Id]));
             }
             filesAndRanks.Sort(
-                (docRank1, docRank2) => docRank2.Item2.CompareTo(docRank1.Item2)
+                (docRank1, docRank2) => docRank2.DocumentRank.CompareTo(docRank1.DocumentRank)
             );
             // Console.WriteLine(filesAndRanks[0].Item2);
             return filesAndRanks;
