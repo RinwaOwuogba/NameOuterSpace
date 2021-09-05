@@ -32,7 +32,7 @@ namespace testcon
 
             var watch = new Watcher(engine);
             var querier = new Querier(engine);
-            //Watcher.IndexInBackGround(watch);
+            Watcher.IndexInBackGround(watch);
             Stopwatch stopwatch = new Stopwatch();
 
             // foreach( var x in watch.getValidFilesFromRepo(meta.repositoryPath)){
@@ -61,13 +61,13 @@ namespace testcon
                 Console.WriteLine(engine.GetWordDocument("this is a simple sentence"));
                 stopwatch.Start();
                 Console.WriteLine("got here, while");
-                List<Tuple<string, double>> d = querier.Query("mina");
+                List<DocumentResultModel> d = querier.Query("mina");
                 stopwatch.Stop();
 
                 Console.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
-                foreach (Tuple<string, double> x in d)
+                foreach (DocumentResultModel x in d)
                 {
-                    Console.WriteLine(x.Item1 + "  " + x.Item2 + "");
+                    Console.WriteLine(x.FilePath + "  " + x.DocumentRank + "");
                 }
                 // string s = "";
                 // // foreach (var x in engine.GetAllWords())
@@ -78,7 +78,7 @@ namespace testcon
                 // File.WriteAllText("showthem.txt", s);
                 break;
                 Console.WriteLine("-----------------------------------------");
-                 Thread.Sleep(5000);
+                Thread.Sleep(5000);
 
             }
         }
