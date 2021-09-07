@@ -46,21 +46,22 @@ namespace SearchEngineClient.ViewModels
                 Console.WriteLine("filePath before: " + filePath);
                 try
                 {
-                    // Process.Start("https://www.google.com");
-                    // open url in default web browser
-                    System.Diagnostics.Process.Start("http://www.csharp-examples.net");
+                    // TODO: Querier should return absolute file path
+                    string modifiedFilePath = Directory.GetCurrentDirectory() + "/" + filePath;
 
-                    // Process.Start(filePath);
-                    // Process.Start("/home/bolarinwa/ComputerScience/C#/SearchEngine/repository/greg.txt");
+                    // open file with default application
+                    new Process
+                    {
+                        StartInfo = new ProcessStartInfo(modifiedFilePath)
+                        {
+                            UseShellExecute = true
+                        }
+                    }.Start();
                 }
                 catch (System.Exception ex)
                 {
-
                     Console.WriteLine("ex.Message: " + ex.Message);
                 }
-                Console.WriteLine("filePath after: " + filePath);
-                // Process.Start("./ViewModelBase.cs");
-                // Process.Start(filePath);
             });
 
             this.Search
