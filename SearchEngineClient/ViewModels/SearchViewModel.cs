@@ -43,7 +43,6 @@ namespace SearchEngineClient.ViewModels
             this.OpenFile = ReactiveCommand.Create<string>(
                 (filePath) =>
             {
-                Console.WriteLine("filePath before: " + filePath);
                 try
                 {
                     // TODO: Querier should return absolute file path
