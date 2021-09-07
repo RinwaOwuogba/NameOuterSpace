@@ -36,10 +36,12 @@ namespace SearchEngineClient.ViewModels
 
         public SearchViewModel(Querier querier)
         {
+            // command to get search query
             this.Search = ReactiveCommand.Create(
                 () => this.Keyword
             );
 
+            // commmand to open selected file
             this.OpenFile = ReactiveCommand.Create<string>(
                 (filePath) =>
             {
