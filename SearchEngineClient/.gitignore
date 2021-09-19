@@ -1,0 +1,9 @@
+.idea/
+.vscode/
+.vs/
+
+bin/
+obj/
+
+*.user
+*.db
