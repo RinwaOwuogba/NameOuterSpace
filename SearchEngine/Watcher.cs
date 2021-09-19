@@ -211,7 +211,7 @@ namespace SearchEngine
                     }
 
                 }
-                Console.WriteLine("Index porcess complete, will crawl repo agin in 15 minutes");
+                Console.WriteLine("Index process complete, will crawl repo again in 15 minutes");
                 Thread.Sleep(900000);
 
             }

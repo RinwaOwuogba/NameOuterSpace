@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+  x:Class="SearchEngineClient.Views.SearchView"
+>
+    <StackPanel Margin="128" MaxWidth="800">
+      <StackPanel.Styles>
+          <Style Selector="TextBlock.h1">
+              <Setter Property="FontSize" Value="20"/>
+              <Setter Property="FontWeight" Value="Bold"/>
+              <Setter Property="Margin" Value="0,0,0,16"/>
+          </Style>
+          <Style Selector="TextBlock.h2">
+              <Setter Property="FontSize" Value="16"/>
+              <Setter Property="FontWeight" Value="Bold"/>
+              <Setter Property="Margin" Value="0,0,0,4"/>
+          </Style>
+          <Style Selector="TextBlock.h3">
+              <Setter Property="FontSize" Value="12"/>
+              <Setter Property="Margin" Value="0,0,0,16"/>
+          </Style>
+      </StackPanel.Styles>
+
+      <Grid ColumnDefinitions="1*,1*,1*,1*,1*" RowDefinitions="Auto,Auto,Auto">
+        <TextBox Text="{Binding Keyword}" Grid.Column="0" Grid.ColumnSpan="4" Watermark="Search for something"/>
+        <Button Command="{Binding Search}" Name="button" HorizontalAlignment="Right"
+            Margin="0,4,0,0" Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2">
+            Search
+        </Button>
+      </Grid>
+    
+    <ItemsControl Items="{Binding Results}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Grid Classes="Result" ColumnDefinitions="Auto,Auto,0.5*" RowDefinitions="Auto,Auto"  Margin="4,16,4,4">
+                <TextBox Text="{Binding FilePath}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap"/>
+                <!-- <TextBlock Classes="h2" Text="Binding fileName" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap"/> -->
+                <TextBlock Classes="h3" Text="{Binding FilePath}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap"/>
+                <!-- <Button Command="{Binding OpenFile}" CommandParameter="{Binding FilePath}" HorizontalAlignment="Right" Margin="0,4,0,0" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="1">
+                  Open
+                </Button> -->
+                <Button Command="{Binding $parent[UserControl].DataContext.OpenFile}" CommandParameter="{Binding FilePath}" HorizontalAlignment="Right" Margin="0,4,0,0" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="1">
+                  Open
+                </Button>
+            </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </StackPanel>
+</UserControl>
