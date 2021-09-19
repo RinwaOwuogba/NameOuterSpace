@@ -58,7 +58,7 @@ namespace SearchEngine
         }
 
         /// <summary>
-        ///     returns an 
+        ///     returns a list of valid filename and thier weights in sorted order
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -80,7 +80,6 @@ namespace SearchEngine
             filesAndRanks.Sort(
                 (docRank1, docRank2) => docRank2.Item2.CompareTo(docRank1.Item2)
             );
-            Console.WriteLine(filesAndRanks[0].Item2);
             return filesAndRanks;
 
         }
