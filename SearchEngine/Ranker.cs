@@ -111,7 +111,7 @@ namespace SearchEngine
                     Math.Log2(noOfDocumentsInCollection / wordDocument.TotalOccurence) + 1;
 
                 double termWeightInQuery =
-                    (0.5 + ((0.5 * this.ParsedQuery.QueryIndex[wordDocument.Word]) /
+                    (0.5 + ((0.5 * this.ParsedQuery.QueryIndex.GetValueOrDefault(wordDocument.Word, 0)) /
                     maxTermFreq)) * termIDF;
 
                 this.queryTermWeights.Add(wordDocument.Word, termWeightInQuery);
