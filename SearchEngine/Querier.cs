@@ -102,10 +102,6 @@ namespace SearchEngine
             filesAndRanks.Sort(
                 (docRank1, docRank2) => docRank2.DocumentRank.CompareTo(docRank1.DocumentRank)
             );
-<<<<<<< HEAD
-=======
-            // Console.WriteLine(filesAndRanks[0].Item2);
->>>>>>> 760096e99c41805272a1e604ffccb3077416788d
             return filesAndRanks;
 
         }

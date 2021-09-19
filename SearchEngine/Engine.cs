@@ -267,8 +267,8 @@ namespace SearchEngine
         /// <returns>A list of WordDocuments </returns>
         public List<WordDocument> GetWordDocuments(HashSet<string> words){
             invertedIndex.EnsureIndex("Word");
-            return invertedIndex.Find(x => words.Contains(x.Word)).ToList<WordDocument>();
-        }
+            return invertedIndex.Find(x => words.Where(y => x.Word.StartsWith(y)).Count() > 0).ToList<WordDocument>();
+         }
         
         /// <summary>
         ///     integrates a forward index into the reverse index 
