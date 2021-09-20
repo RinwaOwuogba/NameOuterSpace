@@ -1,22 +1,29 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using System;
 
 namespace SearchEngineClient.Views
 {
     public class SearchView : UserControl
     {
-        public string[] Names = new string[] { "john", "jike", "jet" };
+        // public string[] Names = new string[] { "john", "jike", "jet" };
 
         public SearchView()
         {
             InitializeComponent();
 
-            // Engine engine = new Engine("../../repository/");
-            // ViewModell.
-
             AutoCompleteBox searchBox = this.FindControl<AutoCompleteBox>("SearchBox");
 
+            if (searchBox.Items != null)
+            {
+                foreach (string item in searchBox.Items)
+                {
+                    Console.WriteLine("item: " + item);
+                }
+            }
+
+            // searchBox.Items = this.Names;
             // searchBox.Items = engine.GetMetaInfo().Lexicon;
             searchBox.TextFilter = this.AutoCompleteFilter;
             searchBox.TextSelector = this.AppendWord;

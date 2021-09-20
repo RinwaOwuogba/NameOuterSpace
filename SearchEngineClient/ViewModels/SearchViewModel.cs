@@ -11,8 +11,9 @@ using ReactiveUI;
 using System;
 using System.Reactive.Linq;
 using SearchEngineClient.Models;
-using SearchEngine;
 using System.Diagnostics;
+
+using SearchEngine;
 
 
 namespace SearchEngineClient.ViewModels
@@ -21,7 +22,10 @@ namespace SearchEngineClient.ViewModels
     {
         string keyword = "";
         long queryTime = 0;
-        public string[] Names = new string[] { "john", "jike", "jet" };
+        public string[] Names
+        {
+            get => new string[] { "john", "jike", "jet" };
+        }
 
         public string Keyword
         {
@@ -43,7 +47,8 @@ namespace SearchEngineClient.ViewModels
             private set => this.RaiseAndSetIfChanged(ref results, value);
         }
 
-        public SearchViewModel(Querier querier)
+        public SearchViewModel(Querier querier, Func<MetaDetails> GetMetaInfo)
+        // public SearchViewModel(Querier querier, Engine engine)
         {
             // command to get search query
             this.Search = ReactiveCommand.Create(
