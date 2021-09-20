@@ -28,7 +28,7 @@ namespace SearchEngineClient
 
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(querier, engine.GetMetaInfo),
+                    DataContext = new MainWindowViewModel(querier, engine),
                 };
             }
 

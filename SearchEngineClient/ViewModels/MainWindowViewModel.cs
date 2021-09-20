@@ -18,9 +18,9 @@ namespace SearchEngineClient.ViewModels
             private set => this.RaiseAndSetIfChanged(ref content, value);
         }
 
-        public MainWindowViewModel(Querier querier, Func<MetaDetails> GetMetaInfo)
+        public MainWindowViewModel(Querier querier, Engine engine)
         {
-            this.content = new SearchViewModel(querier, GetMetaInfo);
+            this.content = new SearchViewModel(querier, engine);
         }
     }
 }

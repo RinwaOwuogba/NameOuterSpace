@@ -61,8 +61,8 @@ namespace Tests
             Autocomplete autocomplete = new Autocomplete(words);
             string test = "Good";
             result = autocomplete.auto(test);
-            Console.WriteLine(result[0]);
-           CollectionAssert.AreEqual(new[] {"Good", "Goodbye this is the end"}, result);
+
+            CollectionAssert.AreEqual(new[] { "Good", "Goodbye this is the end" }, result);
 
         }
 

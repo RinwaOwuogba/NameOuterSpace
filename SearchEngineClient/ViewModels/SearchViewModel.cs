@@ -22,11 +22,13 @@ namespace SearchEngineClient.ViewModels
     {
         string keyword = "";
         long queryTime = 0;
-        public string[] Names
-        {
-            get => new string[] { "john", "jike", "jet" };
-        }
+        Engine engine;
 
+
+        public string[] AutoCompleteList
+        {
+            get => this.engine.GetMetaInfo().Lexicon;
+        }
         public string Keyword
         {
             get => keyword;
@@ -47,9 +49,10 @@ namespace SearchEngineClient.ViewModels
             private set => this.RaiseAndSetIfChanged(ref results, value);
         }
 
-        public SearchViewModel(Querier querier, Func<MetaDetails> GetMetaInfo)
-        // public SearchViewModel(Querier querier, Engine engine)
+        public SearchViewModel(Querier querier, Engine engine)
         {
+            this.engine = engine;
+
             // command to get search query
             this.Search = ReactiveCommand.Create(
                 () => this.Keyword
@@ -98,5 +101,7 @@ namespace SearchEngineClient.ViewModels
 
         public ReactiveCommand<Unit, string> Search { get; }
         public ReactiveCommand<string, Unit> OpenFile { get; }
+
+
     }
 }

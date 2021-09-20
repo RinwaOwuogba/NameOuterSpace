@@ -37,7 +37,7 @@
           Text="{Binding Keyword}"
           Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
           Watermark="Search for something"
-          Items="{Binding Names}"
+          Items="{Binding AutoCompleteList}"
         />
 
         <!-- <TextBox Text="{Binding Keyword}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Watermark="Search for something"/> -->
