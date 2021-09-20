@@ -21,7 +21,6 @@ namespace SearchEngineClient.ViewModels
     {
         string keyword = "";
         long queryTime = 0;
-
         public string[] Names = new string[] { "john", "jike", "jet" };
 
         public string Keyword
@@ -94,15 +93,5 @@ namespace SearchEngineClient.ViewModels
 
         public ReactiveCommand<Unit, string> Search { get; }
         public ReactiveCommand<string, Unit> OpenFile { get; }
-
-        // public delegate bool AutoCompleteFilter<T>(string search, T item) = (search, item) =>
-        // {
-        //     if (item.ToString().Contains(search))
-        //     {
-        //         return true;
-        //     }
-
-        //     else return false;
-        // }
     }
 }
