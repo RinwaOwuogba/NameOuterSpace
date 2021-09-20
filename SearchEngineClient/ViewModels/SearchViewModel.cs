@@ -20,10 +20,20 @@ namespace SearchEngineClient.ViewModels
     public class SearchViewModel : ViewModelBase
     {
         string keyword = "";
+        long queryTime = 0;
+
+        public string[] Names = new string[] { "john", "jike", "jet" };
+
         public string Keyword
         {
             get => keyword;
             set => this.RaiseAndSetIfChanged(ref keyword, value);
+        }
+
+        public long QueryTime
+        {
+            get => queryTime;
+            private set => this.RaiseAndSetIfChanged(ref queryTime, value);
         }
 
         ObservableCollection<DocumentResultModel> results =
@@ -70,7 +80,12 @@ namespace SearchEngineClient.ViewModels
                 {
                     if (keyword != null)
                     {
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
                         List<DocumentResultModel> queryResults = querier.Query(keyword);
+                        stopwatch.Stop();
+
+                        this.QueryTime = stopwatch.ElapsedMilliseconds;
 
                         this.Results = new ObservableCollection<DocumentResultModel>(queryResults);
                     }
@@ -80,6 +95,14 @@ namespace SearchEngineClient.ViewModels
         public ReactiveCommand<Unit, string> Search { get; }
         public ReactiveCommand<string, Unit> OpenFile { get; }
 
+        // public delegate bool AutoCompleteFilter<T>(string search, T item) = (search, item) =>
+        // {
+        //     if (item.ToString().Contains(search))
+        //     {
+        //         return true;
+        //     }
 
+        //     else return false;
+        // }
     }
 }

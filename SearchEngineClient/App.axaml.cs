@@ -22,6 +22,7 @@ namespace SearchEngineClient
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 Engine engine = new Engine("../repository/");
+
                 Querier querier = new Querier(engine);
                 Watcher watch = new Watcher(engine);
 
