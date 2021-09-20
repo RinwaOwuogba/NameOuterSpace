@@ -11,8 +11,9 @@ using ReactiveUI;
 using System;
 using System.Reactive.Linq;
 using SearchEngineClient.Models;
-using SearchEngine;
 using System.Diagnostics;
+
+using SearchEngine;
 
 
 namespace SearchEngineClient.ViewModels
@@ -20,10 +21,20 @@ namespace SearchEngineClient.ViewModels
     public class SearchViewModel : ViewModelBase
     {
         string keyword = "";
+        long queryTime = 0;
+        Engine engine;
+
+
         public string Keyword
         {
             get => keyword;
             set => this.RaiseAndSetIfChanged(ref keyword, value);
+        }
+
+        public long QueryTime
+        {
+            get => queryTime;
+            private set => this.RaiseAndSetIfChanged(ref queryTime, value);
         }
 
         ObservableCollection<DocumentResultModel> results =
@@ -34,8 +45,10 @@ namespace SearchEngineClient.ViewModels
             private set => this.RaiseAndSetIfChanged(ref results, value);
         }
 
-        public SearchViewModel(Querier querier)
+        public SearchViewModel(Querier querier, Engine engine)
         {
+            this.engine = engine;
+
             // command to get search query
             this.Search = ReactiveCommand.Create(
                 () => this.Keyword
@@ -70,7 +83,12 @@ namespace SearchEngineClient.ViewModels
                 {
                     if (keyword != null)
                     {
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
                         List<DocumentResultModel> queryResults = querier.Query(keyword);
+                        stopwatch.Stop();
+
+                        this.QueryTime = stopwatch.ElapsedMilliseconds;
 
                         this.Results = new ObservableCollection<DocumentResultModel>(queryResults);
                     }

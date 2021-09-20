@@ -17,8 +17,6 @@ namespace SearchEngineClient
 
         public override void OnFrameworkInitializationCompleted()
         {
-
-
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 Engine engine = new Engine("../repository/");
@@ -30,7 +28,7 @@ namespace SearchEngineClient
 
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(querier),
+                    DataContext = new MainWindowViewModel(querier, engine),
                 };
             }
 
