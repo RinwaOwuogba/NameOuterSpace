@@ -64,8 +64,9 @@ namespace SearchEngine
                     repositoryPath = pathToRepository,
                     indexedDocumentCount = 0,
                     stopWords = loadStopWords(pathToStopWords),
-                    lastRepoTraverseTime = null
-                };
+                    lastRepoTraverseTime = null,
+                    lexicon = new List<string>()
+            };
                 metaCollection.Insert(metainfo);
             }
             else if(metainfo.repositoryPath != pathToRepository){
@@ -111,6 +112,7 @@ namespace SearchEngine
             meta.lastRepoTraverseTime = updatedmeta.lastRepoTraverseTime;
             meta.repositoryPath = updatedmeta.repositoryPath;
             meta.stopWords = updatedmeta.stopWords;
+            meta.lexicon = updatedmeta.lexicon;
             metaCollection.Update(meta);
         }
         
@@ -267,8 +269,8 @@ namespace SearchEngine
         /// <returns>A list of WordDocuments </returns>
         public List<WordDocument> GetWordDocuments(HashSet<string> words){
             invertedIndex.EnsureIndex("Word");
-            return invertedIndex.Find(x => words.Where(y => x.Word.StartsWith(y)).Count() > 0).ToList<WordDocument>();
-         }
+            return invertedIndex.Find(x => words.Contains(x.Word)).ToList<WordDocument>();
+        }
         
         /// <summary>
         ///     integrates a forward index into the reverse index 

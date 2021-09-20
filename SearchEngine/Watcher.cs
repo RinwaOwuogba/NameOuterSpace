@@ -193,9 +193,9 @@ namespace SearchEngine
 
                 foreach (var file in FilesToBeIndexed)
                 {
-                    var i = new Indexer(meta.stopWords.ToHashSet<string>(), meta.lexicon.ToHashSet<string>);
+                    var i = new Indexer(meta.stopWords.ToHashSet<string>(), meta.lexicon.ToHashSet<string>());
                     var dex = i.IndexFile(repoBeingWatched + file);
-                    meta.lexicon = dex.GetUnstemmedWords();
+                    meta.lexicon = i.GetUnstemmedWords(repoBeingWatched + file);
 
                     try
                     {
