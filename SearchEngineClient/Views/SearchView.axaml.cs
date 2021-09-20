@@ -15,16 +15,6 @@ namespace SearchEngineClient.Views
 
             AutoCompleteBox searchBox = this.FindControl<AutoCompleteBox>("SearchBox");
 
-            if (searchBox.Items != null)
-            {
-                foreach (string item in searchBox.Items)
-                {
-                    Console.WriteLine("item: " + item);
-                }
-            }
-
-            // searchBox.Items = this.Names;
-            // searchBox.Items = engine.GetMetaInfo().Lexicon;
             searchBox.TextFilter = this.AutoCompleteFilter;
             searchBox.TextSelector = this.AppendWord;
         }
@@ -37,31 +27,6 @@ namespace SearchEngineClient.Views
         private bool AutoCompleteFilter(string searchText, string item)
         {
             return true;
-
-
-            // var words = searchText.Split(' ');
-            // var options = Sentences.Select(x => x.First).ToArray();
-            // for (var i = 0; i < words.Length; ++i)
-            // {
-            //     var word = words[i];
-            //     for (var j = 0; j < options.Length; ++j)
-            //     {
-            //         var option = options[j];
-            //         if (option == null)
-            //             continue;
-
-            //         if (i == words.Length - 1)
-            //         {
-            //             options[j] = option.Value.ToLower().Contains(word.ToLower()) ? option : null;
-            //         }
-            //         else
-            //         {
-            //             options[j] = option.Value.Equals(word, StringComparison.InvariantCultureIgnoreCase) ? option.Next : null;
-            //         }
-            //     }
-            // }
-
-            // return options.Any(x => x != null && x.Value == item);
         }
 
         private string AppendWord(string text, string item)

@@ -25,10 +25,6 @@ namespace SearchEngineClient.ViewModels
         Engine engine;
 
 
-        public string[] AutoCompleteList
-        {
-            get => this.engine.GetMetaInfo().Lexicon;
-        }
         public string Keyword
         {
             get => keyword;
