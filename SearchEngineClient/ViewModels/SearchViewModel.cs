@@ -24,23 +24,6 @@ namespace SearchEngineClient.ViewModels
         long queryTime = 0;
         Engine engine;
 
-
-        public ObservableCollection<string> AutoCompleteList
-        {
-            get
-            {
-                // new List<string>() { "pert", "get", "met" };
-                if (this.engine.GetMetaInfo().lexicon.Count > 0)
-                {
-                    return new ObservableCollection<string>(this.engine.GetMetaInfo().lexicon);
-                }
-                else
-                {
-                    return new ObservableCollection<string>();
-                }
-            }
-            // get => this.engine.GetMetaInfo().lexicon;
-        }
         public string Keyword
         {
             get => keyword;
@@ -76,7 +59,6 @@ namespace SearchEngineClient.ViewModels
             {
                 try
                 {
-                    // TODO: Querier should return absolute file path
                     string modifiedFilePath = Directory.GetCurrentDirectory() + "/" + filePath;
 
                     // open file with default application
