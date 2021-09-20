@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using System;
 using SearchEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SearchEngineClient.Views
 {
@@ -18,19 +19,18 @@ namespace SearchEngineClient.Views
 
             AutoCompleteBox searchBox = this.FindControl<AutoCompleteBox>("SearchBox");
 
-            if (searchBox.Items != null)
-            {
+            // this.autoComplete = new Autocomplete(searchBox.Items);
+            // List<string> stuff = new List<string>();
 
-                this.autoComplete = new Autocomplete((IEnumerable<string>)searchBox.Items);
-            }
-
-            // if (searchBox.Items != null)
+            // foreach (var item in searchBox.Items)
             // {
-            //     foreach (string item in searchBox.Items)
-            //     {
-            //         Console.WriteLine("item: " + item);
-            //     }
+            //     // stuff.Add(item);
+            //     Console.WriteLine("somthing");
             // }
+
+
+            // this.autoComplete = new Autocomplete(searchBox.Items.Cast<String>().ToList());
+            // this.autoComplete = new Autocomplete(Convert.ToString(stuff));
 
             searchBox.TextFilter = this.AutoCompleteFilter;
             searchBox.TextSelector = this.AppendWord;
@@ -43,9 +43,15 @@ namespace SearchEngineClient.Views
 
         private bool AutoCompleteFilter(string searchText, string item)
         {
-            return true;
+            // return true;
 
             string lastWord = searchText.Split(' ')[^1];
+
+            if (lastWord == null)
+            {
+                return false;
+            }
+
             var rhymeWords = this.autoComplete.auto(lastWord);
 
             for (int i = 0; i < rhymeWords.Length; i++)

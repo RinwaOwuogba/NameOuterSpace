@@ -25,10 +25,21 @@ namespace SearchEngineClient.ViewModels
         Engine engine;
 
 
-        public string[] AutoCompleteList
+        public ObservableCollection<string> AutoCompleteList
         {
-            get => new string[] { "per", "person", "par", "fine" };
-            // get => this.engine.GetMetaInfo().Lexicon;
+            get
+            {
+                // new List<string>() { "pert", "get", "met" };
+                if (this.engine.GetMetaInfo().lexicon.Count > 0)
+                {
+                    return new ObservableCollection<string>(this.engine.GetMetaInfo().lexicon);
+                }
+                else
+                {
+                    return new ObservableCollection<string>();
+                }
+            }
+            // get => this.engine.GetMetaInfo().lexicon;
         }
         public string Keyword
         {
