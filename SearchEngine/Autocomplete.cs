@@ -41,10 +41,12 @@ namespace SearchEngine
             {
                 char c = word[i];
                 node temp = new node(c);
-                if(c - (char)0 > 255 || c - (char)0 < 0){
+                if (c - (char)0 > 255 || c - (char)0 < 0)
+                {
                     continue;
                 }
-                else{
+                else
+                {
                     if (curr.children[c - (char)0] == null)
                     {
                         curr.children[c - (char)0] = temp;
@@ -172,7 +174,7 @@ namespace SearchEngine
     ///</summary>
     public class Autocomplete : trie
     {
-        public List<string> words;
+        public IEnumerable<string> words;
         public List<string> result;
         public trie WordTree;
 
@@ -182,18 +184,24 @@ namespace SearchEngine
         ///words from string List are also added to the WordTree at initialization
         ///<summary>
         ///<param name='args'>A list of strings</param>
-        public Autocomplete(List<string> args)
+        public Autocomplete(IEnumerable<string> args)
         {
             this.words = args;
             this.WordTree = new trie();
             this.result = new List<string>();
-            for (int i = 0; i < this.words.Count; i++)
+
+            foreach (string word in this.words)
             {
-                this.WordTree.insert(this.words[i]);
+                this.WordTree.insert(word);
+                // this.WordTree.insert(this.words[i]);
             }
+
+            // for (int i = 0; i < this.words.Count; i++)
+            // {
+            // }
         }
 
-        public List<string> getWords()
+        public IEnumerable<string> getWords()
         {
             return this.words;
         }
