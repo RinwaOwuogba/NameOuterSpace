@@ -11,8 +11,9 @@ using ReactiveUI;
 using System;
 using System.Reactive.Linq;
 using SearchEngineClient.Models;
-using SearchEngine;
 using System.Diagnostics;
+
+using SearchEngine;
 
 
 namespace SearchEngineClient.ViewModels
@@ -21,9 +22,13 @@ namespace SearchEngineClient.ViewModels
     {
         string keyword = "";
         long queryTime = 0;
+        Engine engine;
 
-        public string[] Names = new string[] { "john", "jike", "jet" };
 
+        public string[] AutoCompleteList
+        {
+            get => this.engine.GetMetaInfo().Lexicon;
+        }
         public string Keyword
         {
             get => keyword;
@@ -44,8 +49,10 @@ namespace SearchEngineClient.ViewModels
             private set => this.RaiseAndSetIfChanged(ref results, value);
         }
 
-        public SearchViewModel(Querier querier)
+        public SearchViewModel(Querier querier, Engine engine)
         {
+            this.engine = engine;
+
             // command to get search query
             this.Search = ReactiveCommand.Create(
                 () => this.Keyword
@@ -95,14 +102,6 @@ namespace SearchEngineClient.ViewModels
         public ReactiveCommand<Unit, string> Search { get; }
         public ReactiveCommand<string, Unit> OpenFile { get; }
 
-        // public delegate bool AutoCompleteFilter<T>(string search, T item) = (search, item) =>
-        // {
-        //     if (item.ToString().Contains(search))
-        //     {
-        //         return true;
-        //     }
 
-        //     else return false;
-        // }
     }
 }

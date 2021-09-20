@@ -18,9 +18,9 @@ namespace SearchEngineClient.ViewModels
             private set => this.RaiseAndSetIfChanged(ref content, value);
         }
 
-        public MainWindowViewModel(Querier querier)
+        public MainWindowViewModel(Querier querier, Engine engine)
         {
-            this.content = new SearchViewModel(querier);
+            this.content = new SearchViewModel(querier, engine);
         }
     }
 }

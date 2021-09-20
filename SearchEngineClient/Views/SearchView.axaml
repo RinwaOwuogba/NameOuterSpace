@@ -37,12 +37,9 @@
           Text="{Binding Keyword}"
           Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
           Watermark="Search for something"
-          Items="{Binding Names}"
-          IsTextCompletionEnabled="True"
-          IsDropDownOpen="True"
+          Items="{Binding AutoCompleteList}"
         />
 
-        <!-- ItemSelector="{Binding AutoCompleteFilter}" -->
         <!-- <TextBox Text="{Binding Keyword}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Watermark="Search for something"/> -->
         <Button Command="{Binding Search}" Name="button" HorizontalAlignment="Right"
             Margin="0,4,0,0" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2">
@@ -58,8 +55,6 @@
           </TextBlock.Text> 
         </TextBlock>
 
-
-
       </Grid>
     
       <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto">
@@ -68,7 +63,6 @@
             <DataTemplate>
               <Grid Classes="Result" ColumnDefinitions="Auto,Auto,0.5*" RowDefinitions="Auto,Auto"  Margin="4,16,4,4">
                     <TextBox Text="{Binding FilePath}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap"/>
-                    <!-- <TextBlock Classes="h2" Text="Binding fileName" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap"/> -->
                     <TextBlock Classes="h3" Text="{Binding FilePath}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap"/>
                     <Button Command="{Binding $parent[UserControl].DataContext.OpenFile}" CommandParameter="{Binding FilePath}" HorizontalAlignment="Right" Margin="0,4,0,0" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="1">
                       Open

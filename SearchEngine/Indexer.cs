@@ -17,9 +17,15 @@ namespace SearchEngine
         /// </summary>
         private HashSet<string> stopWords;
 
-        public Indexer(HashSet<string> stopWords)
+        /// <summary>
+        /// List of unstemmed words
+        /// </summary>
+        private HashSet<string> unstemmedWords;
+
+        public Indexer(HashSet<string> stopWords, HashSet<string> unstemmedWords = default(HashSet<string>))
         {
             this.stopWords = stopWords;
+            this.unstemmedWords = unstemmedWords;
         }
 
         /// <summary>
@@ -99,5 +105,49 @@ namespace SearchEngine
 
             return forwardIndex;
         }
+
+        /// <summary>
+        /// Gets a list of unstemmed words in file
+        /// </summary>
+        /// <param name="text">Text to index</param>
+        /// <param name="stopWords">Stop words to remove from index</param>
+        /// <returns>List containing</returns>
+        public List<string> GetUnstemmedWords(string filePath)
+        {
+            string fileName = Path.GetFileName(filePath);
+
+            Parser parser = AutoDetectParser.GetContextParser(filePath);
+            string fileContent = fileName + " " + parser.Parse();
+
+            // splits text string into individual tokens
+            string[] tokens = Regex.Split(
+                Regex.Replace(fileContent,
+                    "[^a-zA-Z0-9']",
+                    " "
+                )
+                .Trim(),
+                "\\s+"
+            );
+
+            List<string> filteredWords = new List<string>();
+
+            // remove all stop words
+            for (int i = 0; i < tokens.Length; i++)
+            {
+                string word = tokens[i].ToLower();
+
+                if (this.stopWords.Contains(word) || this.unstemmedWords.Contains(word))
+                {
+                    continue;
+                }
+
+                filteredWords.Add(word);
+            }
+
+
+            return filteredWords;
+        }
     }
+
+
 }
