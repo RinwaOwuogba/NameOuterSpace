@@ -35,6 +35,8 @@ namespace SearchEngine
         ///     A list of stopwords
         /// </summary>
         public List<string> stopWords { get; set; }
+
+        public List<string> lexicon { get; set; }
     }
     /// <summary>
     ///     Represents a file in in collection of Files
