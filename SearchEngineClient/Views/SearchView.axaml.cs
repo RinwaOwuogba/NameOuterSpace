@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using System;
+using SearchEngine;
+using System.Collections.Generic;
 
 namespace SearchEngineClient.Views
 {
@@ -9,6 +11,7 @@ namespace SearchEngineClient.Views
     {
         // public string[] Names = new string[] { "john", "jike", "jet" };
 
+        Autocomplete autoComplete;
         public SearchView()
         {
             InitializeComponent();
@@ -17,14 +20,18 @@ namespace SearchEngineClient.Views
 
             if (searchBox.Items != null)
             {
-                foreach (string item in searchBox.Items)
-                {
-                    Console.WriteLine("item: " + item);
-                }
+
+                this.autoComplete = new Autocomplete((IEnumerable<string>)searchBox.Items);
             }
 
-            // searchBox.Items = this.Names;
-            // searchBox.Items = engine.GetMetaInfo().Lexicon;
+            // if (searchBox.Items != null)
+            // {
+            //     foreach (string item in searchBox.Items)
+            //     {
+            //         Console.WriteLine("item: " + item);
+            //     }
+            // }
+
             searchBox.TextFilter = this.AutoCompleteFilter;
             searchBox.TextSelector = this.AppendWord;
         }
@@ -38,6 +45,22 @@ namespace SearchEngineClient.Views
         {
             return true;
 
+            string lastWord = searchText.Split(' ')[^1];
+            var rhymeWords = this.autoComplete.auto(lastWord);
+
+            for (int i = 0; i < rhymeWords.Length; i++)
+            {
+                if (item == rhymeWords[i])
+                {
+                    return true;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            return false;
 
             // var words = searchText.Split(' ');
             // var options = Sentences.Select(x => x.First).ToArray();
