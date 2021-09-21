@@ -434,4 +434,4 @@ bin/
 obj/
 
 *-log.txt
-/repository
+/repository/**
