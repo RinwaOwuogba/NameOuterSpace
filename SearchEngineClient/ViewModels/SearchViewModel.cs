@@ -60,7 +60,6 @@ namespace SearchEngineClient.ViewModels
             {
                 try
                 {
-                    // TODO: Querier should return absolute file path
                     string modifiedFilePath = Directory.GetCurrentDirectory() + "/" + filePath;
 
                     // open file with default application
