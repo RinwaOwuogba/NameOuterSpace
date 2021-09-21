@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reactive.Linq;
 using ReactiveUI;
-using SearchEngine;
+using NameOuterSpace;
 
 
-namespace SearchEngineClient.ViewModels
+namespace NameOuterSpaceClient.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {

@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 using LiteDB;
 
-namespace SearchEngine
+namespace NameOuterSpace
 {
     public class DocumentResultModel
     {

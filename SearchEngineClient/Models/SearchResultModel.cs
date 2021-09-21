@@ -1,4 +1,0 @@
-namespace SearchEngineClient.Models
-{
-
-}

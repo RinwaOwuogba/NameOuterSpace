@@ -309,10 +309,10 @@ ServiceFabricBackup/
 
 using System;
 
-namespace SearchEngine
+namespace NameOuterSpace
 {   public using System;
 
-namespace SearchEngine
+namespace NameOuterSpace
 {   public class BaseParser
     {
     }

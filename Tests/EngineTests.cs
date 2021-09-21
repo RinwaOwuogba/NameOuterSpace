@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SearchEngine;
+using NameOuterSpace;
 
 namespace Tests
 {
@@ -323,7 +323,8 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Test_GetAllDocumentsCount(){
+        public void Test_GetAllDocumentsCount()
+        {
             engine.AddDocument("simple.txt");
             engine.AddDocument("simple.html");
 

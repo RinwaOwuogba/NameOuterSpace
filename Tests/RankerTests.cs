@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using SearchEngine;
+using NameOuterSpace;
 using Moq;
 
 namespace Tests
@@ -210,8 +210,8 @@ namespace Tests
 
             Dictionary<int, double> expectedDocumentRanks = new Dictionary<int, double>();
             expectedDocumentRanks.Add(1, 0.7755706389);
-                expectedDocumentRanks.Add(2, 0.9437225296);
-                expectedDocumentRanks.Add(3, 0.7756734768);
+            expectedDocumentRanks.Add(2, 0.9437225296);
+            expectedDocumentRanks.Add(3, 0.7756734768);
 
 
             // acceptable error margin 

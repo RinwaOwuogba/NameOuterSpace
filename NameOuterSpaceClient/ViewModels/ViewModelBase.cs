@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ReactiveUI;
 
-namespace SearchEngineClient.ViewModels
+namespace NameOuterSpaceClient.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchEngine", "SearchEngine\SearchEngine.csproj", "{91464E08-997D-43AE-882B-9BED89ACE71A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NameOuterSpace", "NameOuterSpace\NameOuterSpace.csproj", "{91464E08-997D-43AE-882B-9BED89ACE71A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{BE9CD170-EF48-44C9-AA5D-7EE383C2AC4B}"
 EndProject

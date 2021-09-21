@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SearchEngine
+namespace NameOuterSpace
 {
     /// <summary>
     /// Representation of a parsed natural language query

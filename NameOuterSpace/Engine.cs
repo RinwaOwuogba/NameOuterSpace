@@ -5,13 +5,13 @@ using System.Linq;
 using System.Collections.Generic;
 using LiteDB;
 
-namespace SearchEngine
+namespace NameOuterSpace
 {
 
     /// <summary>
     ///     A Singleton Class That interfaces between the file database and other parts of the library
     /// </summary>
-    public class Engine:IEngine
+    public class Engine : IEngine
     {
         private LiteDatabase db;
 
@@ -64,31 +64,35 @@ namespace SearchEngine
                     repositoryPath = pathToRepository,
                     indexedDocumentCount = 0,
                     stopWords = loadStopWords(pathToStopWords),
-                    lastRepoTraverseTime = null
+                    lastRepoTraverseTime = null,
+                    lexicon = new List<string>()
                 };
                 metaCollection.Insert(metainfo);
             }
-            else if(metainfo.repositoryPath != pathToRepository){
+            else if (metainfo.repositoryPath != pathToRepository)
+            {
                 metainfo.repositoryPath = pathToRepository;
                 metainfo.indexedDocumentCount = 0;
                 metainfo.lastRepoTraverseTime = null;
                 metainfo.stopWords = loadStopWords(pathToStopWords);
                 UpdateMetaInfo(metainfo);
             }
-            else{
+            else
+            {
                 metainfo.stopWords = loadStopWords(pathToStopWords);
                 UpdateMetaInfo(metainfo);
             }
 
-        
+
         }
-        
+
         /// <summary>
         ///     utility method that gets the stop from a file and loads into memory
         /// </summary>
         /// <param name="pathtostopwords"> string; file path to stopwords txt</param>
         /// <returns> A List of stop words </returns>
-        private List<string> loadStopWords(string pathtostopwords){
+        private List<string> loadStopWords(string pathtostopwords)
+        {
             var stopwords = new List<string>(System.IO.File.ReadAllLines(pathtostopwords));
             return stopwords;
         }
@@ -97,7 +101,8 @@ namespace SearchEngine
         ///     Gets meta info from the db
         /// </summary>
         /// <returns> A meta details Object that holds all the relevant config data</returns>
-        public MetaDetails GetMetaInfo(){
+        public MetaDetails GetMetaInfo()
+        {
             return metaCollection.FindById(1);
         }
 
@@ -105,31 +110,35 @@ namespace SearchEngine
         ///     updates the meta details in db to reflect the updated meta details object
         /// </summary>
         /// <param name="updatedmeta"> the meta details object with updated properties</param>
-        public void UpdateMetaInfo(MetaDetails updatedmeta){
+        public void UpdateMetaInfo(MetaDetails updatedmeta)
+        {
             var meta = metaCollection.FindById(1);
             meta.indexedDocumentCount = updatedmeta.indexedDocumentCount;
             meta.lastRepoTraverseTime = updatedmeta.lastRepoTraverseTime;
             meta.repositoryPath = updatedmeta.repositoryPath;
             meta.stopWords = updatedmeta.stopWords;
+            meta.lexicon = updatedmeta.lexicon;
             metaCollection.Update(meta);
         }
-        
+
         /// <summary>
         ///     fetches all the file documents from the db
         /// </summary>
         /// <returns> A List of all the file documents in the collections</returns>
-        public List<FileDocument> GetAllDocuments(){
+        public List<FileDocument> GetAllDocuments()
+        {
             documentCollection.EnsureIndex("Filename");
             var documents = new List<FileDocument>(documentCollection.Find(Query.All("Filename")));
             return documents;
         }
-        
+
         /// <summary>
         ///     Gets all the file documents that correspond to the ids 
         /// </summary>
         /// <param name="ids"> a list of file document ids</param>
         /// <returns> A list of File documents </returns>
-        public List<FileDocument> GetDocuments(HashSet<int> ids){
+        public List<FileDocument> GetDocuments(HashSet<int> ids)
+        {
             var matcheddocs = new List<FileDocument>(documentCollection.Find(x => ids.Contains(x.Id)));
             return matcheddocs;
         }
@@ -139,18 +148,20 @@ namespace SearchEngine
         /// </summary>
         /// <param name="names"> a list of file names of the documents</param>
         /// <returns> A list of File documents </returns>
-        public List<FileDocument> GetDocuments(HashSet<string> names){
+        public List<FileDocument> GetDocuments(HashSet<string> names)
+        {
             documentCollection.EnsureIndex("Filename");
             var matcheddocs = new List<FileDocument>(documentCollection.Find(x => names.Contains(x.Filename)));
             return matcheddocs;
         }
-        
+
         /// <summary>
         ///     returns a file document that belongs to the id given
         /// </summary>
         /// <param name="id">a file document id</param>
         /// <returns> A single file document</returns>
-        public FileDocument GetDocument(int id){
+        public FileDocument GetDocument(int id)
+        {
             return documentCollection.FindById(id);
         }
 
@@ -159,27 +170,30 @@ namespace SearchEngine
         /// </summary>
         /// <param name="filename"> the file name of a document</param>
         /// <returns>A single file document</returns>
-        public FileDocument GetDocument(string filename){
+        public FileDocument GetDocument(string filename)
+        {
             documentCollection.EnsureIndex("Filename");
             return documentCollection.FindOne(Query.EQ("Filename", filename));
-        }       
+        }
 
         /// <summary>
         ///     get the number of documents
         /// </summary>
         /// <returns> the number of indexed documents</returns>
-        public long GetAllDocumentsCount(){
+        public long GetAllDocumentsCount()
+        {
 
             return documentCollection.Count(Query.All("Id"));
 
         }
-        
+
         /// <summary>
         ///     adds a new file to the DB
         /// </summary>
         /// <param name="filename"> the name of the file to be added</param>
         /// <returns>the file id of the newly stored document</returns>
-        public int AddDocument(string filename){
+        public int AddDocument(string filename)
+        {
             var document = new FileDocument()
             {
                 Filename = filename,
@@ -188,33 +202,35 @@ namespace SearchEngine
             documentCollection.Insert(document);
             return document.Id;
         }
-   
+
         /// <summary>
         ///     Deletes the document associated with the id from the database
         /// </summary>
         /// <param name="id">an id belonging to a document</param>
-        public void DeleteDocument(int id){
+        public void DeleteDocument(int id)
+        {
             try
+            {
+                using (TransactionScope scope = new TransactionScope())
                 {
-                    using (TransactionScope scope = new TransactionScope())
-                    {
-                        DeleteDocumentReferencesFromInvertedIndex(id);
-                        documentCollection.Delete(id);
-                        scope.Complete();
-                    }
+                    DeleteDocumentReferencesFromInvertedIndex(id);
+                    documentCollection.Delete(id);
+                    scope.Complete();
                 }
-                catch (TransactionAbortedException ex)
-                {
-                    Console.WriteLine("oops" + " " + ex);
-                }
-            
+            }
+            catch (TransactionAbortedException ex)
+            {
+                Console.WriteLine("oops" + " " + ex);
+            }
+
         }
 
         /// <summary>
         ///     Deletes the document of the specified filename from the db
         /// </summary>
         /// <param name="filename">A file name of a document</param>
-        public void DeleteDocument(string filename){
+        public void DeleteDocument(string filename)
+        {
             DeleteDocument(GetDocument(filename).Id);
         }
 
@@ -222,12 +238,14 @@ namespace SearchEngine
         ///     Removes all instances of the document id from the reverse index
         /// </summary>
         /// <param name="docId">A document document id</param>
-        public void DeleteDocumentReferencesFromInvertedIndex(int docId){
+        public void DeleteDocumentReferencesFromInvertedIndex(int docId)
+        {
             IEnumerable<WordDocument> allWordDocs = invertedIndex
                                                         .FindAll();
 
             var relevantWordDocs = allWordDocs.Where(x => x.Documents.ContainsKey(docId)).ToList<WordDocument>();
-            foreach(var worddoc in relevantWordDocs){
+            foreach (var worddoc in relevantWordDocs)
+            {
                 worddoc.RemoveDoc(docId);
             }
 
@@ -237,12 +255,13 @@ namespace SearchEngine
             invertedIndex.DeleteMany(x => relevantids.Contains(x.Id));
             invertedIndex.Upsert(relevantWordDocs);
         }
-       
+
         /// <summary>
         ///     Fetches all the words in the reverse index
         /// </summary>
         /// <returns> A list of all the words</returns>
-        public List<string> GetAllWords(){
+        public List<string> GetAllWords()
+        {
             invertedIndex.EnsureIndex("Word");
             var words = new List<string>();
             words = invertedIndex.Find(Query.All("Word")).Select(x => x.Word).ToList<string>();
@@ -254,7 +273,8 @@ namespace SearchEngine
         /// </summary>
         /// <param name="word"> a word in the reverse index</param>
         /// <returns>A WordDocument Object</returns>
-        public WordDocument GetWordDocument(string word){
+        public WordDocument GetWordDocument(string word)
+        {
             invertedIndex.EnsureIndex("Word");
             var worddoc = invertedIndex.FindOne(Query.EQ("Word", word.ToLower()));
             return worddoc;
@@ -265,17 +285,19 @@ namespace SearchEngine
         /// </summary>
         /// <param name="words"> A List of words in the reverse</param>
         /// <returns>A list of WordDocuments </returns>
-        public List<WordDocument> GetWordDocuments(HashSet<string> words){
+        public List<WordDocument> GetWordDocuments(HashSet<string> words)
+        {
             invertedIndex.EnsureIndex("Word");
-            return invertedIndex.Find(x => words.Where(y => x.Word.StartsWith(y)).Count() > 0).ToList<WordDocument>();
-         }
-        
+            return invertedIndex.Find(x => words.Contains(x.Word)).ToList<WordDocument>();
+        }
+
         /// <summary>
         ///     integrates a forward index into the reverse index 
         /// </summary>
         /// <param name="docId"> the docid that contains the words</param>
         /// <param name="words"> a dictionary of words in the docid and thier number of occurencess</param>
-        public void AddIntoReverseIndex(int docId, Dictionary<string,long> words){
+        public void AddIntoReverseIndex(int docId, Dictionary<string, long> words)
+        {
             var additions = new List<WordDocument>();
 
             invertedIndex.EnsureIndex("Word");
@@ -297,20 +319,22 @@ namespace SearchEngine
             }
             invertedIndex.Upsert(additions);
         }
-        
+
         /// <summary>
         ///     Gets the number of word documents in the inverted index
         /// </summary>
         /// <returns> The number of word documents in the inverted index</returns>
-        public long CountInvertedIndex(){
+        public long CountInvertedIndex()
+        {
             return invertedIndex.Count(Query.All("Word"));
         }
-        
+
         /// <summary>
         ///     remove a word's assocaited worddocument from the reverse index  
         /// </summary>
         /// <param name="word"> a word in the reverse index</param>
-        public void DeleteWord(string word){
+        public void DeleteWord(string word)
+        {
             invertedIndex.Delete(GetWordDocument(word).Id);
 
         }
@@ -318,10 +342,11 @@ namespace SearchEngine
         /// <summary>
         ///     Destroys the Database and everything in it
         /// </summary>
-        public void Kill(){
+        public void Kill()
+        {
             File.Delete(connectionString);
-            File.Delete(connectionString.Replace(".db","-log.db"));
-            
+            File.Delete(connectionString.Replace(".db", "-log.db"));
+
         }
     }
 }

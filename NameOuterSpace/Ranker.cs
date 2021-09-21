@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SearchEngine
+namespace NameOuterSpace
 {
     /// <summary>
     /// Class to retrieve all relevant documents to a
@@ -167,8 +167,9 @@ namespace SearchEngine
             Dictionary<string, double> queryTermWeights
         )
         {
-            foreach(var v in documentTermWeights){
-                
+            foreach (var v in documentTermWeights)
+            {
+
             }
             var documentRanks = new Dictionary<int, double>();
 

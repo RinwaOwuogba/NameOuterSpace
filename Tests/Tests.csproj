@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SearchEngine\SearchEngine.csproj" />
+    <ProjectReference Include="..\NameOuterSpace\NameOuterSpace.csproj" />
   </ItemGroup>
 
 </Project>

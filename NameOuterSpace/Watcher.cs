@@ -8,7 +8,7 @@ using System.Transactions;
 
 
 
-namespace SearchEngine
+namespace NameOuterSpace
 {
 
     /// <summary>
@@ -193,8 +193,9 @@ namespace SearchEngine
 
                 foreach (var file in FilesToBeIndexed)
                 {
-                    var i = new Indexer(meta.stopWords.ToHashSet<string>());
+                    var i = new Indexer(meta.stopWords.ToHashSet<string>(), meta.lexicon.ToHashSet<string>());
                     var dex = i.IndexFile(repoBeingWatched + file);
+                    meta.lexicon = i.GetUnstemmedWords(repoBeingWatched + file);
 
                     try
                     {
@@ -211,6 +212,7 @@ namespace SearchEngine
                     }
 
                 }
+                engine.UpdateMetaInfo(meta);
                 Console.WriteLine("Index process complete, will crawl repo again in 15 minutes");
                 Thread.Sleep(900000);
 

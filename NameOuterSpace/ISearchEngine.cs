@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SearchEngine
+namespace NameOuterSpace
 {
     public interface IEngine
     {

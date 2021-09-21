@@ -2,13 +2,16 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using System;
+using NameOuterSpace;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace SearchEngineClient.Views
+namespace NameOuterSpaceClient.Views
 {
     public class SearchView : UserControl
     {
-        // public string[] Names = new string[] { "john", "jike", "jet" };
 
+        Autocomplete autoComplete;
         public SearchView()
         {
             InitializeComponent();

@@ -1,12 +1,12 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using SearchEngineClient.ViewModels;
-using SearchEngineClient.Views;
-using SearchEngine;
+using NameOuterSpaceClient.ViewModels;
+using NameOuterSpaceClient.Views;
+using NameOuterSpace;
 using System.IO;
 
-namespace SearchEngineClient
+namespace NameOuterSpaceClient
 {
     public class App : Application
     {

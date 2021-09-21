@@ -1,9 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using SearchEngineClient.ViewModels;
+using NameOuterSpaceClient.ViewModels;
 
-namespace SearchEngineClient
+namespace NameOuterSpaceClient
 {
     public class ViewLocator : IDataTemplate
     {

@@ -13,7 +13,7 @@ using Spire.Presentation;
 using Spire.Xls;
 
 
-namespace SearchEngine
+namespace NameOuterSpace
 {
     /// <summary>
     /// Class to automatically handle parsing of semantic text from files

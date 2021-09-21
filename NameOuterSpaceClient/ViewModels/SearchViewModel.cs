@@ -10,20 +10,19 @@ using System.Reactive;
 using ReactiveUI;
 using System;
 using System.Reactive.Linq;
-using SearchEngineClient.Models;
+using NameOuterSpaceClient.Models;
 using System.Diagnostics;
 
-using SearchEngine;
+using NameOuterSpace;
 
 
-namespace SearchEngineClient.ViewModels
+namespace NameOuterSpaceClient.ViewModels
 {
     public class SearchViewModel : ViewModelBase
     {
         string keyword = "";
         long queryTime = 0;
         Engine engine;
-
 
         public string Keyword
         {

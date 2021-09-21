@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Porter2Stemmer;
 
-namespace SearchEngine
+namespace NameOuterSpace
 {
     /// <summary>
     /// Class to compute the reverse index of a file's

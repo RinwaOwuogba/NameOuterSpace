@@ -3,12 +3,12 @@
 !include ./Watcher.puml
 !include ./Engine.puml
 !include ./ParsedQuery.puml
-!include ./ISearchEngine.puml
+!include ./INameOuterSpace.puml
 !include ./Parser.puml
 !include ./Ranker.puml
 !include ./Querier.puml
 !include ./Indexer.puml
 !include ./Models.puml
-!include ./obj/Debug/net5.0/SearchEngine.AssemblyInfo.puml
+!include ./obj/Debug/net5.0/NameOuterSpace.AssemblyInfo.puml
 !include ./obj/Debug/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.puml
 @enduml
