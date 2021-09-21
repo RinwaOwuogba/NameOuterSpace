@@ -4,7 +4,7 @@ using Avalonia.Markup.Xaml;
 using SearchEngineClient.ViewModels;
 using SearchEngineClient.Views;
 using SearchEngine;
-
+using System.IO;
 
 namespace SearchEngineClient
 {
@@ -19,7 +19,7 @@ namespace SearchEngineClient
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                Engine engine = new Engine("../repository/");
+                Engine engine = new Engine("../repository/", Directory.GetCurrentDirectory() + "stopwords.txt");
                 Querier querier = new Querier(engine);
                 Watcher watch = new Watcher(engine);
 
